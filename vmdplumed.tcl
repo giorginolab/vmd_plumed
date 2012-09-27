@@ -12,7 +12,7 @@
 # $Id: vmdplumed.tcl 1030M 2012-07-20 09:24:02Z (local) $ 
 
 # To reload:
-# .plumed destroy; source vmdplumed.tcl; plumed_tk
+#  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
 package provide plumed 1.9
 
@@ -21,7 +21,7 @@ package provide plumed 1.9
 namespace eval Plumed:: {
     namespace export plumed
     variable debug 0
-    variable plugin_version "1.9"
+    variable plugin_version 1.901
     variable plumed_version 2
     variable w                                          ;# handle to main window
     variable textfile "META_INP"
@@ -47,9 +47,12 @@ VMD atom selections in square brackets expand automatically."
 
     DISTANCE ATOMS=protein,ligand
 
-*Note*: units will be nm, ps and kJ/mol if not specified."
+*Note*: UNITS are nm, ps and kJ/mol if not specified."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
-    variable empty_meta_inp_v2 "\n     UNITS    LENGTH=A  ENERGY=kcal/mol  TIME=fs\n\nd1:  DISTANCE ATOMS=1,200                          # Just an example\n"
+    variable empty_meta_inp_v2 "
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
+d1:    DISTANCE ATOMS=1,200                          # Just an example
+"
 }
 
 proc plumed_tk {} {
@@ -124,8 +127,9 @@ proc Plumed::plumed {} {
     $w.menubar.file.menu add command -label "Save as..." -command  Plumed::file_saveas
     $w.menubar.file.menu add command -label "Export..." -command  Plumed::file_export
     $w.menubar.file.menu add separator
-    $w.menubar.file.menu add command -label "Batch analysis..." -command  Plumed::batch_gui
-    $w.menubar.file.menu add separator
+#    FIXME REIMPLEMENT
+#    $w.menubar.file.menu add command -label "Batch analysis..." -command  Plumed::batch_gui
+#    $w.menubar.file.menu add separator
     $w.menubar.file.menu add command -label "Quit" -command  Plumed::file_quit
     $w.menubar.file config -width 5
     bind $w <Control-s> Plumed::file_save
@@ -185,11 +189,11 @@ proc Plumed::plumed {} {
     label $w.txt.label  -textvariable Plumed::textfile
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
 	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {courier 12}
-    label $w.explanation -text "(...)" -justify left -bd 2 -relief solid -padx 10 -pady 10
-    instructions_update
-    file_new
-    $w.txt.text window create 1.0 -window $w.explanation -padx 100 -pady 10
     scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
+    label $w.instructions -text "(...)" -justify left -bd 2 -relief solid -padx 10 -pady 10
+    file_new
+    $w.txt.text window create 1.0 -window $w.instructions -padx 100 -pady 10
+    instructions_update
     pack $w.txt.label -fill x 
     pack $w.txt.text  -side left -fill both -expand 1
     pack $w.txt.vscr  -side left -fill y    -expand 0
@@ -213,6 +217,7 @@ proc Plumed::plumed {} {
     pack [ label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
     pack [ checkbutton $w.options.pbc.inspector -text "Show data points" \
 	       -variable  [namespace current]::plot_points ] -side left
+    pbc_dcd_set_state
 
     # ----------------------------------------
     pack [ frame $w.options.location ] -side top -fill x
@@ -410,6 +415,7 @@ proc Plumed::writePlumed { sel filename } {
 }
 
 
+# TONI consider braces
 proc Plumed::replace_serials { intxt }  {
     variable plumed_version
     set re {\[(.+?)\]}
@@ -635,16 +641,18 @@ proc Plumed::rama_insert {} {
 	$N delete; $CA delete; $C delete
 	$Np delete; $CAp delete
     }
-    $w.txt.text insert insert "! The above list contains $nnew Ramachandan CVs\n" 
+    $w.txt.text insert insert "# The above list contains $nnew Ramachandan CVs\n" 
 }
 
 
 # Return the line computing a torsion CV defined by the arguments iff all of them are valid
 proc Plumed::rama_insert_cv_maybe {A B C D angle rid} {
     variable w
-    set cv_line "TORSION LIST %d %d %d %d  ! %s_%s\n"
-    set oos_msg "! No dihedral %s for residue %s: out of selection\n"
-    set topo_msg "! No dihedral %s for residue %s: chain break\n"
+    variable plumed_version
+    set cv_lines_v1_v2 { - "TORSION LIST %d %d %d %d  ! %s_%s\n"
+	                 "TORSION ATOMS=%d,%d,%d,%d  LABEL=%s_%s\n" }
+    set oos_msg "# No dihedral %s for residue %s: out of selection\n"
+    set topo_msg "# No dihedral %s for residue %s: chain break\n"
     if { [$A num]==0 || [$B num]==0 || [$C num]==0 || [$D num]==0 } {
 	set r [format $oos_msg $angle $rid]
 	set ok 0
@@ -655,6 +663,7 @@ proc Plumed::rama_insert_cv_maybe {A B C D angle rid} {
 	set r [format $topo_msg $angle $rid]
 	set ok 0
     } else {
+	set cv_line [lindex $cv_lines_v1_v2 $plumed_version ]
 	set r [format $cv_line  \
 		   [$A get serial] [$B get serial] [$C get serial] [$D get serial]  \
 		   $rid $angle ]
@@ -1148,6 +1157,7 @@ proc Plumed::nc_preview { } {
 proc Plumed::nc_insert { } {
     variable nc_groupname 
     variable nc_cutoff
+    variable plumed_version
     variable w
 
     set nc [ Plumed::nc_compute ]
@@ -1158,9 +1168,18 @@ proc Plumed::nc_insert { } {
     }
     set ncl [ transpose $nc  ]
 
-    set txt1 "${nc_groupname}_1-> [lindex $ncl 0] ${nc_groupname}_1<-"
-    set txt2 "${nc_groupname}_2-> [lindex $ncl 1] ${nc_groupname}_2<-"
-    set txt3 "COORD LIST <${nc_groupname}_1> <${nc_groupname}_2> PAIR NN 6 MM 12 D_0 $nc_cutoff R_0 0.5"
+    switch $plumed_version {
+	1 {
+	    set txt1 "${nc_groupname}_1-> [lindex $ncl 0] ${nc_groupname}_1<-"
+	    set txt2 "${nc_groupname}_2-> [lindex $ncl 1] ${nc_groupname}_2<-"
+	    set txt3 "COORD LIST <${nc_groupname}_1> <${nc_groupname}_2> PAIR NN 6 MM 12 D_0 $nc_cutoff R_0 0.5"
+	} 
+	2 {
+	    set txt1 "${nc_groupname}_1: GROUP ATOMS={[lindex $ncl 0]}"
+	    set txt2 "${nc_groupname}_2: GROUP ATOMS={[lindex $ncl 1]}"
+	    set txt3 "COORDINATION GROUPA=${nc_groupname}_1 GROUPB=${nc_groupname}_2  PAIR  D_0=$nc_cutoff R_0=0.5"
+	}
+    }
 
     $w.txt.text insert 1.0 "$txt1\n$txt2\n\n"
     $w.txt.text insert insert "$txt3\n"
@@ -1171,6 +1190,16 @@ proc Plumed::nc_insert { } {
 proc Plumed::plumed_version_changed {} {
     instructions_update
     templates_populate_menu
+    pbc_dcd_set_state
+}
+
+proc Plumed::pbc_dcd_set_state {} {
+    variable w
+    variable plumed_version
+    switch $plumed_version {
+	1 { $w.options.pbc.pbcdcd configure -state normal }
+	2 { $w.options.pbc.pbcdcd configure -state disabled }
+    }
 }
 
 proc Plumed::instructions_update {} {
@@ -1183,7 +1212,7 @@ proc Plumed::instructions_update {} {
 	1 { set txt "$text_instructions_header $text_instructions_example_v1" }
 	2 { set txt "$text_instructions_header $text_instructions_example_v2" }
     }
-    $w.explanation configure -text $txt
+    $w.instructions configure -text $txt
 }
 
 proc Plumed::templates_populate_menu {} {
@@ -1205,14 +1234,24 @@ proc Plumed::templates_populate_menu {} {
 	}
     }
 
-    bind $w <Control-g> "$::Plumed::w.menubar.insert.menu invoke 1"
-    $w.menubar.insert.menu entryconfigure 1 -accelerator Ctrl-G
+    switch $plumed_version {
+	1 {
+	    bind $w <Control-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
+	    $w.menubar.insert.menu entryconfigure 1 -accelerator Ctrl-G
+	}
+	2 {
+	    bind $w <Control-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
+	    $w.menubar.insert.menu entryconfigure 1 -accelerator Ctrl-G
+	    bind $w <Control-m> "$::Plumed::w.menubar.insert.menu invoke 2" 
+	    $w.menubar.insert.menu entryconfigure 2 -accelerator Ctrl-M
+	}
+    }
 }
 				      
 
 proc Plumed::templates_list_v1 { } {
     return {  
-	"Group definition"    {groupname-> \[chain A\] groupname<-} 
+	"Group definition"    {groupname-> [chain A] groupname<-} 
 	"-" "-"
 	"Absolute position" "POSITION LIST <xx>   DIR XYZ"
 	"Distance" "DISTANCE LIST <xx> <yy>    DIR XYZ"
@@ -1247,9 +1286,10 @@ proc Plumed::templates_list_v1 { } {
 
 proc Plumed::templates_list_v2 { } {
     return {  
-	"Group definition"    "grp: GROUP ATOMS=[chain A and name CA]"
+	"Group definition"    "grp:   GROUP ATOMS=[chain A and name CA]"
+	"Center of mass"      "com:   COM   ATOMS=[chain A and name CA]"
 	"-" "-"
-	"Distance"            "d1:  DISTANCE ATOMS=3,5"
+	"Distance"            "d1:    DISTANCE ATOMS=3,5"
     }
 }
 
