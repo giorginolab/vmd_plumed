@@ -1,0 +1,28 @@
+Generate time-varying contact map
+
+Selection A ...............  [x] Split by residue
+Selection B ...............  [x] Split by residue
+
+Prefix for PLUMED groups [..............]
+
+CV [COORD LIST <A> <B> nn ...]
+
+<A> and <B> will be automatically substituted
+
+[x] Generate groups and CVs for all residue pairs matched by  the
+selections A and B
+
+
+
+
+
+
+To be fixed in PLUMED's DRIVER
+
+- INDEX/SERIAL on reading
+- RESID
+- Paths on file names
+
+In PLUMED:
+- GROUP not found: which?
+

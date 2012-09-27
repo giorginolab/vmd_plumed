@@ -1,0 +1,27 @@
+2012-07-18  Toni  <toni@tabularasa>
+
+	* 1.0 Added Ramachandran GUI, refactored menus, fixed OSX
+
+2011-02-15    <toni@mio.imim.es>
+
+	* 0.9 Export doesn't keep file name, removed w_stride
+
+2010-09-17    <toni@mio.imim.es>
+
+	* 0.7 Add point option, native contacts
+
+2010-09-13    <toni@mio.imim.es>
+
+	* 0.6 Multithreaded
+
+2010-07-21    <toni@mio.imim.es>
+
+	* 0.5 Batch processing
+
+2010-07-19    <toni@mio.imim.es>
+
+	* 0.3 Don't plot if error on exit
+
+	* 0.2 Fixed user conflict when preparing reference structures
+
+
