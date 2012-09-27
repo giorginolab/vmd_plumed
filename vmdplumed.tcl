@@ -47,10 +47,10 @@ VMD atom selections in square brackets expand automatically."
 
     DISTANCE ATOMS=protein,ligand
 
-*Note*: UNITS are nm, ps and kJ/mol if not specified."
+*Note*: UNITS are nm, ps and kJ/mol unless specified."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
-UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs       # Just an example
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
 
 d1:    DISTANCE ATOMS=1,200                     # Just an example
 "
@@ -208,7 +208,7 @@ proc Plumed::plumed {} {
     pack [ frame $w.options.pbc   ]  -side top -fill x
     pack [ radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC" \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [ radiobutton $w.options.pbc.pbcdcd -value 2 -text "From DCD" \
+    pack [ radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory" \
 	       -variable [namespace current]::pbc_type ] -side left
     pack [ radiobutton $w.options.pbc.pbcbox -value 3 -text "Box:" \
 	       -variable [namespace current]::pbc_type ] -side left
@@ -361,12 +361,14 @@ proc Plumed::help_about { {parent .plumed} } {
 
     tk_messageBox -title "About" -parent $parent -message \
 "
-$plugin_name 
+$plugin_name
+
 Version $plugin_version
 
 Toni Giorgino <toni.giorgino@isib.cnr.it>
-Institute for Biomedical Engineering
-Consiglio Nazionale delle Ricerche
+Institute of Biomedical Engineering
+National Research Council of Italy
+ISIB-CNR
 
 Copyright (c) 2010-2012
 
