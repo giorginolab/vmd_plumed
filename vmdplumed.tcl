@@ -149,7 +149,7 @@ proc Plumed::plumed {} {
     ## Templates
     menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
     menu $w.menubar.insert.menu -tearoff yes
-    templates_populate_menu
+    # FIXME REMOVE templates_populate_menu
     $w.menubar.insert config -width 10
 
     ## Structural
@@ -162,7 +162,7 @@ proc Plumed::plumed {} {
     $w.menubar.structure config -width 8
 
     ## help menu
-    ## TODO plumed 2
+    ## FIXME plumed 2
     menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
     $w.menubar.help.menu add command -label "On the $plugin_name" \
@@ -194,7 +194,7 @@ proc Plumed::plumed {} {
     label $w.instructions -text "(...)" -justify left -bd 2 -relief solid -padx 10 -pady 10
     file_new
     $w.txt.text window create 1.0 -window $w.instructions -padx 100 -pady 10
-    instructions_update
+    #FIXME REMOVE instructions_update
     pack $w.txt.label -fill x 
     pack $w.txt.text  -side left -fill both -expand 1
     pack $w.txt.vscr  -side left -fill y    -expand 0
@@ -218,7 +218,7 @@ proc Plumed::plumed {} {
     pack [ label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
     pack [ checkbutton $w.options.pbc.inspector -text "Show data points" \
 	       -variable  [namespace current]::plot_points ] -side left
-    pbc_dcd_set_state
+#    FIXME REMOVE pbc_dcd_set_state
 
     # ----------------------------------------
     pack [ frame $w.options.location ] -side top -fill x
@@ -241,6 +241,9 @@ proc Plumed::plumed {} {
     pack [ button $w.plot.plot -text "Plot" -relief raised -pady 2 -bd 2 \
 	   -command [namespace current]::do_compute ]  \
 	-side left -fill x -expand 1 
+
+    ## FINALIZE ============================================================
+    plumed_version_changed
 
 }
 
