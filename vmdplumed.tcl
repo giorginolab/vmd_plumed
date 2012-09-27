@@ -50,8 +50,9 @@ VMD atom selections in square brackets expand automatically."
 *Note*: UNITS are nm, ps and kJ/mol if not specified."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
-UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
-d1:    DISTANCE ATOMS=1,200                          # Just an example
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs       # Just an example
+
+d1:    DISTANCE ATOMS=1,200                     # Just an example
 "
 }
 
@@ -563,6 +564,11 @@ proc Plumed::showBalloonHelp {w msg} {
 # RAMACHANDRAN ==================================================                                                 
 
 proc Plumed::rama_gui { } {
+    if { [winfo exists .plumedrama] } {
+	wm deiconify .plumedrama
+	return
+    }
+
     variable rama_sel "protein"
     variable rama_phi 1
     variable rama_psi 1
@@ -680,6 +686,11 @@ proc Plumed::rama_insert_cv_maybe {A B C D angle rid} {
 # BUILD REFERENCE ==================================================                                                 
 
 proc Plumed::reference_gui { } {
+    if { [winfo exists .plumedref] } {
+	wm deiconify .plumedref
+	return
+    }
+
     variable refalign "backbone"
     variable refmeas "name CA"
     variable reffile "reference.pdb"
@@ -1014,6 +1025,11 @@ proc Plumed::batch_event { io findex fname } {
 # NATIVE CONTACTS ==================================================
 
 proc Plumed::nc_gui { } { 
+    if { [winfo exists .plumednc] } {
+	wm deiconify .plumednc
+	return
+    }
+
     variable nc_selA "protein and name CA"
     variable nc_selB ""
     variable nc_cutoff 7
@@ -1173,16 +1189,17 @@ proc Plumed::nc_insert { } {
 	    set txt1 "${nc_groupname}_1-> [lindex $ncl 0] ${nc_groupname}_1<-"
 	    set txt2 "${nc_groupname}_2-> [lindex $ncl 1] ${nc_groupname}_2<-"
 	    set txt3 "COORD LIST <${nc_groupname}_1> <${nc_groupname}_2> PAIR NN 6 MM 12 D_0 $nc_cutoff R_0 0.5"
+	    $w.txt.text insert 1.0 "$txt1\n$txt2\n\n"
+	    $w.txt.text insert insert "$txt3\n"
 	} 
 	2 {
-	    set txt1 "${nc_groupname}_1: GROUP ATOMS={[lindex $ncl 0]}"
-	    set txt2 "${nc_groupname}_2: GROUP ATOMS={[lindex $ncl 1]}"
-	    set txt3 "COORDINATION GROUPA=${nc_groupname}_1 GROUPB=${nc_groupname}_2  PAIR  D_0=$nc_cutoff R_0=0.5"
+	    set txt1 "${nc_groupname}_a: GROUP ATOMS={[lindex $ncl 0]}"
+	    set txt2 "${nc_groupname}_b: GROUP ATOMS={[lindex $ncl 1]}"
+	    set txt3 "nc:   COORDINATION GROUPA=${nc_groupname}_a GROUPB=${nc_groupname}_b  PAIR  D_0=$nc_cutoff R_0=0.5"
+	    $w.txt.text insert insert "\n$txt1\n$txt2\n$txt3\n"
 	}
     }
 
-    $w.txt.text insert 1.0 "$txt1\n$txt2\n\n"
-    $w.txt.text insert insert "$txt3\n"
 }
 
 # TEMPLATES ==================================================
