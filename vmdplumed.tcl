@@ -497,9 +497,11 @@ proc Plumed::dputs { text } {
 
 # ==================================================
 
+# TONI context menus http://www.megasolutions.net/tcl/right-click-menu-49868.aspx
+
+
 # http://wiki.tcl.tk/16317
-
-
+# possibly replace by tklib version
 
 proc Plumed::setBalloonHelp {w msg args} {
   array set opt [concat {
