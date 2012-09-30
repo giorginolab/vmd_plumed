@@ -1,6 +1,7 @@
 #!/bin/tclsh
 
 set unsubst {
+##AUTOGEN_TEMPLATES_BEGIN 
 proc Plumed::templates_list_v2 { } {
     return {  
 	"Group definition"    "grp:   GROUP ATOMS=[chain A and name CA]"
@@ -23,20 +24,26 @@ proc Plumed::templates_list_v2 { } {
 	"Distances"           "%%DISTANCES"
 	"Coordination number" "%%COORDINATIONNUMBER"
 	- -
-        "Energy"              "%%ENERGY"
-	"Box volume"          "%%VOLUME"
-	"Density"             "%%DENSITY"
-	- -
-	"CV Polynomial"       "%%COMBINE"
+#        "Energy"              "%%ENERGY"
+#	"Box volume"          "%%VOLUME"
+#	"Density"             "%%DENSITY"
+#	- -
 	"Path RMSD"           "%%PATHMSD"
-	"Piecewise Function"  "%%PIECEWISE"
-	"Sort vector CV"      "%%SORT"
+	"Polynomial CV function"  "%%COMBINE"
+	"Piecewise function"  "%%PIECEWISE"
+	"Sort CV vector"      "%%SORT"
 	"Distance in CV space" "%%TARGET"
 	- -
 	"Restraint"           "%%RESTRAINT"
         "Moving restraint"    "%%MOVINGRESTRAINT"
+	"Metadynamics"        "%%METAD"
+	"External"            "%%EXTERNAL"
+	"Ratchet-pawl"        "%%ABMD"
+	"Lower wall (allow higher)" "%%LOWER_WALLS"
+	"Upper wall (allow lower)" "%%UPPER_WALLS"
     }
 }
+##AUTOGEN_TEMPLATES_END
 }
 
 
