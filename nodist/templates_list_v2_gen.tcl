@@ -28,7 +28,6 @@ proc Plumed::templates_list_v2 { } {
 	"Density"             "%%DENSITY"
 	- -
 	"CV Polynomial"       "%%COMBINE"
-        "CV Math Function"    "%%MATHEVAL"
 	"Path RMSD"           "%%PATHMSD"
 	"Piecewise Function"  "%%PIECEWISE"
 	"Sort vector CV"      "%%SORT"
@@ -44,14 +43,13 @@ proc Plumed::templates_list_v2 { } {
 # Replace all the %%'s
 while {[regexp {%%([A-Z]+)} $unsubst pkw kw]} {
     set fc [open templates/$kw]
-    set templ [read $fc]
+    set templ [string trim [gets $fc]]
     close $fc
-    puts "Replacing $pkw with $templ"
-    set unsubst [regsub {$pkw} $unsubst $templ]
-puts "$unsubst"
-
-break
+    puts stderr "Replacing $pkw with $templ"
+    set unsubst [regsub $pkw $unsubst $templ]
 }
+
+puts "$unsubst"
 
 
 
