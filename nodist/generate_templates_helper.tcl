@@ -1,7 +1,8 @@
 #!/bin/tclsh
 
 set unsubst {
-##AUTOGEN_TEMPLATES_BEGIN 
+package provide plumed 1.901
+namespace eval Plumed {}
 proc Plumed::templates_list_v2 { } {
     return {  
 	"Group definition"    "grp:   GROUP ATOMS=[chain A and name CA]"
@@ -43,12 +44,11 @@ proc Plumed::templates_list_v2 { } {
 	"Upper wall (allow lower)" "%%UPPER_WALLS"
     }
 }
-##AUTOGEN_TEMPLATES_END
 }
 
 
 # Replace all the %%'s
-while {[regexp {%%([A-Z]+)} $unsubst pkw kw]} {
+while {[regexp {%%([A-Z_]+)} $unsubst pkw kw]} {
     set fc [open templates/$kw]
     set templ [string trim [gets $fc]]
     close $fc

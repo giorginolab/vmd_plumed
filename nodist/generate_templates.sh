@@ -10,4 +10,11 @@ for action in $(cat xx01); do
     plumed gentemplate --action $action > templates/$action
 done
 
-tclsh templates_list_v2_gen.tcl > templates_list_v2.tcl
+tclsh templates_list_v2_gen.tcl > ../templates_list_v2.tcl
+
+tclsh <<EOF
+cd ..
+pkg_mkIndex -verbose .
+EOF
+
+
