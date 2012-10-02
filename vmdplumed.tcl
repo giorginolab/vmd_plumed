@@ -47,8 +47,9 @@ VMD atom selections in square brackets expand automatically."
 
     DISTANCE ATOMS=protein,ligand
 
-Use right mouse button for help on keywords.
-*Note*: UNITS are nm, ps and kJ/mol unless specified."
+*Note*: UNITS are nm, ps and kJ/mol unless specified.
+Right mouse button provides help on keywords.
+"
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
@@ -1351,7 +1352,7 @@ proc ::Plumed::popup_insert_template {} {
     if {$word == ""} {
 	return
     } elseif {![info exists keyword_template_hash($word)]} {
-	tk_messageBox -message "Sorry, no template for keyword $word"
+	tk_messageBox -parent .plumed -message "Sorry, no template for keyword $word"
     } else {
 	$w.txt.text insert insert "$keyword_template_hash($word)\n"
     }
@@ -1384,7 +1385,7 @@ proc ::Plumed::popup_local_or_remote_help {kw} {
     if [file readable $htmlfile] {
 	vmd_open_url $htmlfile
     } else {
-	tk_messageBox -icon error -message "Sorry, no manual for keyword $kw."
+	tk_messageBox -icon error -parent .plumed -message "Sorry, no help page on keyword $kw."
     }	
 }
 
