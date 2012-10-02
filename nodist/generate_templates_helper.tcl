@@ -49,7 +49,7 @@ proc Plumed::templates_list_v2 { } {
 
 # Replace all the %%'s
 while {[regexp {%%([A-Z_]+)} $unsubst pkw kw]} {
-    set fc [open templates/$kw]
+    set fc [open templates_temp/$kw]
     set templ [string trim [gets $fc]]
     close $fc
     puts stderr "Replacing $pkw with $templ"
