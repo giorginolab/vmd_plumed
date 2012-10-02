@@ -49,8 +49,7 @@ VMD atom selections in square brackets expand automatically."
     DISTANCE ATOMS=protein,ligand
 
 *Note*: UNITS are nm, ps and kJ/mol unless specified.
-Right mouse button provides help on keywords.
-"
+Right mouse button provides help on keywords."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
@@ -1336,9 +1335,13 @@ proc ::Plumed::setup_popup_menu {} {
 	    bind $w.txt.text <3> {
 		set w $::Plumed::w
 		set word [$w.txt.text get {@%x,%y wordstart} {@%x,%y wordend}]
-		set ::Plumed::popup_word [string trim $word]
-#		puts "Got $word at %x,%y"
-		tk_popup $w.txt.text.popup %X %Y
+		set word [string trim $word]
+		if {$word != ""} {
+		    set uword [string toupper $word]
+		    $w.txt.text.popup entryconfigure 0 -label "Lookup $uword in browser..."
+		    set ::Plumed::popup_word [string trim $word]
+		    tk_popup $w.txt.text.popup %X %Y
+		}
 	    }
 	}
     }
@@ -1372,6 +1375,7 @@ proc ::Plumed::popup_lookup_manual {} {
 
 proc ::Plumed::popup_prepend_underscore {p} {
     set pu [join [split $p ""] _]
+    set pu [regsub {___} $pu __]
     return "_$pu"
 }
 

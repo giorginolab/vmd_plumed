@@ -18,10 +18,10 @@ proc ::Plumed::templates_list_v2 { } {
 	"Coordination"        "%%COORDINATION"
 	"Contact map"         "%%CONTACTMAP"
 	- -
-	"Amount of \u03b1-helical structure"          "%%ALPHARMSD"
+	"Amount of \u03b1-helical structure"        "%%ALPHARMSD"
         "Amount of parallel-\u03b2 structure"       "%%PARABETARMSD"
 	"Amount of antiparallel-\u03b2 structure"   "%%ANTIBETARMSD"
-	"RMSD from structure" "%%RMSD"
+	"RMSD from reference structure"             "%%RMSD"
 	- -
 	"Distances"           "%%DISTANCES"
 	"Coordination number" "%%COORDINATIONNUMBER"
