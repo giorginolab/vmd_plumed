@@ -18,7 +18,7 @@ package provide plumed 1.901
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
 
-namespace eval Plumed:: {
+namespace eval ::Plumed:: {
     namespace export plumed
     variable debug 0
     variable plugin_version 2.0a
@@ -47,6 +47,7 @@ VMD atom selections in square brackets expand automatically."
 
     DISTANCE ATOMS=protein,ligand
 
+Use right mouse button for help on keywords.
 *Note*: UNITS are nm, ps and kJ/mol unless specified."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
@@ -62,7 +63,7 @@ proc plumed_tk {} {
 }
 
 
-proc Plumed::plumed {} { 
+proc ::Plumed::plumed {} { 
     variable w
     variable textfile
     variable plugin_name
@@ -251,7 +252,7 @@ proc Plumed::plumed {} {
 # ==================================================
 
 
-proc Plumed::empty_meta_inp {} {
+proc ::Plumed::empty_meta_inp {} {
     variable plumed_version
     variable empty_meta_inp_v1
     variable empty_meta_inp_v2
@@ -261,7 +262,7 @@ proc Plumed::empty_meta_inp {} {
     } 
 }
 
-proc Plumed::file_new { } {
+proc ::Plumed::file_new { } {
     variable w
     variable textfile
 
@@ -271,7 +272,7 @@ proc Plumed::file_new { } {
 }
 
 
-proc Plumed::file_open { } {
+proc ::Plumed::file_open { } {
     variable w
     variable textfile
     variable file_types
@@ -288,7 +289,7 @@ proc Plumed::file_open { } {
     $w.txt.text insert end [read_file $textfile ]
 }
 
-proc Plumed::file_save { } {
+proc ::Plumed::file_save { } {
     variable w
     variable textfile
 
@@ -307,7 +308,7 @@ proc Plumed::file_save { } {
     }
 }
 
-proc Plumed::file_saveas { } {
+proc ::Plumed::file_saveas { } {
     variable w
     variable file_types
     variable textfile
@@ -323,7 +324,7 @@ proc Plumed::file_saveas { } {
     close $fd
 }
 
-proc Plumed::file_export { } {
+proc ::Plumed::file_export { } {
     variable w
     variable plumed_version
     set file_types {
@@ -343,13 +344,13 @@ proc Plumed::file_export { } {
 
 
 # Well, not really quit
-proc Plumed::file_quit { } {
+proc ::Plumed::file_quit { } {
     variable w
     wm withdraw $w
 }
 
 # Browse for executable
-proc Plumed::location_browse { } {
+proc ::Plumed::location_browse { } {
     variable driver_path
     set tmp [ tk_getOpenFile  ]
     if { $tmp != "" } {
@@ -358,7 +359,7 @@ proc Plumed::location_browse { } {
 }
 
 
-proc Plumed::help_about { {parent .plumed} } {
+proc ::Plumed::help_about { {parent .plumed} } {
     variable plugin_name
     variable plugin_version
 
@@ -387,7 +388,7 @@ Universitat Pompeu Fabra
 # ==================================================                                                 
 
 # http://wiki.tcl.tk/772
-proc Plumed::tmpdir { } {
+proc ::Plumed::tmpdir { } {
     global tcl_platform
     switch $tcl_platform(platform) {
 	unix {
@@ -405,7 +406,7 @@ proc Plumed::tmpdir { } {
 
 # Write a PDB file using charges and masses in the topology
 # (required by PLUMED's "driver" utility). 
-proc Plumed::writePlumed { sel filename } {
+proc ::Plumed::writePlumed { sel filename } {
     set old [ $sel get { x y z resid occupancy beta } ]
 
     $sel set x 0;		# workaround for xyz>1000 in PDB
@@ -422,7 +423,7 @@ proc Plumed::writePlumed { sel filename } {
 
 
 # TONI consider braces
-proc Plumed::replace_serials { intxt }  {
+proc ::Plumed::replace_serials { intxt }  {
     variable plumed_version
     set re {\[(.+?)\]}
     set lorig {}
@@ -452,7 +453,7 @@ proc Plumed::replace_serials { intxt }  {
 }
 
 
-proc Plumed::transpose matrix {
+proc ::Plumed::transpose matrix {
     set cmd list
     set i -1
     foreach col [lindex $matrix 0] {append cmd " \$[incr i]"}
@@ -465,7 +466,7 @@ proc Plumed::transpose matrix {
 
 
 # Return the contents of a file
-proc Plumed::read_file { fname } {
+proc ::Plumed::read_file { fname } {
     set fd [open $fname r]
     set dtext [read $fd]
     close $fd
@@ -473,7 +474,7 @@ proc Plumed::read_file { fname } {
 }
 
 # from rmsdtt
-proc Plumed::index2rgb {i} {
+proc ::Plumed::index2rgb {i} {
   set len 2
   lassign [colorinfo rgb $i] r g b
   set r [expr int($r*255)]
@@ -483,7 +484,7 @@ proc Plumed::index2rgb {i} {
   return [format "#%.${len}X%.${len}X%.${len}X" $r $g $b]
 }
 
-proc Plumed::dputs { text } {
+proc ::Plumed::dputs { text } {
     variable debug
     if {$debug} {
 	puts "DEBUG $text"
@@ -503,7 +504,7 @@ proc Plumed::dputs { text } {
 # http://wiki.tcl.tk/16317
 # possibly replace by tklib version
 
-proc Plumed::setBalloonHelp {w msg args} {
+proc ::Plumed::setBalloonHelp {w msg args} {
   array set opt [concat {
       -tag ""
     } $args]
@@ -538,7 +539,7 @@ proc Plumed::setBalloonHelp {w msg args} {
   }
 }
 
-proc Plumed::showBalloonHelp {w msg} {
+proc ::Plumed::showBalloonHelp {w msg} {
   set t .balloonHelp
   catch {destroy $t}
   toplevel $t -bg black
@@ -570,7 +571,7 @@ proc Plumed::showBalloonHelp {w msg} {
 
 # RAMACHANDRAN ==================================================                                                 
 
-proc Plumed::rama_gui { } {
+proc ::Plumed::rama_gui { } {
     if { [winfo exists .plumedrama] } {
 	wm deiconify .plumedrama
 	return
@@ -615,7 +616,7 @@ Dihedrals involving atoms outside the selection are skipped.
 # base of "residue" (unique), but they will be printed as "resid"
 # (human-readable)
 
-proc Plumed::rama_insert {} {
+proc ::Plumed::rama_insert {} {
     variable rama_sel
     variable rama_phi
     variable rama_psi
@@ -659,7 +660,7 @@ proc Plumed::rama_insert {} {
 
 
 # Return the line computing a torsion CV defined by the arguments iff all of them are valid
-proc Plumed::rama_insert_cv_maybe {A B C D angle rid} {
+proc ::Plumed::rama_insert_cv_maybe {A B C D angle rid} {
     variable w
     variable plumed_version
     set cv_lines_v1_v2 { - "TORSION LIST %d %d %d %d  ! %s_%s\n"
@@ -692,7 +693,7 @@ proc Plumed::rama_insert_cv_maybe {A B C D angle rid} {
 
 # BUILD REFERENCE ==================================================                                                 
 
-proc Plumed::reference_gui { } {
+proc ::Plumed::reference_gui { } {
     if { [winfo exists .plumedref] } {
 	wm deiconify .plumedref
 	return
@@ -726,9 +727,9 @@ proc Plumed::reference_gui { } {
 	       -command {  destroy .plumedref }   ] -side left -fill x -expand 1
 }
 
-proc Plumed::reference_set_reffile { x } { variable reffile; if { $x != "" } {set reffile $x} }; # why??
+proc ::Plumed::reference_set_reffile { x } { variable reffile; if { $x != "" } {set reffile $x} }; # why??
 
-proc Plumed::reference_write { } {
+proc ::Plumed::reference_write { } {
     variable refalign
     variable refmeas
     variable reffile
@@ -794,7 +795,7 @@ proc Plumed::reference_write { } {
 
 # BATCH ==================================================
 
-proc Plumed::batch_gui {} {
+proc ::Plumed::batch_gui {} {
     variable batch_dir
     variable batch_nthreads 1
     variable batch_extension colvar
@@ -849,7 +850,7 @@ proc Plumed::batch_gui {} {
     Plumed::batch_update_gui
 }
 
-proc Plumed::batch_setdir { x } { 
+proc ::Plumed::batch_setdir { x } { 
     variable batch_dir; if {$x != "" } {
 	set batch_dir $x
 	.plumedbatch.progress coords bar 0 0 0 20 
@@ -860,7 +861,7 @@ proc Plumed::batch_setdir { x } {
     } 
 }
 
-proc Plumed::batch_update_gui { { ext __UNSET__ } } {
+proc ::Plumed::batch_update_gui { { ext __UNSET__ } } {
     variable merge_results
     variable batch_extension
     if { $ext == "__UNSET__" } { 	# not called from validate
@@ -873,7 +874,7 @@ proc Plumed::batch_update_gui { { ext __UNSET__ } } {
     return 1
 }
 
-proc Plumed::batch_progress { x { y 100 } } { 
+proc ::Plumed::batch_progress { x { y 100 } } { 
     variable batch_progress_width
     .plumedbatch.progress coords bar 0 0 [ expr {int($batch_progress_width*$x/$y) } ] 20 
     .plumedbatch.progress itemconfigure text -text [ format "Processed %d of %d" $x $y ]
@@ -881,7 +882,7 @@ proc Plumed::batch_progress { x { y 100 } } {
 
 
 # somewhat contrived implementation of a process pool
-proc Plumed::batch_start { } {
+proc ::Plumed::batch_start { } {
     variable merge_results
     variable batch_nthreads 
     variable batch_ongoing {}
@@ -982,7 +983,7 @@ proc Plumed::batch_start { } {
 }
 
 
-proc Plumed::batch_abort_do {  } {
+proc ::Plumed::batch_abort_do {  } {
     variable batch_ongoing
     set tmpd "[ Plumed::tmpdir ]/vmdplumed.[pid]"
     puts "Cleaning up [llength $batch_ongoing] ongoing processes."
@@ -996,7 +997,7 @@ proc Plumed::batch_abort_do {  } {
     return
 }
 
-proc Plumed::batch_event { io findex fname } {
+proc ::Plumed::batch_event { io findex fname } {
     variable batch_abort
     variable batch_nfiles
     variable batch_ok
@@ -1031,7 +1032,7 @@ proc Plumed::batch_event { io findex fname } {
 
 # NATIVE CONTACTS ==================================================
 
-proc Plumed::nc_gui { } { 
+proc ::Plumed::nc_gui { } { 
     if { [winfo exists .plumednc] } {
 	wm deiconify .plumednc
 	return
@@ -1087,7 +1088,7 @@ The current frame of the top molecule is taken as the native state." ] -side top
 }
 
 
-proc Plumed::nc_compute { } {
+proc ::Plumed::nc_compute { } {
     variable nc_selA
     variable nc_selB
     variable nc_cutoff
@@ -1167,7 +1168,7 @@ proc Plumed::nc_compute { } {
     return $ncl
 }
 
-proc Plumed::nc_preview { } {
+proc ::Plumed::nc_preview { } {
     .plumednc.preview configure -text "Counting, please wait..."
     update
     set ncl [ Plumed::nc_compute ]
@@ -1177,7 +1178,7 @@ proc Plumed::nc_preview { } {
 }
 
 
-proc Plumed::nc_insert { } {
+proc ::Plumed::nc_insert { } {
     variable nc_groupname 
     variable nc_cutoff
     variable plumed_version
@@ -1211,13 +1212,13 @@ proc Plumed::nc_insert { } {
 
 # TEMPLATES ==================================================
 
-proc Plumed::plumed_version_changed {} {
+proc ::Plumed::plumed_version_changed {} {
     instructions_update
     templates_populate_menu
     pbc_dcd_set_state
 }
 
-proc Plumed::pbc_dcd_set_state {} {
+proc ::Plumed::pbc_dcd_set_state {} {
     variable w
     variable plumed_version
     switch $plumed_version {
@@ -1226,7 +1227,7 @@ proc Plumed::pbc_dcd_set_state {} {
     }
 }
 
-proc Plumed::instructions_update {} {
+proc ::Plumed::instructions_update {} {
     variable w
     variable plumed_version
     variable text_instructions_header
@@ -1239,13 +1240,13 @@ proc Plumed::instructions_update {} {
     $w.instructions configure -text $txt
 }
 
-proc Plumed::templates_populate_menu {} {
+proc ::Plumed::templates_populate_menu {} {
     variable w
     variable plumed_version
 
     switch $plumed_version {
 	1  {set templates [templates_list_v1]}
-	2  {set templates [templates_list_v2]}
+	2  {set templates [::Plumed::templates_list_v2]}
     } 
 
     $w.menubar.insert.menu delete 0 last
@@ -1273,7 +1274,7 @@ proc Plumed::templates_populate_menu {} {
 }
 				      
 
-proc Plumed::templates_list_v1 { } {
+proc ::Plumed::templates_list_v1 { } {
     return {  
 	"Group definition"    {groupname-> [chain A] groupname<-} 
 	"-" "-"
@@ -1308,49 +1309,15 @@ proc Plumed::templates_list_v1 { } {
 }
 
 
-proc Plumed::templates_list_v2 { } {
-    return {  
-	"Group definition"    "grp:   GROUP ATOMS=[chain A and name CA]"
-	"Center of mass"      "com:   COM   ATOMS=[chain A and name CA]"
-	"Ghost atom"          "GHOST ATOMS=<atom selection> COORDINATES=<atom selection>"
-	- -
-	"Distance"            "DISTANCE ATOMS=<atom selection>"
-	"Angle"               "ANGLE ATOMS=<atom selection>"
-	"Torsion"             "TORSION ATOMS=<atom selection>"
-        "Gyration radius"     "GYRATION ATOMS=<atom selection> TYPE=RADIUS"
-	"Electric dipole"     "DIPOLE GROUP=<atom selection>"
-	"Coordination"        "COORDINATION GROUPA=<atom selection> GROUPB=<atom selection> NN=6  MM=12  D_0=0.0  R_0="
-	"Contact map"         "CONTACTMAP ATOMS=<atom selection> SWITCH="
-	- -
-	"Alpha-helix"         "ALPHARMSD RESIDUES=<residue selection> TYPE=DRMSD  R_0=     D_0=0.0  NN=8  MM=12"
-        "Parallel beta"       "PARABETARMSD RESIDUES=<residue selection> TYPE=DRMSD  R_0=     D_0=0.0  NN=8  MM=12  STYLE=all"
-	"Antiparallel beta"   "ANTIBETARMSD RESIDUES=<residue selection> TYPE=DRMSD  R_0=     D_0=0.0  NN=8  MM=12  STYLE=all"
-	"RMSD from structure" "RMSD REFERENCE=     TYPE=SIMPLE"
-	- -
-	"Distances"           "DISTANCES ATOMS=<atom selection>"
-	"Coordination number" "COORDINATIONNUMBER SPECIES=<atom selection> NN=6  MM=12  D_0=0.0  R_0="
-	- -
-        "Energy"              "ENERGY"
-	"Box volume"          "VOLUME"
-	"Density"             "DENSITY SPECIES=<atom selection>"
-	- -
-	"CV Polynomial"       "COMBINE ARG=     PERIODIC=     COEFFICIENTS=1.0  POWERS=1.0"
-	"Path RMSD"           "PATHMSD ARG=     LAMBDA="
-	"Piecewise Function"  "PIECEWISE ARG=     POINT="
-	"Sort vector CV"      "SORT ARG="
-	"Distance in CV space" "TARGET ARG=     REFERENCE="
-	- -
-	"Restraint"           "RESTRAINT STRIDE=1  ARG=     SLOPE=0.0  KAPPA=0.0  AT="
-        "Moving restraint"    "MOVINGRESTRAINT STRIDE=1  ARG=     VERSE=B  STEP=     AT=     KAPPA="
-    }
-}
+# NOTE Plumed::templates_list_v2 comes from a separate, autogenerated
+# file in the same package
 
 
 
 # ==================================================
 # Version-independent stuff
 
-proc Plumed::do_compute {} {
+proc ::Plumed::do_compute {} {
     variable plumed_version 
     variable driver_path
 
@@ -1376,7 +1343,7 @@ proc Plumed::do_compute {} {
 
 # Assume a well-formed COLVAR file: one header line
 # FIXME - assuming time is the first column
-proc Plumed::do_plot { { out COLVAR } { txt ""  } } {
+proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
     variable w
     variable plot_points
 
@@ -1436,7 +1403,7 @@ proc Plumed::do_plot { { out COLVAR } { txt ""  } } {
 # ==================================================                                                 
 # V1-specific stuff
 
-proc Plumed::write_meta_inp_v1 { meta } { 
+proc ::Plumed::write_meta_inp_v1 { meta } { 
     variable w
     set text [$w.txt.text get 1.0 {end -1c}]
     set fd [open $meta w]
@@ -1446,7 +1413,7 @@ proc Plumed::write_meta_inp_v1 { meta } {
     close $fd
 }
 
-proc Plumed::get_pbc_v1 { } {
+proc ::Plumed::get_pbc_v1 { } {
     variable pbc_type
     variable pbc_boxx
     variable pbc_boxy
@@ -1458,7 +1425,7 @@ proc Plumed::get_pbc_v1 { } {
     return $pbc
 }
 
-proc Plumed::do_compute_v1 {} {
+proc ::Plumed::do_compute_v1 {} {
     variable driver_path
 
     set tmpd "[ Plumed::tmpdir ]/vmdplumed.[pid]"
@@ -1502,7 +1469,7 @@ proc Plumed::do_compute_v1 {} {
 # ==================================================                                                 
 # V2-specific stuff
 
-proc Plumed::write_meta_inp_v2 { meta colvar } { 
+proc ::Plumed::write_meta_inp_v2 { meta colvar } { 
     variable w
     set text [$w.txt.text get 1.0 {end -1c}]
     set fd [open $meta w]
@@ -1512,7 +1479,7 @@ proc Plumed::write_meta_inp_v2 { meta colvar } {
     close $fd
 }
 
-proc Plumed::get_pbc_v2 { } {
+proc ::Plumed::get_pbc_v2 { } {
     variable pbc_type
     variable pbc_boxx
     variable pbc_boxy
@@ -1525,7 +1492,7 @@ proc Plumed::get_pbc_v2 { } {
     return $pbc
 }
 
-proc Plumed::do_compute_v2 {} {
+proc ::Plumed::do_compute_v2 {} {
     variable driver_path
 
     set tmpd [file join [tmpdir] vmdplumed.[pid]]
