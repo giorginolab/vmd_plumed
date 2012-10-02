@@ -15,6 +15,7 @@
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
 package provide plumed 1.901
+package require tile
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
 
@@ -118,11 +119,11 @@ proc ::Plumed::plumed {} {
 
 
     ## MENU ============================================================
-    frame $w.menubar -relief raised -bd 2 ;# frame for menubar
+    frame $w.menubar -relief raised ;# frame for menubar
     pack $w.menubar -padx 1 -fill x
 
     ## file menu
-    menubutton $w.menubar.file -text File -underline 0 -menu $w.menubar.file.menu
+     menubutton $w.menubar.file -text File -underline 0 -menu $w.menubar.file.menu
     menu $w.menubar.file.menu -tearoff no
     $w.menubar.file.menu add command -label "New" -command  Plumed::file_new
     $w.menubar.file.menu add command -label "Open..." -command Plumed::file_open
@@ -138,7 +139,7 @@ proc ::Plumed::plumed {} {
     bind $w <Control-s> Plumed::file_save
 
     ## edit
-    menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
+     menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
     menu $w.menubar.edit.menu -tearoff no
     $w.menubar.edit.menu add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce Ctrl-Z
     $w.menubar.edit.menu add command -label "Redo" -command  "$::Plumed::w.txt.text edit redo"
@@ -149,13 +150,13 @@ proc ::Plumed::plumed {} {
     $w.menubar.edit config -width 5
 
     ## Templates
-    menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
+     menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
     menu $w.menubar.insert.menu -tearoff yes
     # FIXME REMOVE templates_populate_menu
     $w.menubar.insert config -width 10
 
     ## Structural
-    menubutton $w.menubar.structure -text Structure -underline 0 -menu $w.menubar.structure.menu
+     menubutton $w.menubar.structure -text Structure -underline 0 -menu $w.menubar.structure.menu
     menu $w.menubar.structure.menu -tearoff no
     $w.menubar.structure.menu add command -label "Build reference structure..." -command Plumed::reference_gui
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
@@ -165,7 +166,7 @@ proc ::Plumed::plumed {} {
 
     ## help menu
     ## FIXME plumed 2
-    menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
+     menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
     $w.menubar.help.menu add command -label "On the $plugin_name" \
 	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
@@ -190,15 +191,14 @@ proc ::Plumed::plumed {} {
 
 
     ## TEXT ============================================================
-    frame $w.txt
-    label $w.txt.label  -textvariable Plumed::textfile
+     frame $w.txt
+     label $w.txt.label  -textvariable Plumed::textfile
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
 	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {courier 12}
     scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
-    label $w.instructions -text "(...)" -justify left -bd 2 -relief solid -padx 10 -pady 10
+     label $w.instructions -text "(...)" -justify left  -relief solid -padx 1m -pady 1m
     file_new
     $w.txt.text window create 1.0 -window $w.instructions -padx 100 -pady 10
-    #FIXME REMOVE instructions_update
     pack $w.txt.label -fill x 
     pack $w.txt.text  -side left -fill both -expand 1
     pack $w.txt.vscr  -side left -fill y    -expand 0
@@ -206,43 +206,42 @@ proc ::Plumed::plumed {} {
 
 
     ## OPTIONS ============================================================
-    pack [ labelframe $w.options -relief ridge -bd 2 -text "Options" -padx 1m -pady 1m ] \
+    pack [  ttk::labelframe $w.options -relief ridge  -text "Options"  ] \
 	-side top -fill x
 
-    pack [ frame $w.options.pbc   ]  -side top -fill x
-    pack [ radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC" \
+    pack [  ttk::frame $w.options.pbc   ]  -side top -fill x
+    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC" \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [ radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory" \
+    pack [  ttk::radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory" \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [ radiobutton $w.options.pbc.pbcbox -value 3 -text "Box:" \
+    pack [  ttk::radiobutton $w.options.pbc.pbcbox -value 3 -text "Box:" \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [ entry $w.options.pbc.boxx -width 6 -textvariable [namespace current]::pbc_boxx ] -side left
-    pack [ entry $w.options.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
-    pack [ entry $w.options.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
-    pack [ label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
-    pack [ checkbutton $w.options.pbc.inspector -text "Show data points" \
+    pack [  ttk::entry $w.options.pbc.boxx -width 6 -textvariable [namespace current]::pbc_boxx ] -side left
+    pack [  ttk::entry $w.options.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
+    pack [  ttk::entry $w.options.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
+    pack [  ttk::label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
+    pack [  ttk::checkbutton $w.options.pbc.inspector -text "Show data points" \
 	       -variable  [namespace current]::plot_points ] -side left
-#    FIXME REMOVE pbc_dcd_set_state
 
     # ----------------------------------------
     pack [ frame $w.options.location ] -side top -fill x
-    pack [ label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
-    pack [ radiobutton $w.options.location.v1 -value 1 -text "1.3"        \
+    pack [  ttk::label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
+    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3"        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
-    pack [ radiobutton $w.options.location.v2 -value 2 -text "2+"         \
+    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2+"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
-    pack [ label $w.options.location.text -text "  Path to executable: " ] -side left -expand 0
-    pack [ entry $w.options.location.path -width 40 -textvariable \
+    pack [  ttk::label $w.options.location.text -text "       Path to executable: " ] -side left -expand 0
+    pack [  ttk::entry $w.options.location.path -width 40 -textvariable \
 	       [namespace current]::driver_path ] -side left -expand 1 -fill x
-    pack [ button $w.options.location.browse -text "Browse..." -relief raised \
+    pack [  ttk::button $w.options.location.browse -text "Browse..." \
 	   -command [namespace current]::location_browse   ] -side left -expand 0
 
     ## PLOT ============================================================
-    pack [ frame $w.plot ] -side top -fill x
-    pack [ button $w.plot.plot -text "Plot" -relief raised -pady 2 -bd 2 \
+    pack [  ttk::frame $w.plot ] -side top -fill x
+    pack [  ttk::button $w.plot.plot -text "Plot"   \
 	   -command [namespace current]::do_compute ]  \
 	-side left -fill x -expand 1 
 
@@ -597,25 +596,25 @@ proc ::Plumed::rama_gui { } {
 
     toplevel .plumedrama -bd 4
     wm title .plumedrama "Insert Ramachandran CVs"
-    pack [ label .plumedrama.head1 -text "Insert CVs for the Ramachandran angles of the matched residues.
+    pack [ ttk::label .plumedrama.head1 -text "Insert CVs for the Ramachandran angles of the matched residues.
 N-CA-C atom naming is assumed for backbone atoms.
 Dihedrals involving atoms outside the selection are skipped.
 " ] -side top -fill x 
 
-    pack [ frame .plumedrama.sel ] -side top -fill x
-    pack [ label .plumedrama.sel.txt -text "Selection: backbone and " ] -side left -fill x
-    pack [ entry .plumedrama.sel.in -width 20 -textvariable [namespace current]::rama_sel ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumedrama.sel ] -side top -fill x
+    pack [ ttk::label .plumedrama.sel.txt -text "Selection: backbone and " ] -side left -fill x
+    pack [ ttk::entry .plumedrama.sel.in -width 20 -textvariable [namespace current]::rama_sel ] -side left -expand 1 -fill x
 
-    pack [ frame .plumedrama.cv ] -side top -fill x
-    pack [ label .plumedrama.cv.txt -text "Dihedral angles: " ] -side left -fill x
-    pack [ checkbutton .plumedrama.cv.phi -text Phi -variable  [namespace current]::rama_phi ] -side left
-    pack [ checkbutton .plumedrama.cv.psi -text Psi -variable  [namespace current]::rama_psi ] -side left
-    pack [ checkbutton .plumedrama.cv.omega -text Omega -variable  [namespace current]::rama_omega ] -side left
+    pack [ ttk::frame .plumedrama.cv ] -side top -fill x
+    pack [ ttk::label .plumedrama.cv.txt -text "Dihedral angles: " ] -side left -fill x
+    pack [ ttk::checkbutton .plumedrama.cv.phi -text Phi -variable  [namespace current]::rama_phi ] -side left
+    pack [ ttk::checkbutton .plumedrama.cv.psi -text Psi -variable  [namespace current]::rama_psi ] -side left
+    pack [ ttk::checkbutton .plumedrama.cv.omega -text Omega -variable  [namespace current]::rama_omega ] -side left
 
-    pack [ frame .plumedrama.act ] -side top -fill x
-    pack [ button .plumedrama.act.ok -text "Insert" -relief raised -command \
+    pack [ ttk::frame .plumedrama.act ] -side top -fill x
+    pack [ ttk::button .plumedrama.act.ok -text "Insert"  -command \
 	       { Plumed::rama_insert } ] -side left -fill x -expand 1
-    pack [ button .plumedrama.act.close -text "Close" -relief raised \
+    pack [ ttk::button .plumedrama.act.close -text "Close"  \
 	       -command {  destroy .plumedrama }   ] -side left -fill x -expand 1
 
 }
@@ -718,25 +717,25 @@ proc ::Plumed::reference_gui { } {
     variable refmol top
     toplevel .plumedref -bd 4
     wm title .plumedref "Build reference structure"
-    pack [ label .plumedref.title -text "Convert top molecule's current frame\ninto a reference file for FRAMESET-type analysis:" ] -side top
-    pack [ frame .plumedref.align ] -side top -fill x
-    pack [ label .plumedref.align.aligntext -text "Alignment set: " ] -side left
-    pack [ entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
-    pack [ frame .plumedref.meas ] -side top -fill x
-    pack [ label .plumedref.meas.meastext -text "Displacement set: " ] -side left
-    pack [ entry .plumedref.meas.meas -width 20 -textvariable [namespace current]::refmeas ] -side left -expand 1 -fill x
-    pack [ frame .plumedref.mol ] -side top -fill x
-    pack [ label .plumedref.mol.moltext -text "Numbering for molecule: " ] -side left
-    pack [ entry .plumedref.mol.mol -width 20 -textvariable [namespace current]::refmol ] -side left -expand 1 -fill x
-    pack [ frame .plumedref.file ] -side top -fill x
-    pack [ label .plumedref.file.filetxt -text "File to write: " ] -side left
-    pack [ entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ] -side left -expand 1 -fill x
-    pack [ button .plumedref.file.filebrowse -text "Browse..." -relief raised \
+    pack [ ttk::label .plumedref.title -text "Convert top molecule's current frame\ninto a reference file for FRAMESET-type analysis:" ] -side top
+    pack [ ttk::frame .plumedref.align ] -side top -fill x
+    pack [ ttk::label .plumedref.align.aligntext -text "Alignment set: " ] -side left
+    pack [ ttk::entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumedref.meas ] -side top -fill x
+    pack [ ttk::label .plumedref.meas.meastext -text "Displacement set: " ] -side left
+    pack [ ttk::entry .plumedref.meas.meas -width 20 -textvariable [namespace current]::refmeas ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumedref.mol ] -side top -fill x
+    pack [ ttk::label .plumedref.mol.moltext -text "Numbering for molecule: " ] -side left
+    pack [ ttk::entry .plumedref.mol.mol -width 20 -textvariable [namespace current]::refmol ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumedref.file ] -side top -fill x
+    pack [ ttk::label .plumedref.file.filetxt -text "File to write: " ] -side left
+    pack [ ttk::entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ] -side left -expand 1 -fill x
+    pack [ ttk::button .plumedref.file.filebrowse -text "Browse..." \
 	       -command { Plumed::reference_set_reffile [ tk_getSaveFile  -initialfile "$::Plumed::reffile" ] }   ] -side left -expand 0
-    pack [ frame .plumedref.act ] -side top -fill x
-    pack [ button .plumedref.act.ok -text "Write" -relief raised -command \
+    pack [ ttk::frame .plumedref.act ] -side top -fill x
+    pack [ ttk::button .plumedref.act.ok -text "Write" -command \
 	       { Plumed::reference_write } ] -side left -fill x -expand 1
-    pack [ button .plumedref.act.cancel -text "Close" -relief raised \
+    pack [ ttk::button .plumedref.act.cancel -text "Close" \
 	       -command {  destroy .plumedref }   ] -side left -fill x -expand 1
 }
 
@@ -1060,43 +1059,43 @@ proc ::Plumed::nc_gui { } {
 
     toplevel .plumednc -bd 4
     wm title .plumednc "Native contacts CV"
-    pack [ label .plumednc.head1 -text "Insert a CV and group definitions required to define a native contacts CV.
+    pack [ ttk::label .plumednc.head1 -text "Insert a CV and group definitions required to define a native contacts CV.
 The current frame of the top molecule is taken as the native state." ] -side top -fill x 
 
-    pack [ frame .plumednc.sel1 ] -side top -fill x
-    pack [ label .plumednc.sel1.txt -text "Selection 1: " ] -side left -fill x
-    pack [ entry .plumednc.sel1.sel -width 50 -textvariable [namespace current]::nc_selA ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumednc.sel1 ] -side top -fill x
+    pack [ ttk::label .plumednc.sel1.txt -text "Selection 1: " ] -side left -fill x
+    pack [ ttk::entry .plumednc.sel1.sel -width 50 -textvariable [namespace current]::nc_selA ] -side left -expand 1 -fill x
 
-    pack [ frame .plumednc.sel2 ] -side top -fill x
-    pack [ label .plumednc.sel2.txt -text "Selection 2 (optional): " ] -side left -fill x
-    pack [ entry .plumednc.sel2.sel -width 40 -textvariable [namespace current]::nc_selB ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumednc.sel2 ] -side top -fill x
+    pack [ ttk::label .plumednc.sel2.txt -text "Selection 2 (optional): " ] -side left -fill x
+    pack [ ttk::entry .plumednc.sel2.sel -width 40 -textvariable [namespace current]::nc_selB ] -side left -expand 1 -fill x
 
-    pack [ frame .plumednc.cutoff ] -side top -fill x
-    pack [ label .plumednc.cutoff.txt -text "Distance cutoff (A): " ] -side left -fill x
-    pack [ entry .plumednc.cutoff.sel -width 10 -textvariable [namespace current]::nc_cutoff ] -side left -expand 1 -fill x
-    pack [ label .plumednc.cutoff.txt2 -text "      Single selection: |\u0394 resid| \u2265 " ] -side left -fill x
-    pack [ entry .plumednc.cutoff.dresid -width 10 -textvariable [namespace current]::nc_dresid ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumednc.cutoff ] -side top -fill x
+    pack [ ttk::label .plumednc.cutoff.txt -text "Distance cutoff (A): " ] -side left -fill x
+    pack [ ttk::entry .plumednc.cutoff.sel -width 10 -textvariable [namespace current]::nc_cutoff ] -side left -expand 1 -fill x
+    pack [ ttk::label .plumednc.cutoff.txt2 -text "      Single selection: |\u0394 resid| \u2265 " ] -side left -fill x
+    pack [ ttk::entry .plumednc.cutoff.dresid -width 10 -textvariable [namespace current]::nc_dresid ] -side left -expand 1 -fill x
     Plumed::setBalloonHelp .plumednc.cutoff.dresid "Consider contact pairs only if they span at least N monomers in the sequence (by resid attribute). 
    0 - consider all contact pairs;
    1 - ignore contacts within the same residue;
    2 - also ignore contacts between neighboring monomers; and so on."
 
-    pack [ frame .plumednc.destmol ] -side top -fill x
-    pack [ label .plumednc.destmol.txt -text "Target molecule ID: " ] -side left -fill x
-    pack [ entry .plumednc.destmol.sel -width 10 -textvariable [namespace current]::nc_destmol ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumednc.destmol ] -side top -fill x
+    pack [ ttk::label .plumednc.destmol.txt -text "Target molecule ID: " ] -side left -fill x
+    pack [ ttk::entry .plumednc.destmol.sel -width 10 -textvariable [namespace current]::nc_destmol ] -side left -expand 1 -fill x
 
-    pack [ frame .plumednc.groupname ] -side top -fill x
-    pack [ label .plumednc.groupname.txt -text "Prefix for PLUMED groups: " ] -side left -fill x
-    pack [ entry .plumednc.groupname.sel -width 20 -textvariable [namespace current]::nc_groupname ] -side left -expand 1 -fill x
+    pack [ ttk::frame .plumednc.groupname ] -side top -fill x
+    pack [ ttk::label .plumednc.groupname.txt -text "Prefix for PLUMED groups: " ] -side left -fill x
+    pack [ ttk::entry .plumednc.groupname.sel -width 20 -textvariable [namespace current]::nc_groupname ] -side left -expand 1 -fill x
 
-    pack [ label .plumednc.preview -text "Click `Count' to compute the number of contacts." ] -side top -fill x 
+    pack [ ttk::label .plumednc.preview -text "Click `Count' to compute the number of contacts." ] -side top -fill x 
 
-    pack [ frame .plumednc.act ] -side top -fill x
-    pack [ button .plumednc.act.preview -text "Count" -relief raised -command \
+    pack [ ttk::frame .plumednc.act ] -side top -fill x
+    pack [ ttk::button .plumednc.act.preview -text "Count"  -command \
 	       { Plumed::nc_preview } ] -side left -fill x -expand 1 
-    pack [ button .plumednc.act.insert -text "Insert" -relief raised -command \
+    pack [ ttk::button .plumednc.act.insert -text "Insert"  -command \
 	       { Plumed::nc_insert } ] -side left -fill x -expand 1 
-    pack [ button .plumednc.act.close -text "Close" -relief raised \
+    pack [ ttk::button .plumednc.act.close -text "Close"  \
 	       -command {  destroy .plumednc }   ] -side left -fill x -expand 1
 }
 

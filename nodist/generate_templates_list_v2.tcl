@@ -19,8 +19,8 @@ proc ::Plumed::templates_list_v2 { } {
 	"Contact map"         "%%CONTACTMAP"
 	- -
 	"Amount of \u03b1-helical structure"          "%%ALPHARMSD"
-        "Amount of parallel \u03b2 structure"       "%%PARABETARMSD"
-	"Amount of antiparallel \u03b2 structure"   "%%ANTIBETARMSD"
+        "Amount of parallel-\u03b2 structure"       "%%PARABETARMSD"
+	"Amount of antiparallel-\u03b2 structure"   "%%ANTIBETARMSD"
 	"RMSD from structure" "%%RMSD"
 	- -
 	"Distances"           "%%DISTANCES"
