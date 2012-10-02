@@ -13,14 +13,14 @@ proc ::Plumed::templates_list_v2 { } {
 	"Distance"            "%%DISTANCE"
 	"Angle"               "%%ANGLE"
 	"Torsion"             "%%TORSION"
-        "Gyration radius"     "%%GYRATION"
+        "Radius of gyration"  "%%GYRATION"
 	"Electric dipole"     "%%DIPOLE"
 	"Coordination"        "%%COORDINATION"
 	"Contact map"         "%%CONTACTMAP"
 	- -
-	"Amount of \u03b1 helix"          "%%ALPHARMSD"
-        "Amount of parallel \u03b2 sheets"       "%%PARABETARMSD"
-	"Amount of antiparallel \u03b2 sheets"   "%%ANTIBETARMSD"
+	"Amount of \u03b1-helical structure"          "%%ALPHARMSD"
+        "Amount of parallel \u03b2 structure"       "%%PARABETARMSD"
+	"Amount of antiparallel \u03b2 structure"   "%%ANTIBETARMSD"
 	"RMSD from structure" "%%RMSD"
 	- -
 	"Distances"           "%%DISTANCES"
@@ -63,15 +63,16 @@ puts "$unsubst"
 # ----------------------------------------
 
 # Generate keyword-help hashes for ALL keywords
-puts "proc ::Plumed::templates_hash_v2 {} {"
-puts "  array set h {}"
+puts "namespace eval ::Plumed {"
+puts "  variable keyword_template_hash"
+puts "  array set keyword_template_hash {"
 foreach fkw [glob templates_temp/*] {
     set kw [file tail $fkw]
     set fc [open $fkw]
     set templ [string trim [gets $fc]]
     close $fc
-    puts "  set h($kw) {$templ}"
+    puts "  {$kw} {$templ}"
 }
-puts "  return \[array get h\]"
+puts "  }"
 puts "}"
 
