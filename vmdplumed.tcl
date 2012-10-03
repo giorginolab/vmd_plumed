@@ -69,6 +69,8 @@ proc ::Plumed::plumed {} {
     variable textfile
     variable plugin_name
     variable driver_path
+    variable driver_path_v1
+    variable driver_path_v2
     variable plumed_version
     variable pbc_type 1
     variable pbc_boxx
@@ -94,17 +96,21 @@ proc ::Plumed::plumed {} {
 #    wm resizable $w 0 0
 
     # Look for plumed (v2), then driver (v1)
-    # TODO fallback
+    set driver_path_v1 /path/to/driver
+    set driver_path_v2 /path/to/plumed
+    set can_run 0
+
+    set dr [ auto_execok driver ]
+    if {$dr != ""} {
+	set driver_path_v1 $dr 
+	set plumed_version 1
+	set can_run 1
+    }
     set dr [ auto_execok plumed ]
     if {$dr != ""} {
-	set driver_path $dr 
+	set driver_path_v2 $dr 
 	set plumed_version 2
-    } else {
-	set dr [ auto_execok driver ]
-	if {$dr != ""} {
-	    set driver_path $dr 
-	    set plumed_version 1
-	}
+	set can_run 1
     }
 
     # If PBC exist, use them
@@ -256,6 +262,13 @@ proc ::Plumed::plumed {} {
 
     ## FINALIZE ============================================================
     plumed_version_changed
+
+    if {$can_run==0} {
+	# Oddly, give time to extensions menu to close
+	after 100 { 
+	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message "Neither `plumed' (v2) nor `driver' (v1) executables were found in path.\n\nAlthough you will be able to edit analysis scripts, you will not be able to run them.\n\nPlease see help menu for installation instructions."
+	}
+    }
 
 }
 
@@ -458,7 +471,7 @@ proc ::Plumed::replace_serials { intxt }  {
 # The above script includes the following replacements, based on 
 # a structure named [molinfo top get name] with [molinfo top get numatoms] atoms.\n#\n"
     foreach orig $lorig new $lnew cnt $lcount {
-	set out "${out}# $orig -> (list of $cnt atoms)\n"
+	set out "${out}# \[$orig\] -> (list of $cnt atoms)\n"
     }
     return $out
 }
@@ -1228,6 +1241,7 @@ proc ::Plumed::plumed_version_changed {} {
     templates_populate_menu
     pbc_dcd_set_state
     setup_popup_menu
+    update_driver_path
 }
 
 proc ::Plumed::pbc_dcd_set_state {} {
@@ -1249,7 +1263,18 @@ proc ::Plumed::instructions_update {} {
 	1 { set txt "$text_instructions_header $text_instructions_example_v1" }
 	2 { set txt "$text_instructions_header $text_instructions_example_v2" }
     }
-    $w.instructions configure -text $txt
+    catch { $w.instructions configure -text $txt } err
+}
+
+proc ::Plumed::update_driver_path {} {
+    variable plumed_version
+    variable driver_path
+    variable driver_path_v1
+    variable driver_path_v2
+    switch $plumed_version {
+	1  {set driver_path $driver_path_v1}
+	2  {set driver_path $driver_path_v2}
+    } 
 }
 
 proc ::Plumed::templates_populate_menu {} {
@@ -1338,7 +1363,7 @@ proc ::Plumed::setup_popup_menu {} {
 		set word [string trim $word]
 		if {$word != ""} {
 		    set uword [string toupper $word]
-		    $w.txt.text.popup entryconfigure 0 -label "Lookup $uword in browser..."
+		    $w.txt.text.popup entryconfigure 0 -label "Lookup $uword in PLUMED documentation..."
 		    set ::Plumed::popup_word [string trim $word]
 		    tk_popup $w.txt.text.popup %X %Y
 		}
@@ -1354,7 +1379,7 @@ proc ::Plumed::popup_insert_template {} {
     if {$word == ""} {
 	return
     } elseif {![info exists keyword_template_hash($word)]} {
-	tk_messageBox -parent .plumed -message "Sorry, no template for keyword $word"
+	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
     } else {
 	$w.txt.text insert insert "$keyword_template_hash($word)\n"
     }
@@ -1388,7 +1413,7 @@ proc ::Plumed::popup_local_or_remote_help {kw} {
     if [file readable $htmlfile] {
 	vmd_open_url $htmlfile
     } else {
-	tk_messageBox -icon error -parent .plumed -message "Sorry, no help page on keyword $kw."
+	tk_messageBox -icon error -title Error -parent .plumed -message "Sorry, no help page on keyword $kw."
     }	
 }
 

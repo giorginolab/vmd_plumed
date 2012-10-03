@@ -35,9 +35,9 @@ proc ::Plumed::templates_list_v2 { } {
         "Moving restraint"    "%%MOVINGRESTRAINT"
 	"Metadynamics"        "%%METAD"
 	"External"            "%%EXTERNAL"
-	"Ratchet-pawl"        "%%ABMD"
+	"Adiabatic bias"      "%%ABMD"
 	"Lower wall (allow higher)" "%%LOWER_WALLS"
-	"Upper wall (allow lower)" "%%UPPER_WALLS"
+	"Upper wall (allow lower)"  "%%UPPER_WALLS"
     }
 }
 }
