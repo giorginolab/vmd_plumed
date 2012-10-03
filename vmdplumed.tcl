@@ -22,6 +22,7 @@ package require tile
 namespace eval ::Plumed:: {
     namespace export plumed
     variable debug 0
+    variable highlight_error_ms 15000
     variable plugin_version 2.0a
     variable plumed_version 2
     variable w                                          ;# handle to main window
@@ -254,7 +255,7 @@ proc ::Plumed::plumed {} {
     ## POPUP ============================================================
     set t $w.txt.text
     menu $t.popup -tearoff 0
-    $t.popup add command -label {Lookup manual in browser...} \
+    $t.popup add command -label {Lookup in documentation...} \
 	-command [namespace current]::popup_lookup_manual
     $t.popup add separator
     $t.popup add command -label {Insert template} \
@@ -1235,6 +1236,29 @@ proc ::Plumed::nc_insert { } {
 
 }
 
+# ERROR HANDLING ==================================================
+
+# Lookup label in v2 syntax
+proc ::Plumed::highlight_error_label {label etext} {
+    variable w
+    variable highlight_error_ms
+    set t $w.txt.text
+    set pos [$t search -regexp "(^\\s*$label:|LABEL=$label\\y)" 1.0]
+    if {$pos != ""} {
+	lassign [split $pos .] line char
+	if {$char == 0} {
+	    incr line
+	    set pos "$line.1"
+	}
+	# NOW highlight the line, show error, wait, remove hl
+	$t tag add errorTag "$pos linestart" "$pos lineend"
+	$t tag configure errorTag -background yellow -foreground red
+	setBalloonHelp $t $etext -tag errorTag
+	after $highlight_error_ms "$w.txt.text tag delete errorTag"
+    }
+}
+
+
 # TEMPLATES ==================================================
 
 proc ::Plumed::plumed_version_changed {} {
@@ -1364,7 +1388,7 @@ proc ::Plumed::setup_popup_menu {} {
 		set word [string trim $word]
 		if {$word != ""} {
 		    set uword [string toupper $word]
-		    $w.txt.text.popup entryconfigure 0 -label "Lookup $uword in PLUMED documentation..."
+		    $w.txt.text.popup entryconfigure 0 -label "Lookup $uword in documentation..."
 		    set ::Plumed::popup_word [string trim $word]
 		    tk_popup $w.txt.text.popup %X %Y
 		}
@@ -1631,6 +1655,11 @@ proc ::Plumed::do_compute_v2 {} {
 
     if { $dontplot } {
 	puts "Something went wrong. Check above messages."
+	if [regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
+		$driver_stdout junk label etext] {
+	    puts "-- $label -- $etext "
+	    highlight_error_label $label $etext
+	}
     } else {
 	Plumed::do_plot $colvar $driver_stdout
     }
