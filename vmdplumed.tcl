@@ -22,7 +22,7 @@ package require tile
 namespace eval ::Plumed:: {
     namespace export plumed
     variable debug 0
-    variable highlight_error_ms 15000
+    variable highlight_error_ms 12000
     variable plugin_version 2.0a
     variable plumed_version 2
     variable w                                          ;# handle to main window
@@ -1238,6 +1238,20 @@ proc ::Plumed::nc_insert { } {
 
 # ERROR HANDLING ==================================================
 
+
+proc ::Plumed::get_label_from_line {line} {
+    
+
+}
+
+
+proc ::Plumed::get_action_from_line {line} {
+    
+
+}
+
+
+
 # Lookup label in v2 syntax
 proc ::Plumed::highlight_error_label {label etext} {
     variable w
@@ -1266,7 +1280,7 @@ proc ::Plumed::plumed_version_changed {} {
     templates_populate_menu
     pbc_dcd_set_state
     setup_popup_menu
-    update_driver_path
+    driver_path_update
 }
 
 proc ::Plumed::pbc_dcd_set_state {} {
@@ -1291,7 +1305,7 @@ proc ::Plumed::instructions_update {} {
     catch { $w.txt.text.instructions configure -text $txt } err
 }
 
-proc ::Plumed::update_driver_path {} {
+proc ::Plumed::driver_path_update {} {
     variable plumed_version
     variable driver_path
     variable driver_path_v1

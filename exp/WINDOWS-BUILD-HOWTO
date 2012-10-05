@@ -1,0 +1,7 @@
+Unpack lapack
+
+mkdir build && cd build
+
+cmake -DCMAKE_TOOLCHAIN_FILE=/usr/share/mingw/Toolchain-mingw32.cmake ..
+
+
