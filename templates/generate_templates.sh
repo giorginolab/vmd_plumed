@@ -16,15 +16,16 @@
 
 
 # Get list of all actions
-rm xx??
-plumed manual --action NONE 2>&1 |csplit - '/DOCUMENTED ACTIONS/1'  '/LINE TOOLS/'
+plumed gentemplate --list 2> list.tmp
 
 # Create a template per action
-rm -rf templates_temp
-mkdir templates_temp
+rm -rf templates_temp templates_full
+mkdir templates_temp templates_full
 
-for action in $(cat xx01); do
+for action in $(cat list.tmp); do
+    echo "Action: $action"
     plumed gentemplate --action $action > templates_temp/$action
+    plumed gentemplate --action $action --include-optional > templates_full/$action
 done
 
 # Generate the templates

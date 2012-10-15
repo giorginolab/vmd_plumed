@@ -258,8 +258,10 @@ proc ::Plumed::plumed {} {
     $t.popup add command -label {Lookup in documentation...} \
 	-command [namespace current]::popup_lookup_manual
     $t.popup add separator
-    $t.popup add command -label {Insert template} \
+    $t.popup add command -label {Insert template near cursor} \
 	-command [namespace current]::popup_insert_template
+    $t.popup add command -label {Insert full template near cursor} \
+	-command [namespace current]::popup_insert_full_template
 
 
     ## FINALIZE ============================================================
@@ -1398,21 +1400,35 @@ proc ::Plumed::setup_popup_menu {} {
 }
 
 proc ::Plumed::popup_insert_template {} {
-    variable keyword_template_hash
+    variable template_keyword_hash
     variable w
     set word $::Plumed::popup_word
     if {$word == ""} {
 	return
-    } elseif {![info exists keyword_template_hash($word)]} {
+    } elseif {![info exists template_keyword_hash($word)]} {
 	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
     } else {
-	$w.txt.text insert insert "$keyword_template_hash($word)\n"
+	$w.txt.text edit separator
+	$w.txt.text insert {insert lineend} "\n$template_keyword_hash($word)"
+    }
+}
+
+proc ::Plumed::popup_insert_full_template {} {
+    variable template_full_hash
+    variable w
+    set word $::Plumed::popup_word
+    if {$word == ""} {
+	return
+    } elseif {![info exists template_full_hash($word)]} {
+	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
+    } else {
+	$w.txt.text edit separator
+	$w.txt.text insert {insert lineend} "\n$template_full_hash($word)"
     }
 }
 
 
 proc ::Plumed::popup_lookup_manual {} {
-    variable keyword_template_hash
     variable w
     set word $::Plumed::popup_word
     if {$word == ""} {
