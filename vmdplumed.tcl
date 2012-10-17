@@ -1393,7 +1393,6 @@ proc ::Plumed::templates_list_v1 { } {
 # Invoked upon right-click
 proc ::Plumed::popup_menu {x y X Y} {
     variable plumed_version
-    variable popup_word
     variable w
     variable template_keyword_hash
     variable template_full_hash
@@ -1410,23 +1409,22 @@ proc ::Plumed::popup_menu {x y X Y} {
     $t.popup delete 0 last
     if {$word != ""} {
 	set uword [string toupper $word]
-	set popup_word $uword
 	$t.popup add command -label "Lookup $uword in documentation..." \
 	    -command "[namespace current]::popup_local_or_remote_help $uword"
 	$t.popup add separator
 
 	# Short template
 	if { [info exists template_keyword_hash($uword)] } {
-	    $t.popup add command -label {Insert template line at cursor} \
-		-command [namespace current]::popup_insert_template
+	    $t.popup add command -label {Insert template line below cursor} \
+		-command "[namespace current]::popup_insert_template $uword"
 	} else {
 	    $t.popup add command -label "No template for keyword $uword" -state disabled
 	}
 
 	# Long template
 	if { [info exists template_full_hash($uword)] } {
-	    $t.popup add command -label {Insert full template line at cursor} \
-		-command [namespace current]::popup_insert_full_template
+	    $t.popup add command -label {Insert full template line below cursor} \
+		-command "[namespace current]::popup_insert_full_template $uword"
 
 	    # Build lists of mandatory and optional keywords
 	    set okw_l {}
@@ -1463,12 +1461,10 @@ proc ::Plumed::popup_menu {x y X Y} {
 }
 
 # Checks are unnecessary now
-proc ::Plumed::popup_insert_template {} {
+proc ::Plumed::popup_insert_template {word} {
     variable template_keyword_hash
-    variable popup_word
     variable w
     
-    set word $popup_word
     if {$word == ""} {
 	return
     } elseif {![info exists template_keyword_hash($word)]} {
@@ -1480,11 +1476,10 @@ proc ::Plumed::popup_insert_template {} {
 }
 
 # Checks are unnecessary now
-proc ::Plumed::popup_insert_full_template {} {
+proc ::Plumed::popup_insert_full_template {word} {
     variable template_full_hash
-    variable popup_word
     variable w
-    set word $popup_word
+
     if {$word == ""} {
 	return
     } elseif {![info exists template_full_hash($word)]} {
