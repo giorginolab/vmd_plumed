@@ -75,6 +75,7 @@ foreach fkw [glob templates_temp/*] {
     set fc [open $fkw]
     set templ [string trim [gets $fc]]
     close $fc
+    set templ [string map { " selection>" _selection> } $templ]
     puts "  {$kw} {$templ}"
 }
 puts "  }"
@@ -82,7 +83,7 @@ puts "}"
 
 
 # ----------------------------------------
-# Part 3: popup to insert template keywords
+# Part 3: popup to insert full template keywords
 
 puts "namespace eval ::Plumed {"
 puts "  variable template_full_hash"
@@ -92,6 +93,8 @@ foreach fkw [glob templates_full/*] {
     set fc [open $fkw]
     set templ [string trim [gets $fc]]
     close $fc
+    # kludge to only have spaces as option separators
+    set templ [string map { " selection>" _selection> } $templ]
     puts "  {$kw} {$templ}"
 }
 puts "  }"
