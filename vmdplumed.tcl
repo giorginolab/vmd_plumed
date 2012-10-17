@@ -1403,11 +1403,10 @@ proc ::Plumed::popup_menu {x y X Y} {
 	$t.popup add command -label {Insert template near cursor (full)} \
 	    -command [namespace current]::popup_insert_full_template
 	set ::Plumed::popup_word [string trim $word]
-	tk_popup $w.txt.text.popup $X $Y
     } else {
 	$t.popup add command -label "No keyword here" -state disabled
-	tk_popup $w.txt.text.popup $X $Y
     }
+    tk_popup $w.txt.text.popup $X $Y
 }
 
 
