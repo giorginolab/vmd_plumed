@@ -256,14 +256,79 @@ Padua, Italy}
 
 \section{Introduction}
 
+Molecular dynamics (MD) is computational technique which models the
+interactions between a set of atoms with realistic empirical
+potentials. The vast increases in computer power now allow to
+routinely sample biomolecular systems with all-atom resolution for
+biologically-relevant timescales, thus providing a \emph{in silico} a
+wealth of data on processes that are too fast, or too small to be
+observed \emph{in vitro}; recent examples include protein
+folding~\cite{Lindorff-Larsen_Piana_Dror_Shaw_2011}, ion permeation~\cite{Jensen_Jogini_Borhani_Leffler_Dror_Shaw_2012},
+drug binding~\cite{Shan_Kim_Eastwood_Dror_Seeliger_Shaw_2011,Buch_Giorgino_2011}, protein-protein interactions~\cite{Ahmad_Gu_Helms_2008,Giorgino_Buch_2012}, and so on.
 
- Plumed's scripting
-  language can express a variety of collective variables and
-  force-biasing protocols, which can be applied either to the analysis
-  of existing trajectories, or to bias new simulations.
+The atomistic description of events involves thousands to millions of
+degrees of freedom, which are hardly directly interpretable. To
+extract biophysically or biochemically relevant information, such
+as free energies, kinetic rates, transition probabilities, and so on,
+it is usually necessary to aggregate relevant degrees of freedom
+into reaction coordinates or collective variables (CVs), defined
+as mathematical functions of (some of) the coordinates of the system.
+CVs thus drastically simplify the description of complex systems, and
+are normally  used as independent coordinates in formalisms such as
+the potential of mean force. 
 
- PLUMED-GUI
-  streamlines the development and test of analysis scripts, 
+Choosing the set of CVs that provides a sufficient description of a
+specific system is however not trivial. In general, it is important to
+identify those reaction coordinates which change ``slowly'' in the
+timescales over which the phenomena of interest take place. CVs thus
+identified can then be monitored to detect rare events~\cite{Giorgino_Buch_2012}, be
+biased to determine free energy landscapes [...], or used to partition
+the phase space to reconstruct
+kinetics~\cite{Buch_Giorgino_2011,Biarnes_Pietrucci_Marinelli_Laio_2012}.
+Although chemical intuition is a guide in the selection of CVs, trial
+and error is generally involved in parametrizing the specific details
+of the functions.
+
+Several software packages offer the possibility to compute CVs;
+however, existing software is usually restrictive on the complexity of
+the functions that can be defined, limited to the analysis phase, or
+requires users to explicitly code the CV computations in ad-hoc
+scripts, which therefore tend to contain ``boilerplate'' code that
+obfuscates the intuitive definition of the metric. To the contrary, it
+would be desirable to have a concise definition of both the functional
+forms (say, ``distance'', ``contacts'', ``interfacial waters'', \dots)
+and the atoms involved (``protein'', ``charged residues'', ``molecules
+close to residue X'').
+
+A step forward in this direction is Plumed, a flexible CV engine
+recently upgraded to version 2.0. Plumed provides a wealth of
+pre-defined \emph{actions}, i.e. concise, self-explanatory keywords that define a CV on
+the basis of the geometry of a system. Auxiliary actions also exist to
+define reference points, such as center of masses, ghost atoms, units,
+and so on. Plumed's extensive list of CVs is documented
+elsewhere~\cite{plumed_manual,bonomi_plumed:_2009}.  Plumed's
+scripting language can express a variety of collective variables and
+force-biasing protocols, which can be applied either to the analysis
+of existing trajectories, or to bias new simulations.
+
+Plumed scripts, in general, contain actions to define several CV,
+plus, if desired, statements that express the biasing protocol to be
+employed during simulation. However, the values of CVs can also
+be monitored on existing trajectories (trajectory analysis) through
+its \emph{driver}  feature.
+
+Here, we present PLUMED-GUI, a plugin for the widely-used Visual
+Molecular Dynamics (VMD) molecular visualization
+software~\cite{Humphrey_Dalke_Schulten_1996}.  PLUMED-GUI streamlines
+the development and test of analysis scripts. Used together, Plumed
+and PLUMED-GUI can use a concise and homogeneous way to express CVs
+and evaluate them; VMD enables the intuitive loading and visualization
+of trajectories under analysis, an easy to use graphical environment, 
+and a powerful, topology-aware atom selection language for selecting
+molecular components.
+
+
+
 
 
 Developing reaction coordinates is a central task
