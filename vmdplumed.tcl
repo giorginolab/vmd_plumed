@@ -26,8 +26,8 @@ namespace eval ::Plumed:: {
     variable plugin_version 2.0a
     variable plumed_version 2
     variable w                                          ;# handle to main window
-    variable textfile "META_INP"
-    variable plugin_name "PLUMED collective variable analysis tool"
+    variable textfile unnamed.plumed
+    variable plugin_name "PLUMED-GUI collective variable analysis tool"
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
     variable text_instructions_header \
 "Enter collective variable definitions below, in PLUMED syntax.  
@@ -174,17 +174,18 @@ proc ::Plumed::plumed {} {
     ## FIXME plumed 2
      menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
-    $w.menubar.help.menu add command -label "On the $plugin_name" \
+    $w.menubar.help.menu add command -label "Getting started" \
 	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "On PLUMED (v1.3)" \
+    $w.menubar.help.menu add command -label "Help on PLUMED (v1.3)" \
         -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help.menu add command -label "How to install the 'driver' binary (v1.3)" \
-	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v1.3)" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
+    $w.menubar.help.menu add command -label "How to install the 'driver' binary (v1.3)" \
+	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "About..."  -command [namespace current]::help_about
+    $w.menubar.help.menu add command -label "About the $plugin_name" \
+	-command [namespace current]::help_about
     # XXX - set menubutton width to avoid truncation in OS X
     $w.menubar.help config -width 5
 
@@ -508,7 +509,7 @@ proc ::Plumed::index2rgb {i} {
 proc ::Plumed::dputs { text } {
     variable debug
     if {$debug} {
-	puts "DEBUG $text"
+	puts "DEBUG: $text"
     }
 }
 
@@ -1252,18 +1253,28 @@ proc ::Plumed::highlight_error_label {label etext} {
     variable w
     variable highlight_error_ms
     set t $w.txt.text
-    set pos [$t search -regexp "(^\\s*$label:|LABEL=$label\\y)" 1.0]
+
+    # match label prefixed by word boundary and followed by colon, or
+    # prefixed by LABEL= and followed by word boundary. 
+    set pos [$t search -regexp "(\\y$label:|LABEL=$label\\y)" 1.0]
+
+    # The first half of the regexp should match only at the beginning
+    # of the line, but some bug is gobbling all whitespace in
+    # preceding lines.
+    ## set pos [$t search -regexp "(^\\s*?$label:|LABEL=$label\\y)" 1.0]
+
     if {$pos != ""} {
-	lassign [split $pos .] line char
-	if {$char == 0} {
-	    incr line
-	    set pos "$line.1"
-	}
-	# NOW highlight the line, show error, wait, remove hl
+	dputs "Label found at $pos"
+	$t see $pos
+	# lassign [split $pos .] line char
+	# if {$char == 0} { incr line; set pos "$line.1" }
+	## NOW highlight the line, show error, wait, remove hl
 	$t tag add errorTag "$pos linestart" "$pos lineend"
 	$t tag configure errorTag -background yellow -foreground red
 	setBalloonHelp $t $etext -tag errorTag
 	after $highlight_error_ms "$w.txt.text tag delete errorTag"
+    } else {
+	puts "Label not found in text area"
     }
 }
 
@@ -1494,14 +1505,14 @@ proc ::Plumed::do_compute {} {
     variable driver_path
 
     if {[molinfo top]==-1 || [molinfo top get numframes] < 2} {
-	tk_messageBox -title "Error" -parent .plumed -message "A top
-	molecule and at least two frames are required to plot."
+	tk_messageBox -title "Error" -parent .plumed -message \
+	    "A top molecule and at least two frames are required to plot."
 	return 
     }
 
     if {![file executable $driver_path]} { 
-	tk_messageBox -title "Error" -parent .plumed \
-	    -message "The plumed executable is required. See manual for installation instructions."
+	tk_messageBox -title "Error" -parent .plumed -message \
+	    "The plumed executable is required. See manual for installation instructions."
 	return }
 
     # Delegate
@@ -1699,7 +1710,7 @@ proc ::Plumed::do_compute_v2 {} {
 	puts "Something went wrong. Check above messages."
 	if [regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
 		$driver_stdout junk label etext] {
-	    puts "-- $label -- $etext "
+	    dputs "Trying to highlight label $label -- $etext "
 	    highlight_error_label $label $etext
 	}
     } else {
