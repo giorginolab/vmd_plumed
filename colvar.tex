@@ -28,6 +28,7 @@
 %% \usepackage{graphics}
 %% or use the graphicx package for more complicated commands
 
+\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{subfigure}
 
@@ -86,8 +87,12 @@
 \journal{Computer Physics Communications}
 
 
-\newcommand{\mytitle}{PLUMED-GUI: a visual environment to develop
-  molecular dynamics analysis and biasing scripts}
+%\newcommand{\mytitle}{PLUMED-GUI: a visual environment to develop
+%  molecular dynamics analysis and biasing scripts}
+
+\newcommand{\mytitle}{PLUMED-GUI: an environment for the interactive development 
+  of molecular dynamics analysis and biasing scripts}
+\newcommand{\mykeywords}{Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Collective Variables \sep Metadynamics}
 
 \begin{document}
 
@@ -132,24 +137,25 @@ Padua, Italy}
 
 \begin{abstract}
   This paper presents PLUMED-GUI, an interactive environment to
-  develop complex scripts for the Plumed molecular dynamics
-  code. Plumed core provides a scripting language which can express a
-  variety of collective variables and force-biasing
-  protocols. PLUMED-GUI simplifies the development of analysis and
-  biasing scripts for Plumed providing an integrated environment
-  within the Visual Molecular Dynamics (VMD) software. In this way,
-  computational biophysicists can leverage a richer syntax and
-  interactive operations, for example leveraging VMD's
+  iteratively develop and test complex Plumed scripts within the
+  Visual Molecular Dynamics (VMD) environment. Plumed's scripting
+  language can express a variety of collective variables and
+  force-biasing protocols, which can be applied either to the analysis
+  of existing trajectories, or to bias new simulations. PLUMED-GUI
+  simplifies the development of such scripts providing an environment
+  which integrates seamlessly within one of the best-known visual
+  molecular manipulation codes. Computational biophysicists can
+  therefore take advantage of the best of both worlds, thus leveraging
+  a richer syntax and interactive operations, such as VMD's
   chemically-based atom selection language.  Support for inserting the
   definition of common reaction coordinates is provided through
   pre-defined templates and syntax mnemonics; dialogs can be used to
-  insert CV definitions which are often complex to create manually,
-  such as extracting snapshots for RMSD or native contacts-based
-  calculations.  PLUMED-GUI streamlines the development and test of
-  analysis scripts, which can be computed on loaded trajectories
-  within a VMD-based workflow, and therefore supports the rapid
-  iteration of analysis and biasing scripts through incremental
-  try-see-modify iterations.
+  build complex CV definitions, such as these involving snapshots for
+  RMSD or native contacts calculations.  PLUMED-GUI streamlines the
+  development and test of analysis scripts, which can be computed on
+  loaded trajectories within a VMD-based workflow, and therefore
+  supports the rapid iteration of analysis and biasing scripts through
+  incremental try-see-modify iterations.
 \end{abstract}
 
 % whose features include the ability to load and visualize
@@ -164,7 +170,7 @@ Padua, Italy}
 %  make it an ideal environment to visualize and select parts of   complex molecular systems;
 
 \begin{keyword}
-Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Collective Variables \sep Metadynamics 
+\mykeywords
 \end{keyword}
 
 \end{frontmatter}
@@ -197,16 +203,16 @@ Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Colle
 {\em Programming language:}                                   
  TCL/TK. \\
 {\em Computer:}                                               
- Any capable of running  PLUMED [1] and VMD [2]. \\
+ Should run  PLUMED [1] and VMD [2]. \\
 {\em Operating system:}                                       
  Linux/Unix, OSX, Windows. \\
 {\em RAM:}                                               
- As required to run  PLUMED [1] and VMD [2]. \\
+ Sufficient to run PLUMED [1] and VMD [2]. \\
 {\em Number of processors used:}                              
  1 \\
 % {\em Supplementary material:}                                 \\
   % Fill in if necessary, otherwise leave out.
-{\em Keywords:} Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Collective Variables \sep Metadynamics \\
+{\em Keywords:} \mykeywords \\
   % Please give some freely chosen keywords that we can use in a
   % cumulative keyword index.
 {\em Classification:}                                         
@@ -238,10 +244,9 @@ Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Colle
   {\em Restrictions:}
   Tested on systems up to 100,000 atoms. \\
   {\em Unusual features:} VMD-PLUMED is not a standalone program but a
-  VMD plugin that provides
-  access to PLUMED's analysis features. \\
+  plugin that provides access to PLUMED's analysis features from within VMD. \\
   {\em Additional comments:} Distributed with VMD since version 1.9.0.
-  Update manually to access   the latest features.   \\
+  Manual  update may be required  to access the latest features.   \\
   {\em Running time:} Depends on the size of the system and the length
   of the trajectory; usually negligible with respect to simulation time.  \\
 \begin{thebibliography}{0}
@@ -256,6 +261,25 @@ Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Colle
 
 
 \section{Introduction}
+
+Developing reaction coordinates is a central task
+
+Several analysis frameworks were developed
+
+Plumed is used to bias systems. Has an expressive language 
+
+As a byproduct, the same definitions can be used to evaluate
+existing, precomputed trajectories, thus making it  a good analysis
+framework
+
+
+VMD's builtins
+
+None of these is interactive
+
+
+
+
 
 
 
@@ -282,42 +306,57 @@ Graphical User Interface \sep VMD \sep PLUMED \sep Molecular Dynamics \sep Colle
 
 \section{Plugin usage}
 
-The main PLUMED-GUI interface is opened selecting the
-``Analysis/Collective variable analysis (PLUMED)'' entry found under
-VMD Main window's Extensions menu. Overall, the interface
-(Figure~\ref{fig:main}) behaves like a text editor; in fact, File and
-Edit menus provide the customary editing commands, verbatim file read
-and write functions, and undo/redo.  Upon start, the text area holds a
-short syntax reminder, which can be dismissed if desired. The Plumed
-script is edited in the main text area.  The script should follow the
+The PLUMED-GUI interface is opened selecting the
+\emph{Analysis/Collective variable analysis (PLUMED)} entry found in
+VMD's \emph{Extensions} menu.  The interface (Figure~\ref{fig:main})
+behaves basically as a text editor; \emph{File} and \emph{Edit} menus
+provide the customary editing commands, including  open and save,
+copy/paste and undo/redo operations.  The Plumed script is entered in the main
+text area.   Right upon start, the text area also displayes a
+short syntax reminder, which can be dismissed. 
+
+Pressing the \emph{Plot} button at the bottom of the window applies the displayed
+script to the currently-selected trajectory (known within VMD as the
+all-important \emph{top} molecule). Assuming that Plumed executable is
+properly installed, the GUI will invoke Plumed's \emph{driver} function,
+which will evaluate the values of the CVs defined in the script at each
+of the top trajectory frames.
+
+It is worthwhile noting that the GUI does not restrict the syntax of
+the input; the script is passed as-is to the underlying driver, with
+the sole exception of expanding symbolic atom selections in square
+brackets, as will be discussed in  Section~\ref{sec:symb-atom-select}.
+%It is worth noting that the editor does not enforce syntax checks, and
+%any valid or invalid expression can be entered. 
+Script coding and
+debug is entirely under the control of the user.  Consequently, the
+GUI does not need updates to work with user-customized Plumed versions
+and forthcoming syntax. In general, the script should follow the
 syntax of the Plumed version currently in use.
 
-The analysis is started by pressing the ``Plot'' button at the bottom
-of the window. Assuming that Plumed executable is properly installed,
-the GUI will invoke Plumed's ``driver'' function, which will evaluate
-the collective variables defined in script on each of the trajectory
-frames of the currently selected system (known in VMD as the
-\emph{top} molecule).
+If the evaluation of the script generates an error, it will be
+displayed in the VMD textual console.  In most instances, Plumed
+identifies the specific error and corresponding script line; when this
+information is available, the problematic line will be marked as such
+in the text area.
 
-Once the evaluation is complete, a plot is displayed with the time
-series of the collective variables, each shown with a different color.
-The purpose of the plot is to quickly inspect the values yielded by
-the current CV definition, and provide a quick way to iterate and
-refine them.  If a more advanced layout is desired, the numeric data
-can be exported from the plot window either as a matrix (with rows
-being time, and columns as CVs), or as 1-D timeseries separated by
-empty lines.
-
-It is important to note that the GUI does not restrict the syntax
-available to the user; the script is passed as-is to the underlying
-driver, with the sole exception of expanding symbolic expressions in
-square brackets, which will be discussed in the next section.
-
-Should the script generate errors, these displayed in VMD console.  If
-driver identifies the line containing the error, the error is
-highlighted with a red background in the text input area.
+% Once the evaluation is complete, a plot is displayed with the time
+% series of the collective variables, each shown with a different color.
 
 
+\subsection{Analysis and visualization}
+
+Once the evaluation is successful, the time series of the collective
+variables are displayed graphically in a plot.  The purpose of the
+plot is to quickly inspect the values yielded by the current CV
+definitions, and provide a way to iteratively refine them. The plot
+layout is basic, showing time on the abscissa, and the CV values in
+different line colors; data points can be optionally read out hovering the
+mouse pointer.  More complex visualizations can be obtained exporting
+data to external plotting programs; data can be exported 
+either as a matrix (time running as rows, and CVs as
+columns), or as consecutive time-value vectors separated by empty
+lines.
 
 
 
@@ -325,235 +364,426 @@ highlighted with a red background in the text input area.
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{images/main}
-  \caption{PLUMED-GUI's main window. 
-    The analysis script is entered in the text area, which behaves as
-    a text editor; shortcuts accessible from the ``Templates'' menu
-    insert frequently-used definitions. The ``Plot'' button evaluates
-    the script on the currently-selected (``top'') trajectory, and, if
-    successful, displays a graph showing the values of the chosen
-    collective variables at each frame. The gray box, only shown at
-    startup, contains a brief reminder on the use of the interface.  }
+  \caption{PLUMED-GUI's main window.  The analysis script is entered
+    in the text area, like a text editor; shortcuts accessible from
+    the \emph{Templates} menu insert frequently-used definitions. The
+    \emph{Plot} button evaluates the collective variables defined in
+    the script on the molecular trajectory currently selected in VMD
+    (``top molecule''); if successful, a graph of the values of the
+    CVs at each frame is shown. The gray box, only shown at startup,
+    is a brief reminder about the use of the interface.  }
   \label{fig:main}
 \end{figure}
 
 
-\subsection{Using symbolic atom selections}
+
+
+
+\section{Assistance to Editing}
+
+
+\subsection{Symbolic atom selections}\label{sec:symb-atom-select}
+
+VMD contains a syntax for expressing atom selections; strings such as
+\texttt{same residue as (protein or water within 4 of name CA)} are valid
+expressions that are interpreted at run time, and return a list of
+atoms.  An extensive set of keywords exists to query numerical
+(coordinates, beta values, residue IDs), as well as chemical
+(e.g. polar, atom names) and many other properties, as documented
+elsewhere~\cite{Humphrey_Dalke_Schulten_1996}.
+
+PLUMED-GUI allows  embedding of VMD's atom selections in analysis scripts
+through  square brackets. As shown in Figure~\ref{fig:main},
+textual expressions in square brackets are evaluated with respect to
+the top molecule and frame, and transparently replaced with the
+resulting list of atoms. In this way, Plumed users can 
+avoid the use of numeric atom IDs altogether in favor of human-readable
+alternatives such as \texttt{[protein and name CA]}.
+
+This is especially advantageous when switching between multiple
+systems, with similar, not exactly equal topologies; this is the case,
+for example, when several all-atom systems are solvated and
+parametrized with the same protein but a series of inhibitors.  Serial
+numbers  depend on the specific system and the details of how it was prepared, but
+symbolic selections such as \texttt{[not protein and not water]}
+(matching non-peptide ligands) will be valid
+regardless of the specific ligand being analyzed.
+
+Symbolic atom expressions are interpreted  the moment the
+analysis is requested by pressing the \emph{Plot} button. They can also
+be permanently expanded for use outside of PLUMED-GUI, as shown in
+section~\ref{sec:export-use-simul}.
+
 
 
 \subsection{Templates}
 
+The \emph{Templates} menu provides access to a number of frequently-used
+definitions; selecting one of the menu entries inserts the
+corresponding keyword (Figure~\ref{fig:templates}). Templates, in
+other words, offer human-readable shortcuts to enter the frequently used
+strings that define atom groups and CVs.
+
+After selection, inserted templates can be edited freely in the text
+area.  Some portions to be manually filled in; for example, in the
+case of the ``Distance'' template, one has to specify the two points
+between which the distance is to be computed.
+
+The list of templates provided in the menu is not meant to be
+exhaustive, but to provide access to the most frequently-used CVs;
+only the default options are usually inserted. Generic actions and
+modifiers can be typed manually, while optional keywords can be looked
+up through an on-line contextual help.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=.5]{images/templates}
+  \caption{The \emph{Templates} menu provides shortcuts to
+    insert frequently-used definitions and collective variables.}
+  \label{fig:templates}
+\end{figure}
 
 \subsection{On-line help}
 
-Plumed's action syntax provides a wealth of options for specifying the
-behavior of CVs. For example, the simple \texttt{DISTANCE} action
-foresees modifiers to compute derivatives numerically, to ignore
-periodic boundary conditions, and/or to return the components of the
-distance vector rather than its modulus. The richness of the syntax
-may make it difficult to remember all of the supported keywords and
-default values.  Although templates include placeholders for most
-common options, it would be impractical to include all of the optional
-parameters in each template line.
+Plumed's actions have a wealth of options to further specify the
+behavior of CVs. For instance, the relatively simple \texttt{DISTANCE}
+action foresees modifiers to obtain separate components of the
+distance vector rather than its modulus; to ignore periodic boundary
+conditions; and/or to compute derivatives numerically. The richness of
+the syntax may make it unwieldy to recall the syntax of lesser-used
+keywords.
 
-PLUMED-GUI provides context-sensitive syntax reminders through a
-pop-up menu, invoked pressing the right mouse button on an action
-keyword (Figure~\ref{fig:help}).
+% Although templates include placeholders for most
+% common options, it would be impractical to include all of the optional
+% parameters in each template line.
+
+PLUMED-GUI provides a comprehensive context-dependent help facility
+through a pop-up menu, which is be invoked pressing the right mouse
+button on any action keyword (Figure~\ref{fig:help_popup}). The pop-up
+menu shows the list of optional and mandatory modifiers accepted
+by that action.  The topmost menu item, \emph{Lookup}, opens up a web
+browser to show the full manual of that action
+(Figure~\ref{fig:help_page}).
+
+As for the rest of Plumed 2.0 documentation, PLUMED-GUI's contextual
+help facilities are generated automatically from the source code. This
+implies that, as long as new features are implemented and documented
+following the coding conventions, they become properly integrated in
+the GUI.
+
 
 
 \begin{figure}
   \centering
-  \subfigure{
-    \includegraphics[width=0.5\textwidth]{images/help_popup}
+  \subfigure[Contextual help]{
+    \includegraphics[width=0.45\textwidth]{images/help_popup}
+    \label{fig:help_popup}
   }
-  \subfigure{
-    \includegraphics[width=0.4\textwidth]{images/help_page}
+  \subfigure[Sample manual page]{
+    \includegraphics[width=0.40\textwidth]{images/help_page}
+    \label{fig:help_page}
   }    
   \caption{(a) A contextual popup menu lists the mandatory and
     optional keywords supported by the action under the pointer (in
     this case, \texttt{COORDINATION}, which computes the coordination
-    number of one or two groups of atoms). (b) The ``Lookup'' function
+    number of one or two groups of atoms). (b) The \emph{Lookup} function
     displays the action's manual in a web browser. }
   \label{fig:help}
 \end{figure}
 
-\subsection{Analysis and visualization}
-
-Export data as matrix and ...
-
-Point readout
 
 
 
 
-\section{Structure-based commands}
+\section{Structure-based functions}
 
 %The \textit{Structure} menu supports the construction of complex CVs.
+%Some CVs require too much information to be defined by one script command.
 
-Some CVs require too much information to be defined by one script command.
-The objective of the \emph{Structure} menu is to provide assistance in the declaration of CVs
-that depend upon the topology and coordinates of the currently loaded
-system. Such CVs generally involve long lists of statements and/or
-auxiliary files; automated procedures therefore relieve users
-from the cumbersome and error-prone process of building these lists by
-hand. Each of the functions provided in the menu opens a dialog where
-it is possible to tune the options for the CV being defined.
+Functions in the \emph{Structure} menu provide assistance in the
+declaration of CVs that depend upon the topology and coordinates of
+the currently loaded system.  Each of the menu entries opens up a
+dialog with the tunable options for the CV being defined. Structure-based CVs
+generally involve long lists of statements and/or auxiliary files;
+automated procedures therefore relieve users from the error-prone
+process of building these lists by hand.
+
+
 
 \begin{figure}\label{fig:structure}
   \centering
   \subfigure[Build reference structure]{
-    \includegraphics[scale=.4]{images/reference} \label{fig:reference}}
+    \includegraphics[scale=.45]{images/reference} \label{fig:reference}}
   \subfigure[Native contacts]{
-    \includegraphics[scale=.4]{images/native} \label{fig:native}}
+    \includegraphics[scale=.45]{images/native} \label{fig:native}}
   \subfigure[Ramachandran angles]{
-    \includegraphics[scale=.4]{images/rama} \label{fig:rama}}
-  \caption{Entries in the ``Structure'' menu support the creation of
-    CVs based on the active topology; each opens up a dialog, as shown
-    above. (a) ``Build reference structure'' creates a reference file
-    for RMSD-based calculations on the basis of the currently
-    displayed frame. Displacement and alignment sets can be specified
-    as VMD atom selections; numbering can be mapped between molecules
-    if the reference frame and the trajectory on which to compute the
-    CV have different topologies. (b) ``Native contacts'' computes the
-    list of atom pairs (which are within the chosen distance) in the
-    currently-displayed (``native'') frame. The CV will consist in
-    counting how many of these contacts are present at each time
-    instant.  Contacts between neighboring residues can be filtered
-    out providing a lower bound to the $| \Delta \mbox{resid} |$
-    parameter. (c) The ``Ramachandran angles'' dialog inserts CVs that
-    compute $\phi, \psi$ and/or $\omega$ dihedral angles contained in
-    the selection.}
+    \includegraphics[scale=.45]{images/rama} \label{fig:rama}}
+  \caption{Dialogs accessible from the \emph{Structure} menu support
+    the creation of CVs based on the active topology. (a) \emph{Build
+      reference structure} converts the currently displayed frame into
+    a reference file for RMSD calculations.  Atom sets to be used for
+    alignment and displacement are specified as VMD atom selections;
+    numbering can also be mapped between molecules if the reference
+    frame and the trajectory on which the CV will be computed belong
+    to systems with different topologies. (b) Analogously,
+    \emph{Native contacts} enumerates  the atom pairs (closer
+    than the chosen threshold distance) in the currently-displayed
+    (``native'') frame. The CV will measure how many of
+    those atom pairs will present in each trajectory frame. 
+    Non-informative contacts between neighboring residues can be
+    filtered out putting a lower bound to the $| \Delta \mbox{resid}
+    |$ parameter. (c) The \emph{Ramachandran angles} dialog inserts
+    CVs corresponding to $\phi, \psi$ and/or $\omega$ backbone
+    dihedrals contained in the selection.}
 \end{figure}
 
-\subsection{Reference structures for alignments}
+\subsection{Generating reference structures for alignments}
 
-A typical example of a CV which requires structural data for its
-definition, and thus more information than contained in the script, is
-the root mean square deviation (RMSD) of a set of atoms with respect
-to a reference frame. RMSD are computed averaging the squared
-displacement of a chosen set of atoms (displacement set) after finding
-the roto-translation that optimally aligns another, possibly
-coincident, set of atoms (alignment set). 
+% A typical example of a CV which requires structural data for its
+% definition, and thus more information than contained in the script, is
+% the root mean square deviation (RMSD) of a set of atoms with respect
+% to a reference frame. 
 
-Plumed allows the selection of the two sets and the reference
-coordinates through ``reference files'', which encode - in PDB-like
-syntax - the subset of atoms to be considered, and whether each
-belongs to the displacement and/or alignment set. 
-
-The ability to readily generate reference files is especially
-important because they are employed in a useful generalization of the
-RMSD metric, namely the $S$ and $Z$ path
-variables~\cite{Branduardi_Gervasio_Parrinello_2007}.  Path variables
-which express the ``progression'' and ``distance'' of the current
-state of the system along a path defined by a number of exemplary
+The root mean square deviation (RMSD) metric is frequently used to
+detect structural similarities and conformational transitions.  RMSD
+values are computed averaging the squared displacement of a chosen set
+of atoms (displacement set) with respect to a \emph{reference}
+structure, computed after applying the roto-translation that optimally
+aligns another, possibly coincident, set of atoms (alignment set).  In
+addition to the usual definition, Plumed implements a generalization
+of the metric, namely the $S$ and $Z$ path
+variables~\cite{Branduardi_Gervasio_Parrinello_2007}, which express
+the ``progression'' and ``distance'' of the current state of the
+system along a path defined by an arbitrary number of exemplary
 structures used as landmarks.
 
+In Plumed, the displacement and alignment sets and the reference
+coordinates are defined through ``reference files''; these are text
+files, formatted in a PDB-like fashion, wherein each line represents one
+atom involved in the calculation, and columns indicate serial numbers,
+coordinates, and inclusion in one or the other set.
+
+% A simplified procedure to generate reference frames from loaded
+% structures is therefore especially useful.
+
+The \emph{Build reference structure} dialog (Figure~\ref{fig:structure})
+serves to quickly generate a reference file.  This function freezes
+the coordinates of the \emph{currently selected} frame into a
+reference frame. The subset of the atoms that will be involved,
+respectively, in the computation of the optimal alignment, and the
+measure of the RMSD, are specified as textual atom selections.
+
+The reference structure is the taken as the current frame of the top
+molecule. By default, the reference file generated can be used on a
+trajectory with the same topology from which it was extracted.
+However, it is often necessary to perform alignments between different
+topologies (e.g. the native structure is a PDB file, while the target
+system under analysis is the all-atom structure used in
+simulation). Alignment between molecules with different topologies can
+be arranged by setting the \emph{target molecule ID}. This causes the
+atom numbering to be adjusted to be compatible with the specified
+\emph{target} molecule; in other words, trajectory frames of the
+target molecule will be aligned with the structure of the top
+molecule, even though the two have different topologies. The
+renumbering feature requires that the atom selections match the same
+number of atoms in the two topologies.
 
 
-\subsection{Native contacts}
+
+
+
+\subsection{Number of native contacts}
+
+The number of native contacts is a metric  frequently used to
+determine structural similarity, especially as an indicator of folding
+or binding.  The metric puts the accent on the presence of those
+contacts that characterize the desired (native) structures. First, the
+pairs of atoms in contact in a native structure are
+enumerated, and a list of such pairs is built. Then, this list is evaluated
+for each of the trajectory frames under analysis: the 
+CV counts how many of the contact pairs that were present in the
+reference frame are also present in the frame being analyzed.  
+
+The \emph{native contacts} dialog (Figure~\ref{fig:native}) can be
+used to generate such lists flexibly and with ease. Like when building
+reference structures, the current frame of the top molecule is used as
+the native state.  It is possible to specify either one or two atom
+selections; in the first case, the contacting pairs involving atoms in
+the selection are enumerated; otherwise, if two selections are given,
+intermolecular contacts -- bridging the two selections -- will be
+counted.  The ``distance cutoff'' box adjusts the distance (in \AA) at
+which an atom pair is assumed to be in contact.
+
+A marked rise in the number of native contacts is often used as a
+proxy for the detection of folding events. However, residues adjacent
+in the primary sequence will almost always be in contact, thus
+contributing little or no information to the folding signal. These
+``spurious'' contacts can be filtered out setting a minimum bound to
+the $| \Delta \mbox{resid} |$ to a positive integer $\delta$. If set,
+contacts between atoms closer than $\delta$ residues apart in the
+primary sequence will be disregarded.
+
+Analogously to the \emph{Build reference structure} function, the user
+can match a trajectory with a native frame with a different topology
+specifying the appropriate target molecule ID.
+
+The number of native contacts is implemented in Plumed through the
+\texttt{COORDINATION PAIRS} action and the enumeration of the  
+the contacting pairs in the native frame. 
+It is worthwhile noting that, like all other CVs provided by Plumed,
+this metric is a continuous approximation of the original
+definition. In particular, the number of contacts is made smooth in
+all the system's coordinates through exponential averaging.
 
 
 
 
 \subsection{Ramachandran angles}
 
+The \emph{Ramachandran angles} dialog allows the insertion of the
+standard backbone torsion angles defined between neighboring residues.
+The user is asked to specify an atom selection. When the \emph{Insert}
+button is pressed, CVs will be inserted to compute those $\phi$,
+$\psi$ and/or $\omega$ angles that are contained in the
+selection. Each angle will be a separate CV computed through the
+appropriate \texttt{TORSION} keyword, defined according to the IUPAC
+rules for biochemical nomenclature~\cite{IUPAC}. The generated CVs
+include comments identifying the involved residues in a human-readable
+way.
 
 
 
-\subsection{Export for use in simulation}
 
-In addition to computing CVs on pre-computed trajectories, Plumed is
-often used to bias simulations through forces that enhance the
-sampling of the phase-space in a way that allows the reconstruction of
-free-energy surfaces. 
 
-Simulations are executed in MD codes, patched in order to take into
-account the force biases specified by the user in the plumed script;
-such scripts include the CVs to be biased, and the biasing protocol
-(e.g. constraining elastically CVs to a given value, steering them to
-increasing or decreasing values, metadynamics, and so on).  Plumed
-core only allows the atoms to be specified through their serial
-number; therefore, developing biasing scripts can become an
-error-prone exercise in presence of numerous CVs and complex atom
-specifications.  
 
-The ``export'' function, found in the File menu,  substitutes all the
-symbolic atom selections in the current script with the corresponding
-numerical lists; the script thus exported can be then used in
-simulation.  For the sake of reproducibility and reference, it is
-generally useful to preserve both the exported file and the original
-script (with unsubstituted, symbolic atom selections). However, if the
-latter is lost, the exported file still contains comments which remind
-how the atom lists were computed.
 
+
+\section{Export for use in simulation}\label{sec:export-use-simul}
+
+Plumed has extensive facilities to apply force biases to simulations
+with the objective to enhance the sampling of the phase-space in a way
+that allows the reconstruction of free-energy surfaces. Example of
+biasing protocols include harmonically constraining a CV at a given
+value (used e.g. in the umbrella sampling protocol,
+\cite{Torrie_Valleau_1977}), pulling them towards increasing or
+decreasing values (steered MD,
+\cite{Isralewitz_Gao_Schulten_2001,Giorgino_2011}), metadynamics
+\cite{Laio_Parrinello_2002}, and so on. Biased simulations are carried
+out in MD codes patched to embed the Plumed engine. Force biases are
+specified in the plumed script; such scripts include the definition of
+the CVs to be biased, and the biasing protocol.  Plumed engine
+requires atoms to be specified through their serial numbers;
+therefore, iterating with complex biasing scripts through different
+systems can be an error-prone exercise.
+
+The \emph{Export} function, accessible from the File menu, removes all
+the symbolic atom selections in the current script, replacing them
+with the corresponding numerical lists. The exported script is thus
+independent of VMD-specific constructs, and can then be employed for
+simulations.  The exported file contains comments to remind how the
+numeric atom lists were computed. However, for the sake of
+reproducibility, it is generally advisable to keep the original
+script with unsubstituted, symbolic atom selections.
 
 
 
 \section{Installation}
 
-Recent VMD distributions contain a preinstalled version of PLUMED-GUI.
-This paper describes version 2.0 of the GUI, which supports Plumed 2.0
-and earlier.  Users may manually update their GUI to the latest
-version.
-
-
-
-\subsection{Compatibility} 
-
-The GUI supports the same wide range of platforms as VMD, encompassing
-all major variants of Linux/Unix, OSX, and Windows. To analyze
-trajectories, the plugin executes Plumed's ``driver'' binary for the
-platform; on Unix-like systems, such binary is obtained following the
-instructions included in Plumed's distribution; a precompiled version
-for Windows is provided for convenience.
-
-The language syntax and invocation method differ between Plumed
-versions 2.0 and 1.3.  The GUI detects which version is installed upon
-start, and adapts templates and syntax accordingly.  If both plumed
-versions are available, the user can switch manually between the two.
-
-
-\subsection{Consistency of units}
-
-It may be worth noting that the units of computed CVs only depends on
-Plumed's conventions.  Since version 2.0, Plumed defaults to the
-nanometer, kJ/mol, picosecond combination. Given that VMD users
-may be accustomed to the \AA ngstrom, kcal/mol, femtosecond unit
-set, a reminder is shown about the fact that they can use Plumed's
-\texttt{UNITS} keyword to switch to customary units.
-
-
-\subsection{Version and updates}
 
 The current version of the plugin, PLUMED-GUI 2.0, supports both
 Plumed 1.3 and Plumed 2.0, with minor functional differences. For
 clarity, this paper only discusses the features available when the GUI
 is used along with Plumed 2.0.
 
+Recent VMD distributions contain a preinstalled version of PLUMED-GUI.
+This paper describes version 2.0 of the GUI, which supports Plumed 2.0
+and earlier~\cite{bonomi_plumed:_2009}.  Users may manually update
+their GUI to the latest version.
+
 To update the GUI, it is sufficient to identify VMD's installation
-path, and replace the files contained in the subdirectory named
-\verb+plugins/noarch/tcl/plumed+ with those in the latest
-distribution.  As customary, the ``About'' menu item displays the
-currently installed version of the GUI.
+path, and replace the files contained in the subdirectory
+\texttt{plugins/noarch/tcl/plumed} with those contained in the latest
+distribution of PLUMED-GUI.  As customary, the \emph{About} menu item
+displays the currently installed version of the GUI.
+
+
+
+
+
+% \subsection{Compatibility} 
+
+% \subsection{Version and updates}
+
+The GUI supports the same wide range of platforms as VMD, encompassing
+all major variants of Linux/Unix, OSX, and Windows.  Trajectory
+analysis is performed invoking the platform-specific \emph{driver}
+executable. Plumed distributions provide instructions on how to build
+the executable on Unix-like systems; a precompiled version for Windows
+is provided for convenience.
+
+
+% To analyze
+% trajectories, the plugin executes Plumed's ``driver'' binary for the
+% platform; on Unix-like systems, such binary is obtained following the
+% instructions included in Plumed's distribution; 
+
+
+The language syntax and invocation method differ between Plumed
+versions 2.0 and 1.3~\cite{bonomi_plumed:_2009}.  The GUI detects
+which version is installed upon start, and adapts templates and syntax
+accordingly.  If both plumed versions are available, the user can
+switch manually between the two.
+
+
+\subsection{Consistency of units}
+
+It may be worth noting that the units of computed CVs only depends on
+Plumed's conventions.  Since version 2.0, Plumed defaults to the nm,
+kJ/mol, ps combination. Given that VMD users may be accustomed to the
+\AA, kcal/mol, fs unit set, a reminder is shown about the fact that
+they can use Plumed's \texttt{UNITS} keyword to switch to customary
+units.
+
 
 
 
 
 \section{Conclusions}
 
-This paper described the functions of a graphical interface to develop
-scripts for the Plumed molecular dynamics software. The interface
-integrates into a well-known ``host'' molecular visualization program,
-VMD\cite{Humphrey_Dalke_Schulten_1996}, leveraging its facilities in terms of ease of loading multiple
-systems and long trajectories at the same time, plotting, and a
-powerful chemically-aware atom selection language. At the same time,
-the underlying Plumed code provides both the mathematical facilities
-and a uniform, straightforward syntax to express a wide range of
-collective variables used in the practice of molecular simulations.
-In this sense, PLUMED-GUI merges the best of both worlds -- the
-usability of a graphical interface and the expressiveness of Plumed's
-powerful CV description language.
+Searching for an appropriate combination of reaction coordinates is a
+central task for the analysis of biomolecular systems.  This paper
+described a graphical user interface developed to simplify the
+iterative development and test of collective variables to be used with
+the Plumed engine. The interface is hosted in a state-of-the-art
+molecular visualization program,
+VMD~\cite{Humphrey_Dalke_Schulten_1996}, leveraging its ability to
+load and manipulate multiple systems long trajectories
+concurrently, its extensive visualization options, and a powerful
+chemically-aware atom selection language. The mathematical computation
+of the CVs is demanded to the Plumed engine, which
+provides a uniform, straightforward syntax to express a wide range of
+collective variables used in the practice of biased molecular simulations.
 
-Limitations?
+PLUMED-GUI bridges the usability of a graphical
+interface and the richness of Plumed's CV description language.
+The integration of the two environments has a few
+limitations; right now, only orthorhombic simulation boxes with
+constant edges are supported, thus ruling out the analysis of
+constant-pressure simulations (this limitation may be removed as
+Plumed's support to trajectory formats is expanded). Another drawback
+concerns the use of atom selections: these are evaluated only once in
+the GUI, and thus it is not possible to have time-varying atom sets,
+nor they are supported by the Plumed engine.  If analysis protocols
+involving time-varying atom sets are desired, it will be necessary to
+resort to conventional VMD-TCL scripting. It is worthwhile noting,
+however, that Plumed's continuous approximations often provide
+sensible workarounds to tasks such as counting the number of atoms
+satisfying a given property.
+
+
+METAGUI \cite{Biarnes_Pietrucci_Marinelli_Laio_2012}.
+
+
 
 
 
@@ -561,7 +791,7 @@ Limitations?
 
 Part of the work described in this paper was conducted while at the
 Computational Biophysics Laboratory at the Universitat Pompeu Fabra
-(Barcelona). Support from the ''Beatriu de Pinos'' scheme of the
+(Barcelona). Support from the ``Beatriu de Pin\'os'' scheme of the
 Generalitat de Catalunya is gratefully acknowledged.
 
 
