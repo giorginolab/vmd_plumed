@@ -146,7 +146,7 @@ Padua, Italy}
   language, coding within a natural point-and-click interface.
   Pre-defined templates and syntax mnemonics provide support for
   inserting well-known reaction coordinates. Complex CVs,
-  e.g. involving reference snapshots used for RMSD or native contacts
+  e.g.\ involving reference snapshots used for RMSD or native contacts
   calculations, can be built through dialogs that provide a synoptic
   view of the available options.  Scripts can be either exported for
   use in simulation programs, or evaluated on the currently-displayed
@@ -326,7 +326,7 @@ employed during simulation. The values of CVs can also
 be computed on existing trajectories (trajectory analysis) through
 its \emph{driver}  feature.
 
-This paper introduces Plumed-GUI, a plugin integrated within the
+This paper introduces Plumed-GUI, a plugin integrated with the
 widely-used Visual Molecular Dynamics (VMD) molecular analysis and
 visualization software~\cite{Humphrey_Dalke_Schulten_1996} to
 streamline the development and test of analysis scripts.  Together,
@@ -431,7 +431,7 @@ this happens, the error line will be marked as such in the text area.
     button evaluates the collective variables defined in the script on
     the molecular trajectory currently selected in VMD (``top
     molecule''); if successful, a graph appears, showing the values of
-    the CVs at each frame is shown. The gray box, only shown at
+    the CVs at each frame is shown. The inner gray box, only shown at
     startup, is a brief reminder about the use of the interface. (b)
     The \emph{Templates} menu contains shortcuts that insert
     frequently-used definitions and collective variables. }
@@ -468,7 +468,7 @@ for atom selections; strings such as \texttt{same residue as (protein
   or water within 4 of name CA)} are useful expressions that are
 interpreted at run time, and are equivalent to a list of atoms.  The
 sophisticated syntax can query atoms on the basis of numerical
-(coordinates, beta values, residue IDs), chemical (e.g. polar, atom
+(coordinates, beta values, residue IDs), chemical (e.g.\ polar, atom
 names) and/or other properties, as documented
 elsewhere~\cite{Humphrey_Dalke_Schulten_1996}.
 
@@ -631,30 +631,37 @@ detect structural similarities and conformational transitions.  RMSD
 values are computed averaging the squared displacement of a chosen set
 of atoms (displacement set) with respect to a \emph{reference}
 structure,  after applying the roto-translation that optimally
-aligns another, possibly coincident, set of atoms (alignment set).  In
-addition to the usual definition, Plumed implements a generalization
-of the metric, namely the $S$ and $Z$ path variables, which express
+aligns another, possibly coincident, set of atoms (alignment set).   
+Plumed also implements a generalization
+of the metric, namely the $S$ and $Z$ path variables, to express
 the ``progression'' and ``distance'' of the current state of the
 system along a path defined by an arbitrary number of exemplary
 reference structures used as
 landmarks~\cite{Branduardi_Gervasio_Parrinello_2007}.
 
 
+
+
 % A simplified procedure to generate reference frames from loaded
 % structures is therefore especially useful.
 
-The set of atoms to be used for alignment and computing the
-displacement, and the reference coordinates are defined through
-``reference files''; these are PDB-like text files, wherein each line
-represents one atom involved in the calculation, and columns indicate
-serial numbers, coordinates, and inclusion in one or the other set.
-The \emph{Build reference structure} dialog
- provides a convenient way to generate
-such reference files.  This function ``freezes'' the coordinates of the
-\emph{currently selected} frame into a reference file. The subset of
-the atoms that will be involved, respectively, in the computation of
-the optimal alignment, and the measure of the RMSD, are specified as
-atom selections (Figure~\ref{fig:reference}).
+The \emph{Build reference structure} dialog provides a convenient way
+to generate such reference structures (Figure~\ref{fig:reference}).
+Pressing the \emph{Write} button ``freezes'' the coordinates of the
+\emph{currently selected} frame into a ``reference file''.  Reference
+files are PDB-like tables used by Plumed to define the set of atoms to be used for
+alignment, for computing the displacement, and the reference
+coordinates; each line represents one of the atoms involved in the
+calculation, with columns recording serial numbers, coordinates, and
+inclusion in one or the other set~\cite{plumed_manual}.  The dialog
+allow the use of   atom selections to indicate the  subset of the atoms 
+to be involved,
+respectively, in the computation of the optimal alignment, and the
+measure of the RMSD.
+
+
+
+
 
 % The reference structure is the taken as the current frame of the top molecule. 
 
@@ -747,7 +754,7 @@ Plumed has extensive facilities to biases molecular dynamics
 simulations with forces that enhance the sampling of the phase-space
 in a way that allows the reconstruction of free-energy
 surfaces. Example of biasing protocols include harmonically
-constraining CVs at a given combination of values (used e.g. for the
+constraining CVs at a given combination of values (used e.g.\ for the
 umbrella sampling protocol \cite{Torrie_Valleau_1977}), pulling them
 towards increasing or decreasing values (steered MD,
 \cite{Isralewitz_Gao_Schulten_2001,Giorgino_2011}), metadynamics

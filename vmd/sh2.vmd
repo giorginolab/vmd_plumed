@@ -292,22 +292,22 @@ display cueend     10.000000
 display cuedensity 0.320000
 display cuemode    Exp2
 if [catch {
-                                mol new nc.t/mol0000.pdb;
+                                mol new sh2.vmd.t/mol0001.pdb;
                                 animate delete all;
-                                mol addfile nc.t/mol0000.psf;
-                                mol addfile nc.t/mol0000.dcd waitfor all
+                                mol addfile sh2.vmd.t/mol0001.psf;
+                                mol addfile sh2.vmd.t/mol0001.dcd waitfor all
                     } e ] {
-                                puts "Couldn't open original pathnames; trying /home/toni/work/papers/collective_variable_analysis_plugin/vmd/nc.t";
-                                mol new /home/toni/work/papers/collective_variable_analysis_plugin/vmd/nc.t/mol0000.pdb;
+                                puts "Couldn't open original pathnames; trying /home/toni/work/papers/collective_variable_analysis_plugin/vmd/sh2.vmd.t";
+                                mol new /home/toni/work/papers/collective_variable_analysis_plugin/vmd/sh2.vmd.t/mol0001.pdb;
                                 animate delete all;
-                                mol addfile /home/toni/work/papers/collective_variable_analysis_plugin/vmd/nc.t/mol0000.psf;
-                                mol addfile /home/toni/work/papers/collective_variable_analysis_plugin/vmd/nc.t/mol0000.dcd waitfor all
+                                mol addfile /home/toni/work/papers/collective_variable_analysis_plugin/vmd/sh2.vmd.t/mol0001.psf;
+                                mol addfile /home/toni/work/papers/collective_variable_analysis_plugin/vmd/sh2.vmd.t/mol0001.dcd waitfor all
                            } 
 mol delrep 0 top
-mol representation Tube 0.300000 10.000000
-mol color Name
-mol selection {resid > 644 or chain B}
-mol material Opaque
+mol representation QuickSurf 1.000000 0.500000 1.000000 1.000000
+mol color ColorID 0
+mol selection {chain A and noh}
+mol material Ghost
 mol addrep top
 mol selupdate 0 top 0
 mol colupdate 0 top 0
@@ -338,9 +338,9 @@ mol clipplane center 5 0 top {0.0 0.0 0.0}
 mol clipplane color  5 0 top {0.5 0.5 0.5 }
 mol clipplane normal 5 0 top {0.0 0.0 1.0}
 mol clipplane status 5 0 top {0}
-mol representation VDW 0.400000 12.000000
-mol color ColorID 2
-mol selection {(resid > 644 or chain B) and name CA}
+mol representation Licorice 0.300000 10.000000 10.000000
+mol color Name
+mol selection {chain B and noh}
 mol material Opaque
 mol addrep top
 mol selupdate 1 top 0
@@ -372,11 +372,45 @@ mol clipplane center 5 1 top {0.0 0.0 0.0}
 mol clipplane color  5 1 top {0.5 0.5 0.5 }
 mol clipplane normal 5 1 top {0.0 0.0 1.0}
 mol clipplane status 5 1 top {0}
-mol rename top 1KDX.pdb
-set viewpoints([molinfo top]) {{{1 0 0 15.7667} {0 1 0 -5.47887} {0 0 1 1.65582} {0 0 0 1}} {{0.865996 -0.452184 0.21349 0} {0.500037 0.786155 -0.363215 0} {-0.00359654 0.421295 0.906915 0} {0 0 0 1}} {{0.0515218 0 0 0} {0 0.0515218 0 0} {0 0 0.0515218 0} {0 0 0 1}} {{1 0 0 -0.46} {0 1 0 -0.11} {0 0 1 0} {0 0 0 1}}}
+mol representation NewCartoon 0.300000 10.000000 4.100000 0
+mol color ColorID 6
+mol selection {chain A and noh}
+mol material Translucent
+mol addrep top
+mol selupdate 2 top 0
+mol colupdate 2 top 0
+mol scaleminmax top 2 0.000000 0.000000
+mol smoothrep top 2 0
+mol drawframes top 2 {now}
+mol clipplane center 0 2 top {0.0 0.0 0.0}
+mol clipplane color  0 2 top {0.5 0.5 0.5 }
+mol clipplane normal 0 2 top {0.0 0.0 1.0}
+mol clipplane status 0 2 top {0}
+mol clipplane center 1 2 top {0.0 0.0 0.0}
+mol clipplane color  1 2 top {0.5 0.5 0.5 }
+mol clipplane normal 1 2 top {0.0 0.0 1.0}
+mol clipplane status 1 2 top {0}
+mol clipplane center 2 2 top {0.0 0.0 0.0}
+mol clipplane color  2 2 top {0.5 0.5 0.5 }
+mol clipplane normal 2 2 top {0.0 0.0 1.0}
+mol clipplane status 2 2 top {0}
+mol clipplane center 3 2 top {0.0 0.0 0.0}
+mol clipplane color  3 2 top {0.5 0.5 0.5 }
+mol clipplane normal 3 2 top {0.0 0.0 1.0}
+mol clipplane status 3 2 top {0}
+mol clipplane center 4 2 top {0.0 0.0 0.0}
+mol clipplane color  4 2 top {0.5 0.5 0.5 }
+mol clipplane normal 4 2 top {0.0 0.0 1.0}
+mol clipplane status 4 2 top {0}
+mol clipplane center 5 2 top {0.0 0.0 0.0}
+mol clipplane color  5 2 top {0.5 0.5 0.5 }
+mol clipplane normal 5 2 top {0.0 0.0 1.0}
+mol clipplane status 5 2 top {0}
+mol rename top filtered.psf
+set viewpoints([molinfo top]) {{{1 0 0 0.144037} {0 1 0 0.150726} {0 0 1 -1.81481} {0 0 0 1}} {{0.756767 -0.602224 0.254194 0} {0.609044 0.790832 0.0604112 0} {-0.237406 0.109102 0.965261 0} {0 0 0 1}} {{0.0514903 0 0 0} {0 0.0514903 0 0} {0 0 0.0514903 0} {0 0 0 1}} {{1 0 0 0} {0 1 0 0} {0 0 1 0} {0 0 0 1}}}
 lappend viewplist [molinfo top]
 set topmol [molinfo top]
-# done with molecule 0
+# done with molecule 1
 foreach v $viewplist {
   molinfo $v set {center_matrix rotate_matrix scale_matrix global_matrix} $viewpoints($v)
 }
@@ -524,9 +558,12 @@ color scale colors WBlk {1.0 1.0 1.0} {0.5 0.5 0.5} {0.0 0.0 0.0}
     {color Chain {A} red}
     {color Chain {B} gray}
     {color Segname {} blue}
+    {color Segname {A} red}
+    {color Segname {B} gray}
     {color Conformation {all} blue}
     {color Molecule {0} blue}
     {color Molecule {1KDX.pdb} blue}
+    {color Molecule {1} gray}
     {color Structure {3_10_Helix} blue}
     {color Surface {Grasp} gray}
     {color Labels {Atoms} red3}
@@ -570,4 +607,4 @@ color scale colors WBlk {1.0 1.0 1.0} {0.5 0.5 0.5} {0.0 0.0 0.0}
 }
 vmdrestoremycolors
 label textsize 1.0
-animate goto 16
+animate goto 1860
