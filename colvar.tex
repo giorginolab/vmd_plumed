@@ -244,8 +244,10 @@ Padua, Italy}
   plugin that provides access to Plumed's analysis features from within VMD. \\
   {\em Additional comments:} Distributed with VMD since version 1.9.0.
   Manual  update may be required  to access the latest features.   \\
-  {\em Running time:} Depends on the size of the system and the length
-  of the trajectory; usually negligible with respect to simulation time.  \\
+  {\em Running time:} Computations of the values of collective
+  variables, performed by the underlying Plumed code, depends on the
+  size of the system and the length  of the trajectory; it is 
+  generally negligible with respect to simulation time.  \\
 \begin{thebibliography}{0}
 \bibitem{1}See paper in this issue.
 \bibitem{2}Humphrey, W., A. Dalke, and K. Schulten. ``VMD: Visual
@@ -818,37 +820,42 @@ available, the user can switch manually between the two.
 \section{Conclusions}
 
 Developing an appropriate combination of reaction coordinates is a
-central task in the analysis of biomolecular systems.  This paper
-described a graphical user interface that simplifies the iterative
-refinement and test of collective variables to be used with the Plumed
-engine. The GUI is embedded in a state-of-the-art molecular
-visualization program, VMD~\cite{Humphrey_Dalke_Schulten_1996},
-leveraging its ability to load and manipulate multiple systems and
-long trajectories concurrently, its extensive visualization options,
-and a powerful chemically-aware atom selection language. The
-mathematical computation of the CVs is demanded to the Plumed engine,
-which provides a uniform syntax to express a wide range of collective
-variables used in the practice of biased molecular simulations.
+central task in the analysis of biomolecular systems.  PLUMED-GUI
+simplifies the iterative development, refinement and test of
+collective variables to be used with the Plumed engine.  The GUI
+bridges the usability of VMD's graphical interface and Plumed's rich
+CV definition language.  
 
-PLUMED-GUI bridges the usability of a graphical interface and the
-richness of Plumed's CV description language.  The integration of the
-two environments has a few limitations; right now, only orthorhombic
-simulation boxes with constant edges are supported, thus ruling out
-the analysis of constant-pressure simulations (this limitation may be
-removed as soon as driver's support to trajectory formats is
-expanded). Another drawback concerns the fact that atom selections are
-evaluated only once before the computation is started, and thus it is
-not possible to have time-varying atom lists (nor Plumed engine would
-support them).  Analysis protocols involving time-varying atom sets
-are thus outside of the scope of the programs. It is worthwhile
-noting, however, that Plumed's continuous switching functions (such as
-\texttt{DISTANCES LESS\_THAN}) provide sensible approximations to
-tasks such as counting the number of atoms satisfying a given
-property.
+Integrating the two environments incurs in a few limitations; right
+now, only orthorhombic simulation boxes with constant edges are
+supported, therefore precluding the analysis of constant-pressure
+simulations (this limitation may be removed as soon as \emph{driver}'s
+support to trajectory formats is expanded). Another drawback is due to
+the fact that atom selections are evaluated only once, before the
+computation is started; thus, it is not possible to employ
+time-varying atom lists (nor Plumed engine would support them):
+analysis protocols involving time-varying atom sets are outside of the
+scope of the programs. It is worthwhile noting, however, that Plumed's
+switching functions (such as \texttt{DISTANCES LESS\_THAN}) can
+provide sensible approximations to discrete quantities such as the
+number of atoms satisfying a given property.
 
+One of the objectives of the GUI is to lower the barrier for the use
+of the complex metrics in the analysis tasks of simulation data. In
+the future, the interface may be expanded integrating more ``structure
+building'' features and external programs, such as
+METAGUI~\cite{Biarnes_Pietrucci_Marinelli_Laio_2012} and reweighting
+schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
-% METAGUI \cite{Biarnes_Pietrucci_Marinelli_Laio_2012}.
-
+% The GUI is
+% embedded in a state-of-the-art molecular visualization program,
+% VMD~\cite{Humphrey_Dalke_Schulten_1996}, leveraging its ability to
+% load and manipulate multiple systems and long trajectories
+% concurrently, its extensive visualization options, and a powerful
+% chemically-aware atom selection language. The mathematical computation
+% of the CVs is demanded to the Plumed engine, which provides a uniform
+% syntax to express a wide range of collective variables used in the
+% practice of biased molecular simulations.
 
 
 
@@ -860,18 +867,6 @@ Computational Biophysics Laboratory at the Universitat Pompeu Fabra
 (Barcelona). Support from the ``Beatriu de Pin\'os'' scheme
 of the Generalitat de Catalunya is gratefully acknowledged.
 
-\vspace{2cm}
-
-\texttt{Version of \longdate \today \, \currenttime}
-
-%AA
-
-\begin{verbatim}
-Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
-Istituto di Ingegneria Biomedica              tel +39 049 8295761
-Consiglio Nazionale delle Ricerche            fax +39 049 8295763
-corso Stati Uniti 4                                I-35127 Padova
-\end{verbatim}
 
 
 %% References with bibTeX database:
@@ -879,6 +874,15 @@ corso Stati Uniti 4                                I-35127 Padova
 \bibliographystyle{elsarticle-num}
 \bibliography{colvar}
 
+\vspace{2cm}
+
+\texttt{Version of \longdate \today \, \currenttime}
+\begin{verbatim}
+Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
+Istituto di Ingegneria Biomedica              tel +39 049 8295761
+Consiglio Nazionale delle Ricerche            fax +39 049 8295763
+corso Stati Uniti 4                                I-35127 Padova
+\end{verbatim}
 
 
 \end{document}
