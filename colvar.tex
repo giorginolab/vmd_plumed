@@ -259,10 +259,26 @@ Padua, Italy}
 \end{small}
 
 
+\vspace{2cm}
+
+\section*{Note for the Reviewers}
+
+The following paper should appear in the same journal issue as
+the one describing Plumed 2.0 \emph{engine}. Plumed-GUI relies on
+either (or both) Plumed 1.3 and 2.0; here we show features available
+with the latter version. 
+
+In order to minimize version mismatch, codes of Plumed 2.0 and
+Plumed-GUI 2.0 (described here) will be released approximately
+together, about the time when the corresponding papers are due. Public
+repositories will provide early adopters with access to beta code.
+
+
+\vspace{2cm}
 
 \section{Introduction}
 
-Molecular dynamics (MD) is computational technique which models the
+Molecular dynamics (MD) is a computational technique which models the
 interactions between a set of atoms with realistic empirical
 potentials. Recent increases in computer power allow to routinely
 sample biomolecular systems with all-atom resolution for
@@ -313,7 +329,7 @@ a concise and human-readable definition of both the functional form
 
 A step forward in this direction is Plumed, a flexible CV engine
 recently upgraded to version 2.0~\cite{plumed2_this}. Plumed provides
-an extensive set of pre-defined \emph{actions}, i.e. self-explanatory
+an extensive set of pre-defined \emph{actions}, i.e.\ self-explanatory
 keywords that concisely define a CV on the basis of the geometry of a
 system. Auxiliary actions also exist to define center of masses, ghost
 atoms, units, etc.~\cite{plumed_manual,bonomi_plumed:_2009}
@@ -449,12 +465,12 @@ this happens, the error line will be marked as such in the text area.
 
 \subsection{Consistency of units}
 
-It may be worth noting that the units of computed CVs  depend on
+It may be worth noting that the units of computed CVs depend on
 Plumed's conventions.  Since version 2.0, Plumed defaults to the nm,
 kJ/mol, ps combination. Given that VMD users may be accustomed to the
 \AA, kcal/mol, fs unit set, a reminder is shown about the fact that
-the \texttt{UNITS} keyword can be used to  switch to customary
-units.
+the \texttt{UNITS} keyword can be used at the top of the script to
+switch to customary units.
 
 
 
@@ -482,16 +498,16 @@ labels such as \texttt{[protein and name CA]}.
 
 This is especially advantageous when switching between multiple
 systems; it is the case, for example, when several all-atom systems
-are prepared containing same protein and a series of inhibitors.
+are prepared containing same protein and a series of compounds.
 While atom indices depend on the specific system and the details of
 how it was prepared, symbolic selections such as \texttt{[not protein
   and not water]} (matching non-peptide ligands) do not, and will be
 valid regardless of the specific system being analyzed.
 
-Symbolic atom expressions are interpreted the moment the analysis is
-requested by pressing the \emph{Plot} button. They can also be
-permanently expanded for use independently of Plumed-GUI, via the
-\emph{Export} function shown in section~\ref{sec:export-use-simul}.
+Symbolic atom expressions are interpreted at the moment the analysis is
+started by pressing the \emph{Plot} button. They can also be
+permanently expanded to be used independently of Plumed-GUI, via the
+\emph{Export} function presented in section~\ref{sec:export-use-simul}.
 
 
 
