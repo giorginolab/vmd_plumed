@@ -259,22 +259,18 @@ Corso Stati Uniti 4, I-35127 Padua, Italy}
 \end{small}
 
 
-\vspace{2cm}
+% \vspace{2cm}
+% \section*{Note for the Reviewers}
+% The following paper should appear in the same journal issue as a
+% forthcoming one describing Plumed 2.0 \emph{engine}. Plumed-GUI relies
+% on either (or both) Plumed 1.3 and 2.0; here we show features
+% available with the latter version.
 
-\section*{Note for the Reviewers}
-
-The following paper should appear in the same journal issue as a
-forthcoming one describing Plumed 2.0 \emph{engine}. Plumed-GUI relies
-on either (or both) Plumed 1.3 and 2.0; here we show features
-available with the latter version.
-
-In order to minimize version mismatch, codes of Plumed 2.0 and
-Plumed-GUI 2.0 (described here) will be released approximately
-together, about the time when the corresponding papers are due. Public
-repositories will provide early adopters with access to beta code.
-
-
-\vspace{2cm}
+% In order to minimize version mismatch, codes of Plumed 2.0 and
+% Plumed-GUI 2.0 (described here) will be released approximately
+% together, about the time when the corresponding papers are due. Public
+% repositories will provide early adopters with access to beta code.
+% \vspace{2cm}
 
 \section{Introduction}
 
@@ -402,7 +398,7 @@ brackets, which are resolved as will be shown in
 Section~\ref{sec:symb-atom-select}.  Script coding and debug is
 entirely under the control of the user, and therefore any valid or
 invalid expression can be entered.  (Consequently, the GUI needs no
-updates to accommodate user-customized Plumed variants or future
+updates to accommodate user-customized Plumed variants and future
 syntax.)
 
 
@@ -447,7 +443,7 @@ this happens, the error line will be marked as such in the text area.
     button evaluates the collective variables defined in the script on
     the molecular trajectory currently selected in VMD (``top
     molecule''); if successful, a graph appears, showing the values of
-    the CVs at each frame is shown. The inner gray box, only shown at
+    the CVs at each frame. The inner gray box, only shown at
     startup, is a brief reminder about the use of the interface. (b)
     The \emph{Templates} menu contains shortcuts that insert
     frequently-used definitions and collective variables. }
@@ -499,14 +495,14 @@ labels such as \texttt{[protein and name CA]}.
 This is especially advantageous when switching between multiple
 systems; it is the case, for example, when several all-atom systems
 are prepared containing same protein and a series of compounds.
-While atom indices depend on the specific system and the details of
-how it was prepared, symbolic selections such as \texttt{[not protein
+Whereas atom indices depend on the specific system and the details of
+how it was prepared, expressions such as \texttt{[not protein
   and not water]} (matching non-peptide ligands) do not, and will be
 valid regardless of the specific system being analyzed.
 
 Symbolic atom expressions are interpreted at the moment the analysis is
 started by pressing the \emph{Plot} button. They can also be
-permanently expanded to be used independently of Plumed-GUI, via the
+permanently replaced with atom numbers to be used independently of Plumed-GUI, via the
 \emph{Export} function presented in section~\ref{sec:export-use-simul}.
 
 
@@ -549,18 +545,18 @@ keywords.
 
 Plumed-GUI provides a comprehensive context-dependent help facility
 through a pop-up menu, which is be invoked pressing the right mouse
-button on any action keyword (Figure~\ref{fig:help_popup}). The pop-up
-menu shows the list of optional and mandatory modifiers accepted by
-that action.  The topmost menu item, \emph{Lookup in documentation},
-opens up a web browser  displaying the full manual page of that action
-(Figure~\ref{fig:help_page}).
+button on any action keyword. The topmost menu item, \emph{Lookup in
+  documentation}, opens up a web browser displaying the full manual
+page of that action.  Subsequent entries in the pop-up menu shows the
+list of optional and mandatory modifiers accepted by that
+action~\ref~\ref{fig:help}.
 
 As for the rest of Plumed 2.0 documentation, Plumed-GUI's contextual
 help is generated automatically from Plumed's source code.  This
 implies that, as long as new features are implemented and documented
-following the coding conventions, any newly-developed functions become
-properly integrated in the interface, without requiring modifications
-to the GUI code.
+according to the established coding conventions, any newly-developed
+functions become properly integrated in the interface, without
+requiring modifications to the GUI code.
 
 
 % This implies
@@ -669,25 +665,20 @@ files are PDB-like tables used by Plumed to define the set of atoms to be used f
 alignment, for computing the displacement, and the reference
 coordinates; each line represents one of the atoms involved in the
 calculation, with columns recording serial numbers, coordinates, and
-inclusion in one or the other set~\cite{plumed_manual}.  The dialog
-allow the use of   atom selections to indicate the  subset of the atoms 
-to be involved,
-respectively, in the computation of the optimal alignment, and the
-measure of the RMSD.
-
-
-
-
+inclusion in one or the other set~\cite{plumed_manual}.  
 
 % The reference structure is the taken as the current frame of the top molecule. 
 
+The dialog allows the use of atom selections to indicate the subset of
+the atoms to be involved, respectively, in the computation of the
+optimal alignment, and the measure of the RMSD.
 By default, the reference file generated is suitable for computing
 RMSD on systems having the same topology as that from which the
 reference was extracted.  However, it is sometimes necessary to
 perform alignments between different topologies: the native structure
 may for instance be a PDB file, while the system under analysis is the
 all-atom structure used in simulation. Alignments between molecules
-with different topologies are arranged setting the \emph{target
+with different topologies are arranged changing the \emph{target
   molecule ID}. This feature adjusts the atom numbering of the top
 molecule to be compatible with the specified \emph{target} molecule;
 in other words, trajectory frames of the target molecule will be
@@ -712,7 +703,7 @@ for each of the trajectory frames under analysis: the
 CV counts how many of the pairs that were in contact in the
 reference frame are also close in the frame being analyzed.  
 
-The \emph{native contacts} dialog (Figure~\ref{fig:native}) can be
+The \emph{Native contacts} dialog (Figure~\ref{fig:native}) can be
 used to generate such lists flexibly and with ease. Like when building
 reference structures, the current frame of the top molecule is used as
 the native state.  It is possible to specify either one or two atom
@@ -727,8 +718,8 @@ proxy for the detection of folding events. However, residues adjacent
 in the primary sequence will almost always be in contact, thus
 contributing little or no information to the folding signal. These
 ``trivial'' contacts can be filtered out setting a minimum bound to
-the $| \Delta \mbox{resid} |$ to a positive integer $\delta$. If set,
-contacts between atoms closer than $\delta$ residues apart in the
+the $| \Delta \mbox{resid} |$ to a positive integer $d$. If set,
+contacts between atoms closer than $d$ residues apart in the
 primary sequence will be disregarded.
 Analogously to the \emph{Build reference structure} function, the user
 can match a trajectory with a native frame with a different topology
@@ -738,8 +729,9 @@ The number of native contacts is implemented in Plumed through the
 \texttt{COORDINATION PAIRS} action and the enumeration of the
 contacting pairs in the native frame.  It is worthwhile noting that,
 like all other CVs provided by Plumed, this metric is a continuous
-approximation of the integer atom count, made smooth with respect to
-all of the system's coordinates through exponential averaging.
+approximation of the integer pair count, made smooth with respect to
+all of the system's coordinates through an exponential switching
+function~\cite{plumed_manual}.
 
 
 
@@ -772,7 +764,7 @@ in a way that allows the reconstruction of free-energy
 surfaces. Example of biasing protocols include harmonically
 constraining CVs at a given combination of values (used e.g.\ for the
 umbrella sampling protocol \cite{Torrie_Valleau_1977}), pulling them
-towards increasing or decreasing values (steered MD,
+towards increasing or decreasing values (steered MD
 \cite{Isralewitz_Gao_Schulten_2001,Giorgino_2011}), metadynamics
 \cite{Laio_Parrinello_2002}, and so on. Biased MD simulations are
 carried out with codes patched to embed the Plumed engine. Force
@@ -863,12 +855,12 @@ switching functions (such as \texttt{DISTANCES LESS\_THAN}) can
 provide sensible approximations to discrete quantities such as the
 number of atoms satisfying a given property.
 
-One of the objectives of the GUI is to lower the barrier for the use
-of the complex metrics in the analysis tasks of simulation data. In
-the future, the interface may be expanded integrating more ``structure
-building'' features and external programs, such as
-METAGUI~\cite{Biarnes_Pietrucci_Marinelli_Laio_2012} and reweighting
-schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
+One of the objectives of the GUI is to lower the barrier for the
+adoption of meaningful metrics in the analysis tasks of simulation
+data. In the future, the interface may be expanded integrating more
+``function building'' features and providing interfaces with external
+programs, such as METAGUI~\cite{Biarnes_Pietrucci_Marinelli_Laio_2012}
+and reweighting schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
 % The GUI is
 % embedded in a state-of-the-art molecular visualization program,
@@ -887,8 +879,8 @@ schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
 Part of the work described in this paper was conducted while at the
 Computational Biophysics Laboratory at the Universitat Pompeu Fabra
-(Barcelona). Support from the ``Beatriu de Pin\'os'' scheme
-of the Generalitat de Catalunya is gratefully acknowledged.
+(Barcelona). Financial support from the ``Beatriu de Pin\'os'' scheme
+of the AGAUR (Generalitat de Catalunya) is gratefully acknowledged.
 
 
 
@@ -900,12 +892,12 @@ of the Generalitat de Catalunya is gratefully acknowledged.
 \vspace{2cm}
 
 \texttt{Version of \longdate \today \, \currenttime}
-\begin{verbatim}
-Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
-Istituto di Ingegneria Biomedica              tel +39 049 8295761
-Consiglio Nazionale delle Ricerche            fax +39 049 8295763
-corso Stati Uniti 4                                I-35127 Padova
-\end{verbatim}
+% \begin{verbatim}
+% Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
+% Istituto di Ingegneria Biomedica              tel +39 049 8295761
+% Consiglio Nazionale delle Ricerche            fax +39 049 8295763
+% corso Stati Uniti 4                                I-35127 Padova
+% \end{verbatim}
 
 
 \end{document}
