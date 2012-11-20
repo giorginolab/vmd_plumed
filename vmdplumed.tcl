@@ -1285,7 +1285,6 @@ proc ::Plumed::plumed_version_changed {} {
     instructions_update
     templates_populate_menu
     pbc_dcd_set_state
-#    popup_setup_menu
     driver_path_update
 }
 
@@ -1441,12 +1440,14 @@ proc ::Plumed::popup_menu {x y X Y} {
     tk_popup $w.txt.text.popup $X $Y
 }
 
+# Insert line below cursor
 proc ::Plumed::popup_insert_line {line} {
     variable w
     $w.txt.text edit separator
     $w.txt.text insert {insert lineend} "\n# $line"
 }
 
+# Insert word at cursor
 proc ::Plumed::popup_insert_keyword {kw} {
     variable w
     $w.txt.text edit separator
@@ -1454,21 +1455,23 @@ proc ::Plumed::popup_insert_keyword {kw} {
 }
 
 
-
+# Convert word to doxygen-generated filename
 proc ::Plumed::popup_prepend_underscore {p} {
-    set pu [join [split $p ""] _]
-    set pu [regsub {___} $pu __]
-    return "_$pu"
+    set pu [string tolower $p];	# lower
+    set pu [join [split $pu ""] _]; # intermix underscorse
+    set pu [regsub {___} $pu __];   # ___ -> __
+    return "_$pu";		    # prepend underscore
 }
 
+# Do what it takes to open Doxygen-generated help on keyword
 proc ::Plumed::popup_local_or_remote_help {kw} {
     variable driver_path
-
     if {$kw == ""} { return }
 
+    # Ask Plumed's path
     set root [exec $driver_path info --root]
-    set kwl [string tolower $kw]
-    set kwlu [popup_prepend_underscore $kwl]
+
+    set kwlu [popup_prepend_underscore $kw]
     set htmlfile [file join $root user-doc html $kwlu.html]
     if [file readable $htmlfile] {
 	vmd_open_url $htmlfile
