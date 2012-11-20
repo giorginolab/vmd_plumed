@@ -1395,7 +1395,7 @@ proc ::Plumed::popup_menu {x y X Y} {
 	# Short template
 	if { [info exists template_keyword_hash($uword)] } {
 	    $t.popup add command -label {Insert template line below cursor} \
-		-command "[namespace current]::popup_insert_template $uword"
+		-command "[namespace current]::popup_insert_line \{$template_keyword_hash($uword)\}"
 	} else {
 	    $t.popup add command -label "No template for keyword $uword" -state disabled
 	}
@@ -1403,7 +1403,7 @@ proc ::Plumed::popup_menu {x y X Y} {
 	# Long template
 	if { [info exists template_full_hash($uword)] } {
 	    $t.popup add command -label {Insert full template line below cursor} \
-		-command "[namespace current]::popup_insert_full_template $uword"
+		-command "[namespace current]::popup_insert_line \{$template_full_hash($uword)\}"
 
 	    # Build lists of mandatory and optional keywords
 	    set okw_l {}
@@ -1411,9 +1411,9 @@ proc ::Plumed::popup_menu {x y X Y} {
 	    foreach kw $template_full_hash($uword) {
 		if { $kw == $uword } { continue }
 		if [ regexp {\[(.+)\]} $kw junk kw ] {
-		    lappend okw_l $kw
+		    lappend okw_l $kw; # in brackets? push in optional
 		} else { 
-		    lappend kw_l $kw
+		    lappend kw_l $kw; # push in regular
 		}
 	    }
 	    
@@ -1421,7 +1421,8 @@ proc ::Plumed::popup_menu {x y X Y} {
 		$t.popup add separator
 		$t.popup add command -label "Parameters:" -state disabled
 		foreach kw $kw_l {
-		    $t.popup add command -label "   $kw"
+		    $t.popup add command -label "   $kw" \
+			-command "[namespace current]::popup_insert_keyword $kw"
 		}
 	    }
 
@@ -1429,7 +1430,8 @@ proc ::Plumed::popup_menu {x y X Y} {
 		$t.popup add separator
 		$t.popup add command -label "Optional modifiers:" -state disabled
 		foreach kw $okw_l {
-		    $t.popup add command -label "   $kw"
+		    $t.popup add command -label "   $kw" \
+			-command "[namespace current]::popup_insert_keyword $kw"
 		}
 	    }
 	}
@@ -1439,34 +1441,16 @@ proc ::Plumed::popup_menu {x y X Y} {
     tk_popup $w.txt.text.popup $X $Y
 }
 
-# Checks are unnecessary now
-proc ::Plumed::popup_insert_template {word} {
-    variable template_keyword_hash
+proc ::Plumed::popup_insert_line {line} {
     variable w
-    
-    if {$word == ""} {
-	return
-    } elseif {![info exists template_keyword_hash($word)]} {
-	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
-    } else {
-	$w.txt.text edit separator
-	$w.txt.text insert {insert lineend} "\n$template_keyword_hash($word)"
-    }
+    $w.txt.text edit separator
+    $w.txt.text insert {insert lineend} "\n# $line"
 }
 
-# Checks are unnecessary now
-proc ::Plumed::popup_insert_full_template {word} {
-    variable template_full_hash
+proc ::Plumed::popup_insert_keyword {kw} {
     variable w
-
-    if {$word == ""} {
-	return
-    } elseif {![info exists template_full_hash($word)]} {
-	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
-    } else {
-	$w.txt.text edit separator
-	$w.txt.text insert {insert lineend} "\n$template_full_hash($word)"
-    }
+    $w.txt.text edit separator
+    $w.txt.text insert insert " $kw"
 }
 
 
