@@ -1,12 +1,11 @@
 #!/bin/tclsh
 
-# Template autogeneration for Plumed 2.  The "unsubst" string contains
-# what will become the whole (!)  "templates_list_v2_autogen.tcl" file
-# (coming from stdout). It contains a proc which returns a list. The
-# list defines the Templates menu to be used for Plumed 2. Right-hand
-# sides can be specified manually (here), or contain %%XXXX
-# placeholders which are expanded with the corresponding "plumed
-# gentemplate" command.
+# Template autogeneration for Plumed 2.  This file will generate (on
+# stdout) "templates_list_v2_autogen.tcl" file.  The "unsubst" string
+# contains a proc which returns a list, which defines the CURATED
+# Templates menu to be used for Plumed 2. Right-hand sides can be
+# specified manually (here), or contain %%XXXX placeholders that are
+# expanded with the corresponding "plumed gentemplate" command.
 
 # This script assumes that all of the actions have been expanded in
 # templates_temp/* and templates_full/* . This is done by
@@ -30,12 +29,15 @@ proc ::Plumed::templates_list_v2 { } {
         "Radius of gyration"		"%%GYRATION"
 	"Electric dipole"		"%%DIPOLE"
 	"Coordination"			"%%COORDINATION"
-	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ATOMS3=4,5 ATOMS4=5,6 SWITCH=(RATIONAL R_0=1.5)"
+	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ... SWITCH=(RATIONAL R_0=1.5)"
 	- -
-	"Amount of \u03b1-helical structure"        "%%ALPHARMSD"
-        "Amount of parallel-\u03b2 structure"       "%%PARABETARMSD"
-	"Amount of antiparallel-\u03b2 structure"   "%%ANTIBETARMSD"
-	"RMSD from reference structure"             "%%RMSD"
+	"RMSD from reference structure" "%%RMSD"
+	"Amount of \u03b1-helical structure"        
+	                                "%%ALPHARMSD"
+        "Amount of parallel-\u03b2 structure"       
+	                                "%%PARABETARMSD"
+	"Amount of antiparallel-\u03b2 structure"   
+	                                "%%ANTIBETARMSD"
 	- -
 	"Distances"                     "DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
 	"Coordination number"		"%%COORDINATIONNUMBER"
