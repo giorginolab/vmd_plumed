@@ -569,7 +569,7 @@ proc ::Plumed::showBalloonHelp {w msg} {
   if {$::tcl_platform(platform) == "macintosh"} {
     unsupported1 style $t floating sideTitlebar
   }
-  pack [label $t.l -text [subst $msg] -bg yellow -font {Helvetica 9}]\
+  pack [label $t.l -text [subst $msg] -bg yellow -font {Helvetica 12}]\
     -padx 1\
     -pady 1
   set width [expr {[winfo reqwidth $t.l] + 2}]
@@ -1524,10 +1524,16 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
 	return
     }
 
-    set header [lreplace $header 0 2]; # remove hash-FIELDS-time
+    # remove hash-FIELDS-time . Now header contains CV names
+    set header [lreplace $header 0 2]; 
+
+    # slurp rest of the file
     set data {}
     set nlines 0
     while {[gets $fd line]>=0} {
+	if [regexp {^#} $line] {
+	    continue;		# skip other headers (eg periodicity)
+	}
 	lappend data $line
 	incr nlines
     }
