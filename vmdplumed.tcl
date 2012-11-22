@@ -1517,29 +1517,31 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
     variable w
     variable plot_points
 
+    # slurp $out
     set fd [open $out r]
-    if { [gets $fd header]<0 || ! [ regexp {^#! FIELDS} $header ] } {
-	puts "Missing FIELDS header. 'driver' executable of PLUMED version 1.3 is required"
-	close $fd
-	return
-    }
-
-    # remove hash-FIELDS-time . Now header contains CV names
-    set header [lreplace $header 0 2]; 
-
-    # slurp rest of the file
     set data {}
+    set header {}
     set nlines 0
     while {[gets $fd line]>=0} {
-	if [regexp {^#} $line] {
-	    continue;		# skip other headers (eg periodicity)
+	if [regexp {^#!} $line] {
+	    set op [lindex $line 1]
+	    if { $op == "FIELDS" } {
+		# remove hash-FIELDS-time . Now header contains CV names
+		set header [lreplace $line 0 2]
+	    } else {
+		continue;		# skip other headers (eg periodicity)
+	    }
+	} else {
+	    lappend data $line
+	    incr nlines
 	}
-	lappend data $line
-	incr nlines
     }
     close $fd
 
-    if { $nlines == 0 } {
+    if { [llength $header] == 0 } {
+	puts "No FIELDS header line found. Please use PLUMED version >= 1.3 ."
+	return
+    } elseif { $nlines == 0 } {
 	puts "No output in COLVAR. Please check above messages."
 	return
     } elseif { $nlines == 1 } {
