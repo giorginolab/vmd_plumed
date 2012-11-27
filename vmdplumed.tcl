@@ -814,6 +814,35 @@ proc ::Plumed::reference_write { } {
     puts "Done."
 }
 
+# Alpha, parabeta, antibeta ordered lists ==================================================                                                 
+
+proc ::Plumed::secondary_rmsd {N CA C O CB} {
+    set Nsel [atomselect top $N]
+    set CAsel [atomselect top $CA]
+    set Csel [atomselect top $C]
+    set Osel [atomselect top $O]
+    set CBsel [atomselect top $CB]
+
+    set ret {}
+    set lens [list [$Nsel num] [$CAsel num] [$Csel num] [$Osel num] [$CBsel num]]
+    set lens [lsort -integer -uniq $lens]
+    if {[llength $lens] != 1} {
+	puts "ERROR. Atom selection lengths are different: [$Nsel num] C, [$CAsel num] CA, [$Csel num] C, [$Osel num] O, [$CBsel num] CB"
+    } else {
+	set ret [list [$Nsel get serial] [$CAsel get serial] [$Csel get serial] [$Osel get serial] [$CBsel get serial]]
+	set ret [transpose $ret]; # transpose
+	set ret [concat {*}$ret]; # flatten
+    }
+
+    $Nsel delete
+    $CAsel delete
+    $Csel delete
+    $Osel delete
+    $CBsel delete
+    return $ret
+}
+
+
 
 # BATCH ==================================================
 
@@ -1670,6 +1699,7 @@ proc ::Plumed::get_pbc_v2 { } {
     return $pbc
 }
 
+# Unlike v1, there is no need to cd 
 proc ::Plumed::do_compute_v2 {} {
     variable driver_path
 
@@ -1687,7 +1717,7 @@ proc ::Plumed::do_compute_v2 {} {
     file delete $colvar
 
     set pbc [get_pbc_v2]
-    set cmd "$driver_path --standalone-executable driver --ixyz $xyz --pdb $pdb --plumed $meta --box $pbc --length-units A"
+    set cmd [list $driver_path --standalone-executable driver --ixyz $xyz --pdb $pdb --plumed $meta --box $pbc --length-units A]
 
     puts "Executing: $cmd"
     if { [ catch { eval exec $cmd } driver_stdout ] ||
