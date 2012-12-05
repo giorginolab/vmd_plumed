@@ -26,8 +26,8 @@ namespace eval ::Plumed:: {
     variable plugin_version 2.0a
     variable plumed_version 2
     variable w                                          ;# handle to main window
-    variable textfile "META_INP"
-    variable plugin_name "PLUMED collective variable analysis tool"
+    variable textfile unnamed.plumed
+    variable plugin_name "PLUMED-GUI collective variable analysis tool"
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
     variable text_instructions_header \
 "Enter collective variable definitions below, in PLUMED syntax.  
@@ -174,17 +174,18 @@ proc ::Plumed::plumed {} {
     ## FIXME plumed 2
      menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
-    $w.menubar.help.menu add command -label "On the $plugin_name" \
+    $w.menubar.help.menu add command -label "Getting started" \
 	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "On PLUMED (v1.3)" \
+    $w.menubar.help.menu add command -label "Help on PLUMED (v1.3)" \
         -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help.menu add command -label "How to install the 'driver' binary (v1.3)" \
-	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v1.3)" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
+    $w.menubar.help.menu add command -label "How to install the 'driver' binary (v1.3)" \
+	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
     $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "About..."  -command [namespace current]::help_about
+    $w.menubar.help.menu add command -label "About the $plugin_name" \
+	-command [namespace current]::help_about
     # XXX - set menubutton width to avoid truncation in OS X
     $w.menubar.help config -width 5
 
@@ -508,7 +509,7 @@ proc ::Plumed::index2rgb {i} {
 proc ::Plumed::dputs { text } {
     variable debug
     if {$debug} {
-	puts "DEBUG $text"
+	puts "DEBUG: $text"
     }
 }
 
@@ -568,7 +569,7 @@ proc ::Plumed::showBalloonHelp {w msg} {
   if {$::tcl_platform(platform) == "macintosh"} {
     unsupported1 style $t floating sideTitlebar
   }
-  pack [label $t.l -text [subst $msg] -bg yellow -font {Helvetica 9}]\
+  pack [label $t.l -text [subst $msg] -bg yellow -font {Helvetica 12}]\
     -padx 1\
     -pady 1
   set width [expr {[winfo reqwidth $t.l] + 2}]
@@ -1252,18 +1253,28 @@ proc ::Plumed::highlight_error_label {label etext} {
     variable w
     variable highlight_error_ms
     set t $w.txt.text
-    set pos [$t search -regexp "(^\\s*$label:|LABEL=$label\\y)" 1.0]
+
+    # match label prefixed by word boundary and followed by colon, or
+    # prefixed by LABEL= and followed by word boundary. 
+    set pos [$t search -regexp "(\\y$label:|LABEL=$label\\y)" 1.0]
+
+    # The first half of the regexp should match only at the beginning
+    # of the line, but some bug is gobbling all whitespace in
+    # preceding lines.
+    ## set pos [$t search -regexp "(^\\s*?$label:|LABEL=$label\\y)" 1.0]
+
     if {$pos != ""} {
-	lassign [split $pos .] line char
-	if {$char == 0} {
-	    incr line
-	    set pos "$line.1"
-	}
-	# NOW highlight the line, show error, wait, remove hl
+	dputs "Label found at $pos"
+	$t see $pos
+	# lassign [split $pos .] line char
+	# if {$char == 0} { incr line; set pos "$line.1" }
+	## NOW highlight the line, show error, wait, remove hl
 	$t tag add errorTag "$pos linestart" "$pos lineend"
 	$t tag configure errorTag -background yellow -foreground red
 	setBalloonHelp $t $etext -tag errorTag
 	after $highlight_error_ms "$w.txt.text tag delete errorTag"
+    } else {
+	puts "Label not found in text area"
     }
 }
 
@@ -1274,7 +1285,6 @@ proc ::Plumed::plumed_version_changed {} {
     instructions_update
     templates_populate_menu
     pbc_dcd_set_state
-#    popup_setup_menu
     driver_path_update
 }
 
@@ -1320,7 +1330,7 @@ proc ::Plumed::templates_populate_menu {} {
 
     switch $plumed_version {
 	1  {set templates [templates_list_v1]}
-	2  {set templates [::Plumed::templates_list_v2]}
+	2  {set templates [templates_list_v2]}
     } 
 
     $w.menubar.insert.menu delete 0 last
@@ -1348,42 +1358,10 @@ proc ::Plumed::templates_populate_menu {} {
 }
 				      
 
-proc ::Plumed::templates_list_v1 { } {
-    return {  
-	"Group definition"    {groupname-> [chain A] groupname<-} 
-	"-" "-"
-	"Absolute position" "POSITION LIST <xx>   DIR XYZ"
-	"Distance" "DISTANCE LIST <xx> <yy>    DIR XYZ"
-	"Minimum distance" "MINDIST LIST <xx> <yy>    BETA 500"
-	"Angle" "ANGLE LIST <xx> <oo> <yy>"
-	"Dihedral" "TORSION LIST <xx> <yy> <zz> <ww>"
-	"Contacts" "COORD LIST <xx> <yy>  NN 6 MM 12 D_0 2.5 R_0 0.5 "
-	"Hydrogen bonds" "HBONDS LIST <xx> <yy>  TYPE nn"
-	"Interfacial water" "WATERBRIDGE LIST <type1> <type2> <solvent> NN 8 MM 12 R_0 4.0"
-	"Radius of gyration" "RGYR LIST <xx>"
-	"Trace of the inertia tensor" "INERTIA LIST <xx>"
-	"Electrostatic potential" "ELSTPOT LIST <xx> <yy>  R_0 4.0   CUT 12.0"
-	"Electric dipole" "DIPOLE LIST <xx>"
-	"-" "-"
-	"RMSD from a reference" "TARGETED TYPE RMSD FRAMESET /tmp/reference.pdb SQRT  ! use absolute pathname"
-	"S-path variable" "S_PATH TYPE RMSD FRAMESET /tmp/frame_ NFRAMES 2 LAMBDA 9.0  ! use absolute pathnames"
-	"Z-path variable" "Z_PATH TYPE RMSD FRAMESET /tmp/frame_ NFRAMES 2 LAMBDA 9.0  ! use absolute pathnames"
-	"-" "-"
-	"Dihedral correlation" "DIHCOR NDIH 3\nA1 B1 C1 D1\nA2 B2 C2 D2\nA3 B3 C3 D3\n"
-	"Alpha-beta similarity" "ALPHABETA NDIH 3\nA1 B1 C1 D1 ref1\nA2 B2 C2 D2 ref2\nA3 B3 C3 D3 ref3\n"
-	"Alpha RMSD" "ALPHARMSD LIST <xx>  R_0 0.8  NN 8  MM 12  NOPBC"
-	"Antiparallel beta RMSD" "ANTIBETARMSD LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
-	"Parallel beta RMSD" "PARABETARMSD LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
-	"Torsional RMSD" "RMSDTOR NDIH 3\nA1 B1 C1 D1 ref1\nA2 B2 C2 D2 ref2\nA3 B3 C3 D3 ref3\n"
-	"Puckering coordinates" "PUCKERING LIST <xx>  TYPE  PHI|THETA|Q"
-	"-" "-"
-	"Upper wall (allow lower)" "UWALL CV nn LIMIT xx   KAPPA 100.0 EXP 4.0 EPS 1.0 OFF 0.0"
-	"Lower wall (allow higher)" "LWALL CV nn LIMIT xx   KAPPA 100.0 EXP 4.0 EPS 1.0 OFF 0.0"
-    }
-}
+# Plumed::templates_list_v1 is in a separate file in the same
+# package
 
-
-# NOTE Plumed::templates_list_v2 is in a separate, autogenerated
+# Plumed::templates_list_v2 is in a separate, autogenerated
 # file in the same package
 
 
@@ -1416,7 +1394,7 @@ proc ::Plumed::popup_menu {x y X Y} {
 	# Short template
 	if { [info exists template_keyword_hash($uword)] } {
 	    $t.popup add command -label {Insert template line below cursor} \
-		-command "[namespace current]::popup_insert_template $uword"
+		-command "[namespace current]::popup_insert_line \{$template_keyword_hash($uword)\}"
 	} else {
 	    $t.popup add command -label "No template for keyword $uword" -state disabled
 	}
@@ -1424,7 +1402,7 @@ proc ::Plumed::popup_menu {x y X Y} {
 	# Long template
 	if { [info exists template_full_hash($uword)] } {
 	    $t.popup add command -label {Insert full template line below cursor} \
-		-command "[namespace current]::popup_insert_full_template $uword"
+		-command "[namespace current]::popup_insert_line \{$template_full_hash($uword)\}"
 
 	    # Build lists of mandatory and optional keywords
 	    set okw_l {}
@@ -1432,17 +1410,18 @@ proc ::Plumed::popup_menu {x y X Y} {
 	    foreach kw $template_full_hash($uword) {
 		if { $kw == $uword } { continue }
 		if [ regexp {\[(.+)\]} $kw junk kw ] {
-		    lappend okw_l $kw
+		    lappend okw_l $kw; # in brackets? push in optional
 		} else { 
-		    lappend kw_l $kw
+		    lappend kw_l $kw; # push in regular
 		}
 	    }
 	    
 	    if {[llength $kw_l] > 0} {
 		$t.popup add separator
-		$t.popup add command -label "Modifiers:" -state disabled
+		$t.popup add command -label "Parameters:" -state disabled
 		foreach kw $kw_l {
-		    $t.popup add command -label "   $kw"
+		    $t.popup add command -label "   $kw" \
+			-command "[namespace current]::popup_insert_keyword $kw"
 		}
 	    }
 
@@ -1450,7 +1429,8 @@ proc ::Plumed::popup_menu {x y X Y} {
 		$t.popup add separator
 		$t.popup add command -label "Optional modifiers:" -state disabled
 		foreach kw $okw_l {
-		    $t.popup add command -label "   $kw"
+		    $t.popup add command -label "   $kw" \
+			-command "[namespace current]::popup_insert_keyword $kw"
 		}
 	    }
 	}
@@ -1460,52 +1440,38 @@ proc ::Plumed::popup_menu {x y X Y} {
     tk_popup $w.txt.text.popup $X $Y
 }
 
-# Checks are unnecessary now
-proc ::Plumed::popup_insert_template {word} {
-    variable template_keyword_hash
+# Insert line below cursor
+proc ::Plumed::popup_insert_line {line} {
     variable w
-    
-    if {$word == ""} {
-	return
-    } elseif {![info exists template_keyword_hash($word)]} {
-	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
-    } else {
-	$w.txt.text edit separator
-	$w.txt.text insert {insert lineend} "\n$template_keyword_hash($word)"
-    }
+    $w.txt.text edit separator
+    $w.txt.text insert {insert lineend} "\n# $line"
 }
 
-# Checks are unnecessary now
-proc ::Plumed::popup_insert_full_template {word} {
-    variable template_full_hash
+# Insert word at cursor
+proc ::Plumed::popup_insert_keyword {kw} {
     variable w
-
-    if {$word == ""} {
-	return
-    } elseif {![info exists template_full_hash($word)]} {
-	tk_messageBox -title "No template" -parent .plumed -message "Sorry, no template for keyword $word"
-    } else {
-	$w.txt.text edit separator
-	$w.txt.text insert {insert lineend} "\n$template_full_hash($word)"
-    }
+    $w.txt.text edit separator
+    $w.txt.text insert insert " $kw"
 }
 
 
-
+# Convert word to doxygen-generated filename
 proc ::Plumed::popup_prepend_underscore {p} {
-    set pu [join [split $p ""] _]
-    set pu [regsub {___} $pu __]
-    return "_$pu"
+    set pu [string tolower $p];	# lower
+    set pu [join [split $pu ""] _]; # intermix underscorse
+    set pu [regsub {___} $pu __];   # ___ -> __
+    return "_$pu";		    # prepend underscore
 }
 
+# Do what it takes to open Doxygen-generated help on keyword
 proc ::Plumed::popup_local_or_remote_help {kw} {
     variable driver_path
-
     if {$kw == ""} { return }
 
+    # Ask Plumed's path
     set root [exec $driver_path info --root]
-    set kwl [string tolower $kw]
-    set kwlu [popup_prepend_underscore $kwl]
+
+    set kwlu [popup_prepend_underscore $kw]
     set htmlfile [file join $root user-doc html $kwlu.html]
     if [file readable $htmlfile] {
 	vmd_open_url $htmlfile
@@ -1526,14 +1492,14 @@ proc ::Plumed::do_compute {} {
     variable driver_path
 
     if {[molinfo top]==-1 || [molinfo top get numframes] < 2} {
-	tk_messageBox -title "Error" -parent .plumed -message "A top
-	molecule and at least two frames are required to plot."
+	tk_messageBox -title "Error" -parent .plumed -message \
+	    "A top molecule and at least two frames are required to plot."
 	return 
     }
 
     if {![file executable $driver_path]} { 
-	tk_messageBox -title "Error" -parent .plumed \
-	    -message "The plumed executable is required. See manual for installation instructions."
+	tk_messageBox -title "Error" -parent .plumed -message \
+	    "The plumed executable is required. See manual for installation instructions."
 	return }
 
     # Delegate
@@ -1551,23 +1517,31 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
     variable w
     variable plot_points
 
+    # slurp $out
     set fd [open $out r]
-    if { [gets $fd header]<0 || ! [ regexp {^#! FIELDS} $header ] } {
-	puts "Missing FIELDS header. 'driver' executable of PLUMED version 1.3 is required"
-	close $fd
-	return
-    }
-
-    set header [lreplace $header 0 2]; # remove hash-FIELDS-time
     set data {}
+    set header {}
     set nlines 0
     while {[gets $fd line]>=0} {
-	lappend data $line
-	incr nlines
+	if [regexp {^#!} $line] {
+	    set op [lindex $line 1]
+	    if { $op == "FIELDS" } {
+		# remove hash-FIELDS-time . Now header contains CV names
+		set header [lreplace $line 0 2]
+	    } else {
+		continue;		# skip other headers (eg periodicity)
+	    }
+	} else {
+	    lappend data $line
+	    incr nlines
+	}
     }
     close $fd
 
-    if { $nlines == 0 } {
+    if { [llength $header] == 0 } {
+	puts "No FIELDS header line found. Please use PLUMED version >= 1.3 ."
+	return
+    } elseif { $nlines == 0 } {
 	puts "No output in COLVAR. Please check above messages."
 	return
     } elseif { $nlines == 1 } {
@@ -1731,7 +1705,7 @@ proc ::Plumed::do_compute_v2 {} {
 	puts "Something went wrong. Check above messages."
 	if [regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
 		$driver_stdout junk label etext] {
-	    puts "-- $label -- $etext "
+	    dputs "Trying to highlight label $label -- $etext "
 	    highlight_error_label $label $etext
 	}
     } else {
