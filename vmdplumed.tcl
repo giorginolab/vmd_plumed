@@ -153,7 +153,10 @@ proc ::Plumed::plumed {} {
     $w.menubar.edit.menu add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce Ctrl-X
     $w.menubar.edit.menu add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce Ctrl-C
     $w.menubar.edit.menu add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce Ctrl-V
+    $w.menubar.edit.menu add separator
+    $w.menubar.edit.menu add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce Ctrl-A
     $w.menubar.edit config -width 5
+    bind $w <Control-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
 
     ## Templates
      menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
@@ -1394,10 +1397,12 @@ proc ::Plumed::driver_path_update {} {
 proc ::Plumed::templates_populate_menu {} {
     variable w
     variable plumed_version
+    variable templates_list_v1
+    variable templates_list_v2
 
     switch $plumed_version {
-	1  {set templates [templates_list_v1]}
-	2  {set templates [templates_list_v2]}
+	1  {set templates $templates_list_v1}
+	2  {set templates $templates_list_v2}
     } 
 
     $w.menubar.insert.menu delete 0 last

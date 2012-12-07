@@ -19,13 +19,13 @@
 plumed gentemplate --list 2> list.tmp
 
 # Create a template per action
-rm -rf templates_temp templates_full
-mkdir templates_temp templates_full
+rm -rf templates.tmp templates_full.tmp
+mkdir templates.tmp templates_full.tmp
 
 for action in $(cat list.tmp); do
     echo "Action: $action"
-    plumed gentemplate --action $action > templates_temp/$action
-    plumed gentemplate --action $action --include-optional > templates_full/$action
+    plumed gentemplate --action $action > templates.tmp/$action
+    plumed gentemplate --action $action --include-optional > templates_full.tmp/$action
 done
 
 # Generate the templates

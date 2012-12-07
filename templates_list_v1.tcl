@@ -1,9 +1,6 @@
 package provide plumed 1.901
-namespace eval ::Plumed {}
-
-
-proc ::Plumed::templates_list_v1 { } {
-    return {  
+namespace eval ::Plumed {
+    variable templates_list_v1 {
 	"Group definition"			{groupname-> [chain A] groupname<-} 
 	"-" "-"
 	"Absolute position"			"POSITION	LIST <xx>	DIR XYZ"
@@ -25,9 +22,9 @@ proc ::Plumed::templates_list_v1 { } {
 	"-" "-"
 	"Dihedral correlation"			"DIHCOR NDIH 3\nA1 B1 C1 D1\nA2 B2 C2 D2\nA3 B3 C3 D3\n"
 	"Alpha-beta similarity"			"ALPHABETA NDIH 3\nA1 B1 C1 D1 ref1\nA2 B2 C2 D2 ref2\nA3 B3 C3 D3 ref3\n"
-	"Alpha RMSD"				"ALPHARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  NOPBC"
-	"Antiparallel beta RMSD"		"ANTIBETARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
-	"Parallel beta RMSD"			"PARABETARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
+	"Alpha-helix RMSD"			"ALPHARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  NOPBC"
+	"Antiparallel beta-sheet RMSD"		"ANTIBETARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
+	"Parallel beta-sheet RMSD"			"PARABETARMSD	LIST <xx>  R_0 0.8  NN 8  MM 12  STRANDS_CUTOFF 10  NOPBC"
 	"Torsional RMSD"			"RMSDTOR NDIH 3\nA1 B1 C1 D1 ref1\nA2 B2 C2 D2 ref2\nA3 B3 C3 D3 ref3\n"
 	"Puckering coordinates"			"PUCKERING	LIST <xx>  TYPE  PHI|THETA|Q"
 	"-" "-"

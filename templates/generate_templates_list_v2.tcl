@@ -8,17 +8,15 @@
 # expanded with the corresponding "plumed gentemplate" command.
 
 # This script assumes that all of the actions have been expanded in
-# templates_temp/* and templates_full/* . This is done by
+# templates.tmp/* and templates_full.tmp/* . This is done by
 # generate_templates.sh .
 
 
 
 set unsubst {
 package provide plumed 1.901
-namespace eval ::Plumed {}
-
-proc ::Plumed::templates_list_v2 { } {
-    return {  
+namespace eval ::Plumed {
+    variable templates_list_v2 {
 	"Group definition"		"grp:   GROUP ATOMS=[chain A and name CA]"
 	"Center of mass"		"com:   COM   ATOMS=[chain A and name CA]"
 	"Ghost atom"			"%%GHOST"
@@ -32,21 +30,22 @@ proc ::Plumed::templates_list_v2 { } {
 	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ... SWITCH=(RATIONAL R_0=1.5)"
 	- -
 	"RMSD from reference structure" "%%RMSD"
+	"S- and Z-path variables"	"%%PATHMSD"
 	"Amount of \u03b1-helical structure"        
 	                                "%%ALPHARMSD"
         "Amount of parallel-\u03b2 structure"       
 	                                "%%PARABETARMSD"
 	"Amount of antiparallel-\u03b2 structure"   
 	                                "%%ANTIBETARMSD"
+	"Distance RMSD"                 "%%DRMSD"
 	- -
-	"Distances"                     "DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
+	"Distance set"                  "DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
 	"Coordination number"		"%%COORDINATIONNUMBER"
-	- -
-	"Path RMSD"			"%%PATHMSD"
-	"Polynomial CV function"	"%%COMBINE"
-	"Piecewise function"		"%%PIECEWISE"
 	"Sort CV vector"		"%%SORT"
 	"Distance in CV space"		"%%TARGET"
+	"Polynomial CV function"	"%%COMBINE"
+	"Piecewise CV function"		"%%PIECEWISE"
+	"Arbitrary CV function"		"MATHEVAL VAR=x,y ARG=d1.x,d1.y FUNC=x+y   # If compiled"
 	- -
 	"Restraint"			"%%RESTRAINT"
         "Moving restraint"		"%%MOVINGRESTRAINT"
@@ -56,28 +55,61 @@ proc ::Plumed::templates_list_v2 { } {
 	"Lower wall (allow higher)"	"%%LOWER_WALLS"
 	"Upper wall (allow lower)"	"%%UPPER_WALLS"
 	- -
-	"Switch to VMD units"           "UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs"
+	"Set system structure"          "%%MOLINFO"
+	"Switch to VMD units"           "UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps"
     }
 }
+
+# These will be substituted but left out of the menu
+#  Manually placed
+#	%%CONTACTMAP 
+#       %%DISTANCES 
+#       %%COM 
+#       %%GROUP
+#       %%UNITS
+
+      
+#  Deliberately left out 
+# %%RESTART
+# %%TEMPLATE
+# %%BIASVALUE
+# %%DEBUG
+# %%DUMPATOMS
+# %%FUNCPATHMSD
+# %%DUMPPROJECTIONS
+# %%VOLUME
+# %%WHOLEMOLECULES
+# %%PROPERTYMAP
+# %%INCLUDE
+# %%LOAD
+# %%TIME
+# %%READ
+# %%DUMPFORCES
+# %%ENERGY
+# %%CENTER
+# %%FLUSH
+# %%PRINT
+# %%DUMPDERIVATIVES
+# %%DENSITY
+# %%SUBCELL
+
+
+
+#  Do not work
+#
+
 }
-
-#	"Contact map"			"%%CONTACTMAP"
-#	"Distances"			"%%DISTANCES"
-
-
-#        "Energy"              "%%ENERGY"
-#	"Box volume"          "%%VOLUME"
-#	"Density"             "%%DENSITY"
-#	- -
 
 
 # Replace all the %%'s
 while {[regexp {%%([A-Z_]+)} $unsubst pkw kw]} {
-    set fc [open templates_temp/$kw]
+    set fc [open templates.tmp/$kw]
     set templ [string trim [gets $fc]]
     close $fc
 #    puts stderr [format "%20s --> %s" $kw $templ]
     set unsubst [regsub $pkw $unsubst $templ]
+    # Remember the set of replacements in the menu
+    lappend replaced_kw_list $kw
 }
 
 # ----------------------------------------
@@ -89,11 +121,32 @@ puts "$unsubst"
 # ----------------------------------------
 # Part 2: popup to insert "short" template
 
-# Generate keyword-help hashes for ALL keywords
+# Generate keyword-help hashes for ALL keywords. 
 puts "namespace eval ::Plumed {"
 puts "  variable template_keyword_hash"
 puts "  array set template_keyword_hash {"
-foreach fkw [glob templates_temp/*] {
+foreach fkw [glob templates.tmp/*] {
+    set kw [file tail $fkw]
+    set fc [open $fkw]
+    set templ [string trim [gets $fc]]
+    close $fc
+    # Hack to remove spaces in <some selection>
+    set templ [string map { " selection>" _selection> } $templ]
+    puts "  {$kw} {$templ}"
+    # Keep a list of the templates we've seen
+    lappend known_kw_list $kw
+}
+puts "  }"
+puts "}"
+
+
+# ----------------------------------------
+# Part 3: popup to insert full template keywords
+
+puts "namespace eval ::Plumed {"
+puts "  variable template_full_hash"
+puts "  array set template_full_hash {"
+foreach fkw [glob templates_full.tmp/*] {
     set kw [file tail $fkw]
     set fc [open $fkw]
     set templ [string trim [gets $fc]]
@@ -107,21 +160,14 @@ puts "}"
 
 
 # ----------------------------------------
-# Part 3: popup to insert full template keywords
+# Part 4: Remind of unused KWs (possibly new)
 
-puts "namespace eval ::Plumed {"
-puts "  variable template_full_hash"
-puts "  array set template_full_hash {"
-foreach fkw [glob templates_full/*] {
-    set kw [file tail $fkw]
-    set fc [open $fkw]
-    set templ [string trim [gets $fc]]
-    close $fc
-    # Hack to remove spaces in <some selection>
-    set templ [string map { " selection>" _selection> } $templ]
-    puts "  {$kw} {$templ}"
+puts stderr "NOTE: Following keywords are known but may not be in menu"
+foreach kw $known_kw_list {
+    if {[lsearch $replaced_kw_list $kw]==-1} {
+	puts  stderr "# %%$kw"
+    }
 }
-puts "  }"
-puts "}"
+puts stderr "\n\n"
 
 
