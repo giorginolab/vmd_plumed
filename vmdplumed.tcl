@@ -767,7 +767,7 @@ proc ::Plumed::reference_write {} {
  
    if [ catch {
 	if { $ref_oneframe == 1 } {
-	    reference_write_one $reffile
+	    reference_write_one $reffile now
 	    puts "File $reffile written."
 	} else {
 	    # Could be vastly improved and refactored, considering that
@@ -776,7 +776,7 @@ proc ::Plumed::reference_write {} {
 	    set ofs [open $reffile w]
 	    set tmpf [file join [ Plumed::tmpdir ] "reftmp.[pid].one.pdb" ]
 	    for {set f 0} {$f<$nf} {incr f} {
-		reference_write_one $tmpf
+		reference_write_one $tmpf $f
 		set ifs [open $tmpf r]
 		set dat [read -nonewline $ifs]
 		puts $ofs "REMARK FRAME=$f"
@@ -797,7 +797,7 @@ proc ::Plumed::reference_write {} {
 
 
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write_one { fileout } {
+proc ::Plumed::reference_write_one { fileout frameno } {
     variable refalign
     variable refmeas
     variable refmol
@@ -831,6 +831,7 @@ proc ::Plumed::reference_write_one { fileout } {
     $asref   set segname YYYY
 
     set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
+    $asall frame $frameno
     $asall writepdb $tmpf
 
     $asall set {occupancy beta segname} $old; # restore
