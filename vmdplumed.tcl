@@ -725,6 +725,8 @@ proc ::Plumed::reference_gui { } {
     variable refmeas "name CA"
     variable reffile "reference.pdb"
     variable refmol top
+    variable refmultiframe 0
+
     toplevel .plumedref -bd 4
     wm title .plumedref "Build reference structure"
     pack [ ttk::label .plumedref.title -text "Convert top molecule's current frame\ninto a reference file for FRAMESET-type analysis:" ] -side top
@@ -742,6 +744,7 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ] -side left -expand 1 -fill x
     pack [ ttk::button .plumedref.file.filebrowse -text "Browse..." \
 	       -command { Plumed::reference_set_reffile [ tk_getSaveFile  -initialfile "$::Plumed::reffile" ] }   ] -side left -expand 0
+    pack [ ttk::checkbutton .plumedref.multiframe -text "File holds multiple frames (Plumed 2)" -variable  [namespace current]::refmultiframe ] -side top -fill x
     pack [ ttk::frame .plumedref.act ] -side top -fill x
     pack [ ttk::button .plumedref.act.ok -text "Write" -command \
 	       { Plumed::reference_write } ] -side left -fill x -expand 1
@@ -749,13 +752,29 @@ proc ::Plumed::reference_gui { } {
 	       -command {  destroy .plumedref }   ] -side left -fill x -expand 1
 }
 
-proc ::Plumed::reference_set_reffile { x } { variable reffile; if { $x != "" } {set reffile $x} }; # why??
+proc ::Plumed::reference_set_reffile { x } { 
+    variable reffile; 
+    if { $x != "" } {set reffile $x} 
+}; # why??
 
-proc ::Plumed::reference_write { } {
+
+proc ::Plumed::reference_write {} {
+    variable refmultiframe
+    if { $refmultiframe == 0 } {
+	reference_write_one 
+    } else {
+	dputs TBD
+    }
+}
+
+
+
+# Uses class variables to get the selection strings
+proc ::Plumed::reference_write_one {  } {
     variable refalign
     variable refmeas
-    variable reffile
     variable refmol
+    variable reffile
 
     set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
 
@@ -793,7 +812,6 @@ proc ::Plumed::reference_write { } {
     $asalign delete
     $asmeas delete
 
-
     # i.e. grep YYYY $tmpd/reftmp.pdb > $reffile
     set fdr [ open $tmpf r ]
     set fdw [ open $reffile w ]
@@ -803,7 +821,8 @@ proc ::Plumed::reference_write { } {
 	    # workaround plumed bug in PDB reader
 	    set line [string replace $line 21 21 " "]
 	    # replace serial
-	    set line [string replace $line 6 10 [ format "%5s" [ lindex $newserial $i ] ] ]
+	    set line [string replace $line 6 10 \
+			  [ format "%5s" [ lindex $newserial $i ] ] ]
 	    puts $fdw $line
 	    incr i
 	}
@@ -813,6 +832,9 @@ proc ::Plumed::reference_write { } {
     file delete $tmpf
     puts "Done."
 }
+
+
+
 
 # Alpha, parabeta, antibeta ordered lists ==================================================                                                 
 
