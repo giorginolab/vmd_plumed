@@ -1,3 +1,8 @@
+2012-12-07  Toni  <toni@pcgiorgino.isib.cnr.it>
+
+	* 1.901 Extensive changes; added support for Plumed 2 with auto
+	switching. Added multi-file references, cleanup.
+
 2012-07-18  Toni  <toni@tabularasa>
 
 	* 1.0 Added Ramachandran GUI, refactored menus, fixed OSX
