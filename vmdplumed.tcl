@@ -53,7 +53,7 @@ VMD atom selections in square brackets expand automatically."
 Right mouse button provides help on keywords."
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
-UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=fs
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps
 
 d1:    DISTANCE ATOMS=1,200                     # Just an example
 "
@@ -732,7 +732,7 @@ proc ::Plumed::reference_gui { } {
 
     toplevel .plumedref -bd 4
     wm title .plumedref "Build reference structure"
-    pack [ ttk::label .plumedref.title -text "Convert top molecule's current frame\ninto a reference file for FRAMESET-type analysis:" ] -side top
+    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" ] -side top
     pack [ ttk::frame .plumedref.align ] -side top -fill x
     pack [ ttk::label .plumedref.align.aligntext -text "Alignment set: " ] -side left
     pack [ ttk::entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
@@ -767,26 +767,12 @@ proc ::Plumed::reference_write {} {
  
    if [ catch {
 	if { $ref_oneframe == 1 } {
-	    reference_write_one $reffile now
+	    set fn [molinfo top get frame]
+	    reference_write_one $reffile $fn $fn
 	    puts "File $reffile written."
 	} else {
-	    # Could be vastly improved and refactored, considering that
-	    # selections are constant
-	    set nf [molinfo top get numframes]
-	    set ofs [open $reffile w]
-	    set tmpf [file join [ Plumed::tmpdir ] "reftmp.[pid].one.pdb" ]
-	    for {set f 0} {$f<$nf} {incr f} {
-		reference_write_one $tmpf $f
-		set ifs [open $tmpf r]
-		set dat [read -nonewline $ifs]
-		puts $ofs "REMARK FRAME=$f"
-		puts $ofs $dat
-		puts $ofs "END"
-		close $ifs
-		file delete $tmpf
-	    }
-	    close $ofs
-	    puts "Multi-frame $reffile ($nf frames) written."
+	    reference_write_one $reffile 0 -1
+	    puts "Multi-frame $reffile written with full trajectory."
 	}
     } exc ] {
 	tk_messageBox -title "Error" -parent .plumedref -message $exc
@@ -797,7 +783,7 @@ proc ::Plumed::reference_write {} {
 
 
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write_one { fileout frameno } {
+proc ::Plumed::reference_write_one { fileout fbeg fend } {
     variable refalign
     variable refmeas
     variable refmol
@@ -831,8 +817,7 @@ proc ::Plumed::reference_write_one { fileout frameno } {
     $asref   set segname YYYY
 
     set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
-    $asall frame $frameno
-    $asall writepdb $tmpf
+    animate write pdb $tmpf beg $fbeg end $fend
 
     $asall set {occupancy beta segname} $old; # restore
     $asall delete
@@ -847,12 +832,16 @@ proc ::Plumed::reference_write_one { fileout frameno } {
     set fdw [ open $fileout w ]
     set i 0
     while { [gets $fdr line] != -1 } {
-	if { [ regexp {YYYY} $line ] } {
+	# Only passthrough lines marked with YYYY
+	if [ regexp {YYYY} $line ] {
 	    # replace serial
 	    set line [string replace $line 6 10 \
 			  [ format "%5s" [ lindex $newserial $i ] ] ]
 	    puts $fdw $line
 	    incr i
+	} elseif [ regexp END $line ] { # and ENDs
+	    puts $fdw $line
+	    set i 0
 	}
     }
     close $fdr
