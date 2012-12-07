@@ -725,7 +725,10 @@ proc ::Plumed::reference_gui { } {
     variable refmeas "name CA"
     variable reffile "reference.pdb"
     variable refmol top
-    variable refmultiframe 0
+    variable ref_oneframe 0
+    variable plumed_version
+
+    if {$plumed_version==1} { set ref_oneframe 1 }
 
     toplevel .plumedref -bd 4
     wm title .plumedref "Build reference structure"
@@ -744,7 +747,7 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ] -side left -expand 1 -fill x
     pack [ ttk::button .plumedref.file.filebrowse -text "Browse..." \
 	       -command { Plumed::reference_set_reffile [ tk_getSaveFile  -initialfile "$::Plumed::reffile" ] }   ] -side left -expand 0
-    pack [ ttk::checkbutton .plumedref.multiframe -text "File holds multiple frames (Plumed 2)" -variable  [namespace current]::refmultiframe ] -side top -fill x
+    pack [ ttk::checkbutton .plumedref.multiframe -text "Only current frame (Plumed 1)" -variable  [namespace current]::ref_oneframe ] -side top -fill x
     pack [ ttk::frame .plumedref.act ] -side top -fill x
     pack [ ttk::button .plumedref.act.ok -text "Write" -command \
 	       { Plumed::reference_write } ] -side left -fill x -expand 1
@@ -759,51 +762,75 @@ proc ::Plumed::reference_set_reffile { x } {
 
 
 proc ::Plumed::reference_write {} {
-    variable refmultiframe
-    if { $refmultiframe == 0 } {
-	reference_write_one 
-    } else {
-	dputs TBD
+    variable ref_oneframe
+    variable reffile
+ 
+   if [ catch {
+	if { $ref_oneframe == 1 } {
+	    reference_write_one $reffile
+	    puts "File $reffile written."
+	} else {
+	    # Could be vastly improved and refactored, considering that
+	    # selections are constant
+	    set nf [molinfo top get numframes]
+	    set ofs [open $reffile w]
+	    set tmpf [file join [ Plumed::tmpdir ] "reftmp.[pid].one.pdb" ]
+	    for {set f 0} {$f<$nf} {incr f} {
+		reference_write_one $tmpf
+		set ifs [open $tmpf r]
+		set dat [read -nonewline $ifs]
+		puts $ofs "REMARK FRAME=$f"
+		puts $ofs $dat
+		puts $ofs "END"
+		close $ifs
+		file delete $tmpf
+	    }
+	    close $ofs
+	    puts "Multi-frame $reffile ($nf frames) written."
+	}
+    } exc ] {
+	tk_messageBox -title "Error" -parent .plumedref -message $exc
     }
+
 }
 
 
 
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write_one {  } {
+proc ::Plumed::reference_write_one { fileout } {
     variable refalign
     variable refmeas
     variable refmol
-    variable reffile
-
-    set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
 
     # From where new serials are taken
     set asnew [ atomselect $refmol "($refalign) or ($refmeas)" ]
     set newserial [ $asnew  get serial ]
     $asnew delete
 
-    set asall [ atomselect top all]
     set asref [ atomselect top "($refalign) or ($refmeas)" ]
-    set asalign [ atomselect top $refalign ] 
-    set asmeas  [ atomselect top $refmeas ] 
-    
     set oldserial [ $asref  get serial ]
+
+    
     if { [llength $oldserial] != [llength $newserial] } {
-	tk_messageBox -title "Error" -parent .plumedref -message "Selection ($refalign) or ($refmeas) has different number of atoms in molecule $refmol ([llength $newserial]) versus top ([llength $oldserial])."
-	return
+	$asref delete
+	error "Selection ($refalign) or ($refmeas) matches a different number of atoms in molecule $refmol ([llength $newserial] matched atoms) with respect to the top molecule ([llength $oldserial] atoms)."
     }
 
-    set old [ $asall get {occupancy beta segname} ]; # backup
+    set asall [ atomselect top all]
+    set asalign [ atomselect top $refalign ] 
+    set asmeas  [ atomselect top $refmeas ] 
 
+    set old [ $asall get {occupancy beta segname} ]; # backup
+    
     $asall set occupancy 0
     $asall set beta 0
     $asall set segname XXXX
-
+    
     $asalign set occupancy 1
     $asmeas  set beta 1
     $asref   set segname YYYY
 
+    set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
     $asall writepdb $tmpf
 
     $asall set {occupancy beta segname} $old; # restore
@@ -812,14 +839,14 @@ proc ::Plumed::reference_write_one {  } {
     $asalign delete
     $asmeas delete
 
-    # i.e. grep YYYY $tmpd/reftmp.pdb > $reffile
+    # i.e. grep YYYY $tmpd/reftmp.pdb > $fileout
+    # plumed <1.3 had a bug in PDB reader, which required
+    # non-standard empty chain: ## set line [string replace $line 21 21 " "]
     set fdr [ open $tmpf r ]
-    set fdw [ open $reffile w ]
+    set fdw [ open $fileout w ]
     set i 0
     while { [gets $fdr line] != -1 } {
 	if { [ regexp {YYYY} $line ] } {
-	    # workaround plumed bug in PDB reader
-	    set line [string replace $line 21 21 " "]
 	    # replace serial
 	    set line [string replace $line 6 10 \
 			  [ format "%5s" [ lindex $newserial $i ] ] ]
@@ -830,7 +857,6 @@ proc ::Plumed::reference_write_one {  } {
     close $fdr
     close $fdw
     file delete $tmpf
-    puts "Done."
 }
 
 
