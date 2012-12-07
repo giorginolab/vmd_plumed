@@ -21,18 +21,26 @@ package require tile
 
 namespace eval ::Plumed:: {
     namespace export plumed
-    variable debug 0
-    variable highlight_error_ms 12000
-    variable plugin_version 2.0a
-    variable plumed_version 2
-    variable w                                          ;# handle to main window
-    variable textfile unnamed.plumed
+    variable plugin_version 1.901
     variable plugin_name "PLUMED-GUI collective variable analysis tool"
+
+    variable debug 0;		       # extra log info
+    variable highlight_error_ms 12000; # error message held this long
+    variable plumed_version 1;	       # default PLUMED to use if none found
+    variable w;			       # handle to main window
+
+    variable textfile unnamed.plumed
+
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
+
+    # Header of short help
     variable text_instructions_header \
 "Enter collective variable definitions below, in PLUMED syntax.  
 Click 'Plot' to evaluate them on the 'top' trajectory.  
 VMD atom selections in square brackets expand automatically."
+
+    # Plumed v1 ............
+    # ...short help
     variable text_instructions_example_v1 \
 "For example:
 
@@ -41,6 +49,11 @@ VMD atom selections in square brackets expand automatically."
 
     DISTANCE LIST <protein> <ligand>
     COORD LIST <protein> <ligand>  NN 6 MM 12 D_0 5.0 R_0 0.5 "
+    # ...example script
+    variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
+
+    # Plumed v2 ............
+    # ...short help
     variable text_instructions_example_v2 \
 "For example:
 
@@ -51,12 +64,20 @@ VMD atom selections in square brackets expand automatically."
 
 *Note*: UNITS are nm, ps and kJ/mol unless specified.
 Right mouse button provides help on keywords."
-    variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
+    # ...example script
     variable empty_meta_inp_v2 "
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps
 
 d1:    DISTANCE ATOMS=1,200                     # Just an example
 "
+
+    # Used in file requestors
+    variable file_types {
+	{"Plumed Files" { .plumed .metainp .meta_inp } }
+	{"Text Files" { .txt .TXT} }
+	{"All Files" * }
+    }
+
 }
 
 proc plumed_tk {} {
@@ -84,12 +105,6 @@ proc ::Plumed::plumed {} {
     if { [winfo exists .textview] } {
 	wm deiconify $w
 	return
-    }
-
-    variable file_types {
-	{"Plumed Files" { .plumed .metainp .meta_inp } }
-	{"Text Files" { .txt .TXT} }
-	{"All Files" * }
     }
 
     set w [toplevel ".plumed"]
@@ -169,7 +184,7 @@ proc ::Plumed::plumed {} {
     menu $w.menubar.structure.menu -tearoff no
     $w.menubar.structure.menu add command -label "Build reference structure..." -command Plumed::reference_gui
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
-    $w.menubar.structure.menu add command -label "Insert Ramachandran \u03c6/\u03c8/\u03c9 CVs..." \
+    $w.menubar.structure.menu add command -label "Insert backbone \u03c6/\u03c8/\u03c9 CVs..." \
 	-command Plumed::rama_gui
     $w.menubar.structure config -width 8
 
@@ -184,8 +199,8 @@ proc ::Plumed::plumed {} {
         -command "vmd_open_url http://www.plumed-code.org"
     $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v1.3)" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help.menu add command -label "How to install the 'driver' binary (v1.3)" \
-	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
+    $w.menubar.help.menu add command -label "Installation of the 'driver' binary (v1.3)" \
+	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool#installation"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -395,16 +410,16 @@ $plugin_name
 Version $plugin_version
 
 Toni Giorgino <toni.giorgino@isib.cnr.it>
-Institute of Biomedical Engineering
-National Research Council of Italy
-ISIB-CNR
+Institute of Biomedical Engineering (ISIB)
+National Research Council of Italy (CNR)
 
 Copyright (c) 2010-2012
 
-Consiglio Nazionale delle Ricerche,
-Universitat Pompeu Fabra
+Previous versions: 
+Computational Biophysics Group
+Research Programme on Biomedical Informatics (GRIB-IMIM)
+Universitat Pompeu Fabra (UPF)
 
-\$Id: vmdplumed.tcl 1030M 2012-07-20 09:24:02Z (local) $
 "
 }
 
@@ -608,8 +623,8 @@ proc ::Plumed::rama_gui { } {
     variable rama_omega 0
 
     toplevel .plumedrama -bd 4
-    wm title .plumedrama "Insert Ramachandran CVs"
-    pack [ ttk::label .plumedrama.head1 -text "Insert CVs for the Ramachandran angles of the matched residues.
+    wm title .plumedrama "Insert backbone torsion CVs"
+    pack [ ttk::label .plumedrama.head1 -text "Insert torsion CVs for the backbone of the matched residues.
 N-CA-C atom naming is assumed for backbone atoms.
 Dihedrals involving atoms outside the selection are skipped.
 " ] -side top -fill x 
@@ -680,7 +695,7 @@ proc ::Plumed::rama_insert {} {
 	$N delete; $CA delete; $C delete
 	$Np delete; $CAp delete
     }
-    $w.txt.text insert insert "# The above list contains $nnew Ramachandan CVs\n" 
+    $w.txt.text insert insert "# The above list contains $nnew backbone torsion CVs\n" 
 }
 
 
@@ -1138,7 +1153,7 @@ proc ::Plumed::nc_gui { } {
     variable nc_groupname nc
 
     toplevel .plumednc -bd 4
-    wm title .plumednc "Native contacts CV"
+    wm title .plumednc "Insert native contacts CV"
     pack [ ttk::label .plumednc.head1 -text "Insert a CV and group definitions required to define a native contacts CV.
 The current frame of the top molecule is taken as the native state." ] -side top -fill x 
 
