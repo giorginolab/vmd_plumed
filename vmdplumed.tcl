@@ -22,7 +22,7 @@ package require tile
 namespace eval ::Plumed:: {
     namespace export plumed
     variable plugin_version 1.901
-    variable plugin_name "PLUMED-GUI collective variable analysis tool"
+    variable plugin_name "Plumed-GUI collective variable analysis tool"
 
     variable debug 0;		       # extra log info
     variable highlight_error_ms 12000; # error message held this long
@@ -402,6 +402,7 @@ proc ::Plumed::location_browse { } {
 proc ::Plumed::help_about { {parent .plumed} } {
     variable plugin_name
     variable plugin_version
+    set at @
 
     tk_messageBox -title "About" -parent $parent -message \
 "
@@ -409,16 +410,20 @@ $plugin_name
 
 Version $plugin_version
 
-Toni Giorgino <toni.giorgino@isib.cnr.it>
+Toni Giorgino <toni.giorgino${at}isib.cnr.it>
+
 Institute of Biomedical Engineering (ISIB)
 National Research Council of Italy (CNR)
 
-Copyright (c) 2010-2012
-
 Previous versions: 
+
 Computational Biophysics Group
-Research Programme on Biomedical Informatics (GRIB-IMIM)
+Research Programme on 
+   Biomedical Informatics (GRIB-IMIM)
 Universitat Pompeu Fabra (UPF)
+
+Citation:
+T. Giorgino, Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts.
 
 "
 }
