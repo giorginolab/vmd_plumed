@@ -25,5 +25,6 @@ templates_list_v2_autogen.tcl: templates/generate_templates.sh templates/generat
 
 
 clean:
-	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR).tgz  $(VMD_PLUGIN_DIR) README.txt
+	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR).tgz  $(VMD_PLUGIN_DIR) README.txt \
+		templates/templates_full.tmp templates/templates.tmp 
 

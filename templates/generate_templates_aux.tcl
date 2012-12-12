@@ -45,7 +45,7 @@ namespace eval ::Plumed {
 	"Distance in CV space"		"%%TARGET"
 	"Polynomial CV function"	"%%COMBINE"
 	"Piecewise CV function"		"%%PIECEWISE"
-	"Arbitrary CV function"		"MATHEVAL VAR=x,y ARG=d1.x,d1.y FUNC=x+y   # If compiled"
+	"Arbitrary CV function"		"MATHEVAL ARG=d1.x,d1.y VAR=x,y FUNC=x+y   # If compiled"
 	- -
 	"Restraint"			"%%RESTRAINT"
         "Moving restraint"		"%%MOVINGRESTRAINT"
@@ -55,7 +55,7 @@ namespace eval ::Plumed {
 	"Lower wall (allow higher)"	"%%LOWER_WALLS"
 	"Upper wall (allow lower)"	"%%UPPER_WALLS"
 	- -
-	"Set system structure"          "%%MOLINFO"
+	"Set system topology"           "%%MOLINFO"
 	"Switch to VMD units"           "UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps"
     }
 }
@@ -92,6 +92,7 @@ namespace eval ::Plumed {
 # %%DUMPDERIVATIVES
 # %%DENSITY
 # %%SUBCELL
+# %%HISTOGRAM
 
 
 

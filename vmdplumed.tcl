@@ -1364,7 +1364,7 @@ proc ::Plumed::highlight_error_label {label etext} {
 }
 
 
-# TEMPLATES ==================================================
+# Handle version changes ==================================================
 
 proc ::Plumed::plumed_version_changed {} {
     instructions_update
@@ -1426,7 +1426,7 @@ proc ::Plumed::templates_populate_menu {} {
 	    $w.menubar.insert.menu add separator
 	} else {
 	    $w.menubar.insert.menu add command -label $disp \
-		-command [list $::Plumed::w.txt.text insert insert "$insr\n"]
+		-command [list [namespace current]::templates_insert_line $insr]
 	}
     }
 
@@ -1443,6 +1443,15 @@ proc ::Plumed::templates_populate_menu {} {
 	}
     }
 }
+
+
+# Insert line at cursor
+proc ::Plumed::templates_insert_line {line} {
+    variable w
+    $w.txt.text edit separator
+    $w.txt.text insert {insert linestart} "$line\n"
+}
+
 				      
 
 # Plumed::templates_list_v1 is in a separate file in the same
