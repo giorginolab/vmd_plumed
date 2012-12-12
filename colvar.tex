@@ -642,16 +642,14 @@ The root mean square deviation (RMSD) metric is frequently used to
 detect structural similarities and conformational transitions.  RMSD
 values are computed averaging the squared displacement of a chosen set
 of atoms (displacement set) with respect to a \emph{reference}
-structure,  after applying the roto-translation that optimally
-aligns another, possibly coincident, set of atoms (alignment set).   
-Plumed also implements a generalization
-of the metric, namely the $S$ and $Z$ path variables, to express
-the ``progression'' and ``distance'' of the current state of the
-system along a path defined by an arbitrary number of exemplary
-reference structures used as
-landmarks~\cite{Branduardi_Gervasio_Parrinello_2007}.
-
-
+structure, after applying the roto-translation that optimally aligns
+another, possibly coincident, set of atoms (alignment set).  Plumed
+also implements three generalization of the metric, namely the $S$,
+$Z$ and \emph{property map} path variables, to express the
+``progression'' and ``distance'' of the current state of the system
+along a path defined by an arbitrary number of exemplary reference
+structures used as
+landmarks~\cite{Branduardi_Gervasio_Parrinello_2007,Spiwok_2011}.
 
 
 % A simplified procedure to generate reference frames from loaded
@@ -661,31 +659,37 @@ The \emph{Build reference structure} dialog provides a convenient way
 to generate such reference structures (Figure~\ref{fig:reference}).
 Pressing the \emph{Write} button ``freezes'' the coordinates of the
 \emph{currently selected} frame into a ``reference file''.  Reference
-files are PDB-like tables used by Plumed to define the set of atoms to be used for
-alignment, for computing the displacement, and the reference
-coordinates; each line represents one of the atoms involved in the
-calculation, with columns recording serial numbers, coordinates, and
-inclusion in one or the other set~\cite{plumed_manual}.  
+files are PDB-like tables used by Plumed to define the set of atoms to
+be used for alignment, for computing the displacement, and the
+reference coordinates; each line represents one of the atoms involved
+in the calculation, with columns recording serial numbers,
+coordinates, and inclusion in one or the other
+set~\cite{plumed_manual}.  
 
 % The reference structure is the taken as the current frame of the top molecule. 
 
 The dialog allows the use of atom selections to indicate the subset of
 the atoms to be involved, respectively, in the computation of the
-optimal alignment, and the measure of the RMSD.
+optimal alignment, and the measure of the RMSD. A check-box provides
+the choice on whether to export all of the frames of the current
+trajectory (convenient when specifying a complex path), or just the
+current frame (for simple RMSD calculations, or to facilitate the
+manual construction of paths).
+
 By default, the reference file generated is suitable for computing
-RMSD on systems having the same topology as that from which the
-reference was extracted.  However, it is sometimes necessary to
-perform alignments between different topologies: the native structure
-may for instance be a PDB file, while the system under analysis is the
-all-atom structure used in simulation. Alignments between molecules
-with different topologies are arranged changing the \emph{target
-  molecule ID}. This feature adjusts the atom numbering of the top
-molecule to be compatible with the specified \emph{target} molecule;
-in other words, trajectory frames of the target molecule will be
-aligned with the structure of the top molecule, even though the
-topologies of the two are different. The renumbering feature requires
-that the atom selections match the same number of atoms in the two
-systems.
+$S$, $Z$ and property map values on systems with the same topology as the
+one from which the reference was extracted.  However, it is sometimes
+necessary to perform alignments between different topologies; for example, the
+native structure may be a PDB file, while the system
+under analysis is the all-atom structure used in
+simulation. Alignments between molecules with different topologies are
+possible by setting the \emph{target molecule ID}. This feature adjusts
+the atom numbering of the top molecule to be compatible with the
+specified \emph{target} molecule; in other words, trajectory frames of
+the target molecule will be aligned with the structure of the top
+molecule, even though the topologies of the two are different. The
+renumbering feature requires that the atom selections match the same
+number of atoms in the two systems.
 
 
 
