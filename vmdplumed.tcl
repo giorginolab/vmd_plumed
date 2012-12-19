@@ -214,26 +214,16 @@ proc ::Plumed::plumed {} {
     pack $w.menubar.help -side right
 
 
-    ## TEXT ============================================================
-    ttk::frame $w.txt
-    ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
-    text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
-	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {Courier 12}
-    ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
-    label $w.txt.text.instructions -text "(...)" -justify left \
-	-relief solid -padx 2m -pady 2m
-    file_new
-    $w.txt.text window create 1.0 -window $w.txt.text.instructions \
-	-padx 100 -pady 10
-    pack $w.txt.label -side top   -fill x 
-    pack $w.txt.vscr  -side right -fill y    
-    pack $w.txt.text  -side left  -fill both -expand yes
-    pack $w.txt                   -fill both -expand 1
+    ## PLOT ============================================================
+    pack [  ttk::frame $w.plot ] -side bottom -fill x 
+    pack [  ttk::button $w.plot.plot -text "Plot"   \
+	   -command [namespace current]::do_compute ]  \
+	-side left -fill x -expand 1 
 
 
     ## OPTIONS ============================================================
     pack [  ttk::labelframe $w.options -relief ridge  -text "Options"  ] \
-	-side top -fill x
+	-side bottom -fill x
 
     pack [  ttk::frame $w.options.pbc   ]  -side top -fill x
     pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC" \
@@ -250,7 +240,7 @@ proc ::Plumed::plumed {} {
 	       -variable  [namespace current]::plot_points ] -side left
 
     # ----------------------------------------
-    pack [ frame $w.options.location ] -side top -fill x
+    pack [ frame $w.options.location ]  -fill x
     pack [  ttk::label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
     pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3"        \
 	       -variable [namespace current]::plumed_version              \
@@ -260,16 +250,29 @@ proc ::Plumed::plumed {} {
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
     pack [  ttk::label $w.options.location.text -text "       Path to executable: " ] -side left -expand 0
-    pack [  ttk::entry $w.options.location.path -width 40 -textvariable \
+    pack [  ttk::entry $w.options.location.path -width 5 -textvariable \
 	       [namespace current]::driver_path ] -side left -expand 1 -fill x
     pack [  ttk::button $w.options.location.browse -text "Browse..." \
 	   -command [namespace current]::location_browse   ] -side left -expand 0
 
-    ## PLOT ============================================================
-    pack [  ttk::frame $w.plot ] -side top -fill x
-    pack [  ttk::button $w.plot.plot -text "Plot"   \
-	   -command [namespace current]::do_compute ]  \
-	-side left -fill x -expand 1 
+
+
+    ## TEXT ============================================================
+    ttk::frame $w.txt
+    ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
+    text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
+	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {Courier 12}
+    ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
+    label $w.txt.text.instructions -text "(...)" -justify left \
+	-relief solid -padx 2m -pady 2m
+    file_new
+    $w.txt.text window create 1.0 -window $w.txt.text.instructions \
+	-padx 100 -pady 10
+    pack $w.txt.label -side top   -fill x 
+    pack $w.txt.vscr  -side right -fill y    
+    pack $w.txt.text  -side left  -fill both -expand yes
+    pack $w.txt                   -fill both -expand 1 -side top
+
 
     ## POPUP ============================================================
     menu $w.txt.text.popup -tearoff 0
