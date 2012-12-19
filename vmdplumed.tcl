@@ -21,7 +21,7 @@ package require tile
 
 namespace eval ::Plumed:: {
     namespace export plumed
-    variable plugin_version 1.901
+    variable plugin_version [package versions plumed]
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
     variable debug 0;		       # extra log info
@@ -215,20 +215,20 @@ proc ::Plumed::plumed {} {
 
 
     ## TEXT ============================================================
-    frame $w.txt
-    label $w.txt.label  -textvariable Plumed::textfile
+    ttk::frame $w.txt
+    ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
 	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {Courier 12}
-    scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
+    ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
     label $w.txt.text.instructions -text "(...)" -justify left \
 	-relief solid -padx 2m -pady 2m
     file_new
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
 	-padx 100 -pady 10
-    pack $w.txt.label            -fill x 
-    pack $w.txt.text  -side left -fill both -expand 1
-    pack $w.txt.vscr  -side left -fill y    -expand 0
-    pack $w.txt                  -fill both -expand 1
+    pack $w.txt.label -side top   -fill x 
+    pack $w.txt.vscr  -side right -fill y    
+    pack $w.txt.text  -side left  -fill both -expand yes
+    pack $w.txt                   -fill both -expand 1
 
 
     ## OPTIONS ============================================================
