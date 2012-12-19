@@ -1,21 +1,25 @@
 default: pkgIndex.tcl
 
 TCLLIST:=vmdplumed.tcl templates_list_v1.tcl templates_list_v2_autogen.tcl
-DISTLIST:=INSTALL README.txt pkgIndex.tcl $(TCLLIST)
-VMD_PLUGIN_DIR=plumed1.901
+DISTLIST:=INSTALL README pkgIndex.tcl ChangeLog $(TCLLIST)
+VMD_PLUGIN_DIR=plumed_1.901
 
-dist: $(DISTLIST)
+dist: $(VMD_PLUGIN_DIR).tar.gz
+
+$(VMD_PLUGIN_DIR).tar.gz: $(DISTLIST)
 	rm -rf $(VMD_PLUGIN_DIR)
 	mkdir $(VMD_PLUGIN_DIR)
 	cp $(DISTLIST) $(VMD_PLUGIN_DIR)
-	tar -zcvf  $(VMD_PLUGIN_DIR).tgz  $(VMD_PLUGIN_DIR)
+	tar -zcvf  $@  $(VMD_PLUGIN_DIR)
+	rm -rf $(VMD_PLUGIN_DIR)
+	cp $@ /home/toni/Dropbox/Public
 
 
 pkgIndex.tcl: $(TCLLIST)
 	tclsh <<< "pkg_mkIndex -verbose ."
 
 # Todo - download wiki, update README
-README.txt:
+README:
 	links -dump 'http://www.multiscalelab.org/utilities/PlumedCVTool?action=print' | \
 		cat templates/README_header.txt - > $@
 
@@ -25,6 +29,6 @@ templates_list_v2_autogen.tcl: templates/generate_templates.sh templates/generat
 
 
 clean:
-	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR).tgz  $(VMD_PLUGIN_DIR) README.txt \
+	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR).tgz  $(VMD_PLUGIN_DIR) README \
 		templates/templates_full.tmp templates/templates.tmp 
 
