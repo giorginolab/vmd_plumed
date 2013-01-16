@@ -39,11 +39,13 @@ doc/index.html:
 
 
 # Todo - replace with sub-Make
-templates_list_v2_autogen.tcl: private/templates/generate_templates.sh private/templates/generate_templates_aux.tcl
-	cd private/templates && bash generate_templates.sh
+templates_list_v2_autogen.tcl: private/templates/generate_templates_aux.tcl
+	$(MAKE) -C private/templates
+
 
 
 clean:
-	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR) $(TGZ) \
-		private/templates/*.tmp
+	$(MAKE) -C private/templates clean
+	rm -rf templates_list_v2_autogen.tcl $(VMD_PLUGIN_DIR) $(TGZ)
+
 
