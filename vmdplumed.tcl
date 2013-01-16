@@ -240,7 +240,7 @@ proc ::Plumed::plumed {} {
 	       -variable  [namespace current]::plot_points ] -side left
 
     # ----------------------------------------
-    pack [ frame $w.options.location ]  -fill x
+    pack [  ttk::frame $w.options.location ]  -fill x
     pack [  ttk::label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
     pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3"        \
 	       -variable [namespace current]::plumed_version              \
