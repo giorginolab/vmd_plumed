@@ -14,7 +14,7 @@
 
 
 set unsubst {
-package provide plumed 1.901
+package provide plumed 1.9
 namespace eval ::Plumed {
     variable templates_list_v2 {
 	"Group definition"		"grp:   GROUP ATOMS=[chain A and name CA]"

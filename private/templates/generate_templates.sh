@@ -29,7 +29,7 @@ for action in $(cat list.tmp); do
 done
 
 # Generate the templates
-tclsh generate_templates_aux.tcl > ../templates_list_v2_autogen.tcl
+tclsh generate_templates_aux.tcl > ../../templates_list_v2_autogen.tcl
 
 
 

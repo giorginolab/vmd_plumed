@@ -1,0 +1,210 @@
+This page is just a text dump of the on-line documentation, provided
+for convenience.  The authoritative and up-to-date documentation is at
+http://www.multiscalelab.org/utilities/PlumedCVTool .
+
+
+
+****************
+
+
+
+   Link: Start
+   Link: Alternate: Wiki Markup
+   Link: Alternate: Print View
+   Link: Appendix: cvs.png
+   Link: Appendix: driver.exe
+   Link: Appendix: driver_safe
+   Link: Appendix: patch-pdbparser
+   Link: Appendix: screenshotmultiplot.png
+   Link: Appendix: screenshotnc.png
+   Link: Appendix: screenshotplumedcollect.png
+   Link: Appendix: screenshotpreparerefere.png
+   Link: Appendix: screenshotrama.png
+   Link: Appendix: vmd_plumed.tgz
+   Link: Search
+   Link: Index
+   Link: Glossary
+   Link: Help
+     * utilities
+     * PlumedCVTool
+
+    A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 1.901)
+
+   To use this plugin, you will need PLUMED's driver executable. Download it
+   from the 'installation' section below
+
+   The PLUMED-GUI collective variable analysis tool is a plugin for the
+   Visual Molecular Dynamics (VMD) software that provides access to the
+   extensive set of collective variables (CV) defined in the PLUMED software.
+   It allows you to:
+     * analyze the currently loaded trajectory by evaluating and plotting
+       arbitrary CVs
+     * use VMD's atom selection keywords to define atom groups and ready-made
+       templates for common CVs
+     * export the CV definition file for use in MD simulations
+     * prepare reference files for RMSD, path-variable, native contacts, etc.
+     * analyze DCD files in batches
+
+   Please check that you have the latest version installed.
+
+   The plugin supports both Plumed 1.3 and Plumed 2.0, which is still
+   unreleased.
+
+Usage
+
+   The usage of the plugin is straightforward.
+    1. From VMD's main window, select "Extensions > Analysis > Collective
+       variable analysis (PLUMED)"
+    2. Edit the CV definition file, defining one or more CVs
+    3. Enter the number of CVs defined in the corresponding box (this will be
+       fixed in a future PLUMED release)
+    4. Click "Plot". This will open a plot window with the selected CVs.
+
+   Square brackets can be used to conveniently define atom groups (Ctrl-G).
+   During evaluation, atom selection keywords in square brackets are replaced
+   with a list of the corresponding serial numbers for the top molecule.
+
+   When Plot is clicked, the currently loaded trajectory is exported to a
+   temporary directory (shown in the console), and the driver utility is
+   invoked. If there are no errors, a plot will show the CVs evaluated on the
+   frames of the current trajectory.
+
+   Troubleshooting: In case of errors, the console will provide diagnostics
+   and the location of the temporary directory where computations are run.
+   Common sources of error are:
+     * Hills deposition should be disabled.
+     * Improperly set periodic boundary conditions, especially when dealing
+       with non-wrapped solvent or with MD engines which "break" molecules by
+       wrapping them.
+
+     ----------------------------------------------------------------------
+
+The File menu
+
+   CV definition files can be opened, edited and saved as usual. Save and
+   Save as... save the currently open file verbatim, while the Export...
+   function performs the atom selection replacements (see below), thus
+   creating a META_INP file that can be used directly in simulations.
+
+     ----------------------------------------------------------------------
+
+The Edit menu
+
+   The Edit menu provides the usual cut-copy-paste text-editing options.
+
+     ----------------------------------------------------------------------
+
+The Templates menu
+
+   Elements in the Templates menu provides shortcuts for most CVs supported
+   by PLUMED. Please refer to PLUMED's user's guide for the full syntax.
+
+   The Electrostatic energy and Dipole CVs require charges to be defined in
+   the currently loaded molecule, so AMBER or CHARMM topology file have to be
+   loaded beforehand.
+
+   Structure files (used for RMSD, Z_PATH, S_PATH, etc.) must be referenced
+   by absolute pathname.
+
+   The template menu does not hold the full list of the CVs implemented in
+   PLUMED, but all of them will work anyway when typed in.
+
+     ----------------------------------------------------------------------
+
+The Structure menu
+
+   The Structure menu provides functions for entering complex CVs.
+
+  Reference structures for RMSD and path variables
+
+   The Structure>Prepare reference structure... dialog can be used to prepare
+   pseudo-PDB files that can be used as reference structures for RMSD,
+   path-variables, etc. Two VMD atom selections are required to define the
+   set of atoms that will be used for alignment (alignment set) and for the
+   distance measurement (displacement set), respectively. The currently
+   selected frame of the top molecule is used to create a reference file;
+   numbering can be altered to conform to another molecule. The file format
+   is specified in the 'Path collective variables' section of the PLUMED
+   manual.
+
+   Notes:
+     * After generating the structures, remember to set the top molecule to
+       the one you want to analyze.
+     * Structures must be referenced by absolute pathname in the PLUMED
+       script.
+     * The RMSD keyword has been renamed to MSD in PLUMED 1.3.
+
+  Native contacts
+
+   The Structure>Native contacts CV inserts a native-contacts CV. The
+   currently selected frame of the top molecule is taken as the native state.
+   Atom numbers are adapted to fit the structure indicated in the target
+   molecule field. If selection 2 is given, only intermolecular contacts
+   (between selection 1 and 2) are counted. Otherwise, contacts internal in
+   selection 1 are considered. The Distance cutoff selects the radius to
+   consider contacts in the native state. If only one selection is given,
+   contacts can be filtered with the D resid option (see description in RMSD
+   trajectory tool enhanced with native contacts). Group name specifies the
+   label for two atom lists (that will be placed at the top of the plumed
+   file). Note: After generating the CV lines, remember to set the top
+   molecule to the one you want to analyze.
+
+  Backbone torsion CVs
+
+   A list of f, q, and w Ramachandran angles can be inserted for an atom
+   selection. Note that N-CA-C atom names are assumed for backbone atoms.
+   Dihedrals involving atoms outside the selection are not added. The w angle
+   is intended between residue i and i+1.
+
+     ----------------------------------------------------------------------
+
+Screenshot
+
+   User interface:
+
+   screenshotplumedcollect.png
+
+   attachment:screenshotmultiplot.png attachment:cvs.png
+   attachment:screenshotpreparerefere.png
+
+   attachment:screenshotnc.png attachment:screenshotrama.png
+
+Installation
+
+   The plugin is being updated. In the meantime, please use the version
+   included in VMD.
+
+   Plumed driver. The plugin requires that you have PLUMED's driver utility
+   (LGPL) in your path.
+     * Windows the easiest is to download the pre-compiled binary for Win32
+       (version 1.3) and copy it e.g. in c:\windows. Users willing to compile
+       the plugin can follow the windows build instructions.
+     * Linux users can download the code from PLUMED home page and build it
+       following the instructions.
+
+   If the executable is not in the path (not recommended), its location can
+   be specified in the "Path to executable" box.
+
+   Upgrades. VMD versions 1.9.0 is distributed with PLUMED GUI v0.9. If you
+   want to upgrade, download the plugin and follow the installation
+   instructions in the archive.
+
+License
+
+   By downloading the software you agree to comply with the terms of the
+   3-clause BSD license.
+
+   In any publication resulting from the use of Plumed-GUI, you are kindly
+   requested to cite the following paper (in addition to other possibly
+   relevant Plumed citations).
+     * Toni Giorgino, Plumed-GUI: an environment for the interactive
+       development of molecular dynamics analysis and biasing scripts
+       (submitted)
+
+   Author: Toni Giorgino
+
+Acknowledgments
+
+   Work partially supported by the Generalitat de Catalunya.
+
+   http://img191.imageshack.us/img191/496/vphlogo.png
