@@ -610,7 +610,7 @@ process of building files and lists by hand.
     \includegraphics[scale=.45]{images/reference} \label{fig:reference}}
   \subfigure[Native contacts]{
     \includegraphics[scale=.45]{images/native} \label{fig:native}}
-  \subfigure[Ramachandran angles]{
+  \subfigure[Backbone torsion angles]{
     \includegraphics[scale=.45]{images/rama} \label{fig:rama}}
   \caption{Dialogs accessible from the \emph{Structure} menu support
     the creation of CVs based on the active topology. (a) \emph{Build
@@ -626,8 +626,8 @@ process of building files and lists by hand.
     those atom pairs will present in each trajectory frame. 
     Non-informative contacts between neighboring residues can be
     filtered out putting a lower bound to the $| \Delta \mbox{resid}
-    |$ parameter. (c) The \emph{Ramachandran angles} dialog inserts
-    CVs corresponding to $\phi, \psi$ and/or $\omega$ backbone
+    |$ parameter. (c) The \emph{Insert backbone angles} dialog inserts
+    CVs corresponding to $\phi, \psi$ and/or $\omega$ 
     dihedrals contained in the selection.}\label{fig:structure}
 \end{figure}
 
@@ -740,20 +740,18 @@ function~\cite{plumed_manual}.
 
 
 
-\subsection{Ramachandran angles}
+\subsection{Backbone torsion angles}
 
-The \emph{Ramachandran angles} dialog allows the insertion of the
-standard backbone torsion angles that are defined between neighboring residues.
-The user is asked to specify an atom selection. When the \emph{Insert}
-button is pressed, CVs will be inserted to compute those $\phi$,
-$\psi$ and/or $\omega$ angles that are contained in the
-selection. Each angle will be a separate CV computed through the
-appropriate \texttt{TORSION} keyword, defined according to the IUPAC
-rules for biochemical nomenclature~\cite{IUPAC}. The generated CVs
-include comments marking the involved residues in a human-readable
-way.
-
-
+The \emph{Insert backbone angles} dialog (Figure~\ref{fig:rama})
+allows the computation of backbone $\phi$, $\psi$ and/or $\omega$
+torsion angles between neighboring residues, defined according to the
+standard IUPAC rules for biochemical nomenclature~\cite{IUPAC}.  The
+user is asked to specify an atom selection; when the \emph{Insert}
+button is pressed, a CV will be inserted for each $\phi$, $\psi$
+and/or $\omega$ backbone dihedral contained in the selection. Each
+angle is defined through the appropriate \texttt{TORSION} keyword and,
+for the sake of readability, includes a comment pointing back to the
+name of the involved residue.
 
 
 
