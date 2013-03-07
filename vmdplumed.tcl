@@ -184,7 +184,7 @@ proc ::Plumed::plumed {} {
     menu $w.menubar.structure.menu -tearoff no
     $w.menubar.structure.menu add command -label "Build reference structure..." -command Plumed::reference_gui
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
-    $w.menubar.structure.menu add command -label "Insert backbone \u03c6/\u03c8/\u03c9 CVs..." \
+    $w.menubar.structure.menu add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
 	-command Plumed::rama_gui
     $w.menubar.structure config -width 8
 
@@ -1562,7 +1562,7 @@ proc ::Plumed::popup_insert_keyword {kw} {
 # Convert word to doxygen-generated filename
 proc ::Plumed::popup_prepend_underscore {p} {
     set pu [string tolower $p];	# lower
-    set pu [join [split $pu ""] _]; # intermix underscorse
+    set pu [join [split $pu ""] _]; # intermix underscore
     set pu [regsub {___} $pu __];   # ___ -> __
     return "_$pu";		    # prepend underscore
 }
@@ -1713,7 +1713,7 @@ proc ::Plumed::do_compute_v1 {} {
     set tmpd "[ Plumed::tmpdir ]/vmdplumed.[pid]"
     file mkdir $tmpd
     set owd [ pwd ]
-    cd $tmpd
+    cd $tmpd;			# because "COLVAR" is hardcoded
 
     set dcd temp.dcd
     animate write dcd $dcd waitfor all
