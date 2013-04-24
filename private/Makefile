@@ -7,24 +7,29 @@ VMVERSION = $(shell awk '/VMVERSION =/ {print $$NF}' ../Makefile)
 
 
 GENERATED_DOCFILES = ../doc/index.html ../doc/README
+
+
+
+# ----------------------------------------
+# Default is: Pkg Index, Templates, Doc files
+
 default: ../pkgIndex.tcl ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES)
 
 
 
+# ----------------------------------------
+# PKG Index
 
 # In principle TCLLIST=VMFILES of root Makefile, but we don't include it
 TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 	   ../templates_list_v2_autogen.tcl 
 
-
-
-
-# Index
 ../pkgIndex.tcl: $(TCLLIST)
 	cd ..; tclsh <<< "pkg_mkIndex -verbose ."
 
 
 
+# ----------------------------------------
 # Template generator
 ../templates_list_v2_autogen.tcl: 
 	$(MAKE) -C templates
@@ -32,7 +37,8 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 
 
 
-# Handle doc directory, as per
+# ----------------------------------------
+# Doc generator, as per
 # http://stackoverflow.com/questions/4669105/makefile-dependencies-on-directory-content-when-creating-a-tar-file
 
 # These are automatically generated. The whole dir is included anyway.
@@ -45,6 +51,7 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 
 
 
+# ----------------------------------------
 # Distribution (No attempt at tracking deps). Usable for both the wiki
 # and VMD.
 TGZ = plumed_gui_$(VMVERSION).tar.gz
@@ -57,6 +64,7 @@ $(TGZ): default
 
 
 
+# ----------------------------------------
 clean:
 	$(MAKE) -C templates clean
 	rm -rf ../templates_list_v2_autogen.tcl \
