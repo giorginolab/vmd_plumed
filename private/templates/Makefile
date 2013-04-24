@@ -14,7 +14,7 @@
 #      example
 
 
-default: ../../templates_list_v2_autogen.tcl
+default: templates_list_v2_autogen.tcl
 
 
 # Get list of all actions. Prints an harmless warning on STDOUT
@@ -34,7 +34,7 @@ temp_dirs: list.tmp
 
 
 # Generate the templates
-../../templates_list_v2_autogen.tcl: generate_templates_aux.tcl list.tmp temp_dirs
+templates_list_v2_autogen.tcl: generate_templates_aux.tcl list.tmp temp_dirs
 	tclsh generate_templates_aux.tcl > $@
 
 

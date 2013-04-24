@@ -4,9 +4,9 @@
 
 	  The authoritative and up-to-date documentation is
 
-	 http://www.multiscalelab.org/utilities/PlumedCVTool
+	   http://www.multiscalelab.org/utilities/PlumedGUI
 
-	 A text dump is only provided below for convenience.
+	A text dump is provided below merely for convenience.
 
 
 			   
@@ -26,7 +26,7 @@
    Link: Appendix: driver.exe
    Link: Appendix: driver_safe
    Link: Appendix: patch-pdbparser
-   Link: Appendix: plumed_1.9.tar.gz
+   Link: Appendix: plumed_gui_1.9.tar.gz
    Link: Appendix: screenshotmultiplot.png
    Link: Appendix: screenshotnc.png
    Link: Appendix: screenshotplumedcollect.png
@@ -38,7 +38,7 @@
    Link: Glossary
    Link: Help
      * utilities
-     * PlumedCVTool
+     * PlumedGUI
 
      A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 1.9)
 
@@ -197,6 +197,10 @@ Installation
    The path to driver's executable will appear in the "Path to executable"
    box; it can be adjusted manually if outside of the search path (not
    recommended).
+
+   VMD versions 1.9.0 is distributed with PLUMED GUI v0.9. To upgrade,
+   download the plugin and follow the installation instructions in the
+   archive.
 
 License
 
