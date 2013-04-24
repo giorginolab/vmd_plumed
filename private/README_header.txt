@@ -1,10 +1,21 @@
-This page is just a text dump of the on-line documentation, provided
-for convenience.  The authoritative and up-to-date documentation is at
-http://www.multiscalelab.org/utilities/PlumedCVTool .
 
 
 
-****************
+
+	  The authoritative and up-to-date documentation is
+
+	 http://www.multiscalelab.org/utilities/PlumedCVTool
+
+	 A text dump is only provided below for convenience.
+
+
+			   
+
+
+     ************************************************************
+
+
+
 
 
 

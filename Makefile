@@ -1,7 +1,7 @@
 .SILENT:
 
 VMFILES = vmdplumed.tcl pkgIndex.tcl \
-	templates_list_v1.tcl templates_list_v2_autogen.tcl
+	  templates_list_v1.tcl templates_list_v2_autogen.tcl
 VMVERSION = 1.9
 DIR = $(PLUGINDIR)/noarch/tcl/plumed$(VMVERSION)
 
@@ -11,9 +11,10 @@ dynlibs:
 staticlibs:
 win32staticlibs:
 
+# Toni's plumed_wiki_distrib: make -f private/Makefile
+
 distrib:
 	@echo "Copying plumed $(VMVERSION) files to $(DIR)"
 	mkdir -p $(DIR) 
 	cp $(VMFILES) $(DIR) 
 
-	

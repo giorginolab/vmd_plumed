@@ -1,6 +1,9 @@
-VMD versions 1.9.2 is distributed with PLUMED GUI v1.901. If you want to upgrade,
+VMD is distributed with the Plumed-GUI version current at the time of 
+release. 
+
+Should you want to upgrade, download the latest Plumed-GUI version and
+
 1. Identify your VMD installation directory (say, $VMDDIR)
 2. Go in $VMDDIR/plugins/noarch/tcl
 3. Replace the files therein with those contained in this archive.
-   
-   
+  
