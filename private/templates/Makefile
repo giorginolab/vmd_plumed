@@ -20,7 +20,7 @@ default: templates_list_v2_autogen.tcl
 # Get list of all actions. Prints an harmless warning on STDOUT
 # --action DISTANCE is a temporary workaround
 list.tmp:
-	plumed gentemplate --list --action DISTANCE 2> $@  > /dev/null
+	plumed gentemplate --list 2> $@  > /dev/null
 
 # Create a template per action
 temp_dirs: list.tmp

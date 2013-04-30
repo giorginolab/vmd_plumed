@@ -67,7 +67,6 @@ $(TGZ): default
 # ----------------------------------------
 clean:
 	$(MAKE) -C templates clean
-	rm -rf ../templates_list_v2_autogen.tcl \
-		$(GENERATED_DOCFILES) $(TGZ) 
+	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(TGZ) 
 
 
