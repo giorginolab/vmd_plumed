@@ -1,9 +1,29 @@
-VMD is distributed with the Plumed-GUI version current at the time of 
-release. 
 
-Should you want to upgrade, download the latest Plumed-GUI version and
+Manual installation (recommended)
+----------------------------------------
 
-1. Identify your VMD installation directory (say, $VMDDIR)
-2. Go in $VMDDIR/plugins/noarch/tcl
-3. Replace the files therein with those contained in this archive.
-  
+Installation requires these steps:
+
+1. Identify your VMD installation directory (let's call it
+   $VMDDIR). In VMD's console, you can use:
+      puts $env(VMDDIR)
+
+2. Copy the script's distribution directory (after archive extraction)
+   into $VMDDIR/plugins/noarch/tcl
+
+3. Copy or move the file <PACKAGENAME>_init.tcl into
+   $VMDDIR/scripts/init.d , creating said directory if it does not
+   exist already.
+
+Note that you will need write privileges in VMD's program directory.
+The plugin should appear in the "Extensions" menu upon VMD's next run.
+
+
+
+
+Usage without installation
+----------------------------------------
+
+As a last resort, plugins may be loaded without installation by
+issuing a "source xxx.tcl" command for each of the distributed .tcl
+files, with the exclusion of "<PACKAGENAME>_init.tcl" and examples.

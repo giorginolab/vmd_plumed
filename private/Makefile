@@ -4,9 +4,9 @@
 # .SILENT (which can't be unset)
 
 VMVERSION = $(shell awk '/VMVERSION =/ {print $$NF}' ../Makefile)
+VMDPLUGINDIR = plumed$(VMVERSION)
 
-
-GENERATED_DOCFILES = ../doc/index.html ../doc/README
+GENERATED_DOCFILES = ../doc/index.html ../doc/README ../doc/versionId
 
 
 
@@ -48,19 +48,26 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 ../doc/index.html:
 	wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.0.19) Gecko/2011032314 Iceweasel/3.0.6 (Debian-3.0.6-3)" -k 'http://www.multiscalelab.org/utilities/PlumedGUI?action=print' -O $@
 
+../doc/versionId:
+	( echo -n "Package generated on "; \
+	  date; \
+	  echo "========"; \
+	  git show -s --oneline ) > $@
 
 
 
 # ----------------------------------------
 # Distribution (No attempt at tracking deps). Usable for both the wiki
 # and VMD.
-TGZ = plumed_gui_$(VMVERSION).tar.gz
+TGZ = $(VMDPLUGINDIR).tar.gz
 
 dist: $(TGZ) 
 
 $(TGZ): default
-	cd ..; tar -zcvf $@ doc *.tcl Makefile
-	mv ../$@ .
+	mkdir $(VMDPLUGINDIR)
+	cp -a ../doc ../*.tcl ../Makefile $(VMDPLUGINDIR)
+	tar -zcvf $@ $(VMDPLUGINDIR)
+	rm -rf $(VMDPLUGINDIR)
 
 
 
