@@ -14,7 +14,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 1.9
+package provide plumed 2.0
 package require tile
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
@@ -30,6 +30,8 @@ namespace eval ::Plumed:: {
     variable w;			       # handle to main window
 
     variable textfile unnamed.plumed
+
+    variable plumed2_online_docbase "http://plumed2.berlios.de/"
 
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
 
@@ -176,7 +178,6 @@ proc ::Plumed::plumed {} {
     ## Templates
      menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
     menu $w.menubar.insert.menu -tearoff yes
-    # FIXME REMOVE templates_populate_menu
     $w.menubar.insert config -width 10
 
     ## Structural
@@ -189,18 +190,19 @@ proc ::Plumed::plumed {} {
     $w.menubar.structure config -width 8
 
     ## help menu
-    ## FIXME plumed 2
      menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
     $w.menubar.help.menu add command -label "Getting started" \
-	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool"
-    $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "Help on PLUMED (v1.3)" \
+	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
+    $w.menubar.help.menu add command -label "Help on PLUMED" \
         -command "vmd_open_url http://www.plumed-code.org"
+    $w.menubar.help.menu add command -label "Installation of the 'driver' binary" \
+	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
+    $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v1.3)" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help.menu add command -label "Installation of the 'driver' binary (v1.3)" \
-	-command "vmd_open_url http://www.multiscalelab.org/toni/PlumedCVTool#installation"
+    $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v2.0)" \
+	-command "vmd_open_url http://plumed2.berlios.de/master/user-doc/html/index.html"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -242,10 +244,10 @@ proc ::Plumed::plumed {} {
     # ----------------------------------------
     pack [  ttk::frame $w.options.location ]  -fill x
     pack [  ttk::label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
-    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3"        \
+    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3  "        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
-    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2+"         \
+    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2.0"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
@@ -1560,7 +1562,7 @@ proc ::Plumed::popup_insert_keyword {kw} {
 
 
 # Convert word to doxygen-generated filename
-proc ::Plumed::popup_prepend_underscore {p} {
+proc ::Plumed::popup_keyword_underscorify {p} {
     set pu [string tolower $p];	# lower
     set pu [join [split $pu ""] _]; # intermix underscore
     set pu [regsub {___} $pu __];   # ___ -> __
@@ -1570,19 +1572,23 @@ proc ::Plumed::popup_prepend_underscore {p} {
 # Do what it takes to open Doxygen-generated help on keyword
 proc ::Plumed::popup_local_or_remote_help {kw} {
     variable driver_path
+    variable plumed2_online_docbase
     if {$kw == ""} { return }
+    set kwlu [popup_keyword_underscorify $kw]
 
-    # Ask Plumed's path
+    # Local help: ask Plumed's path
     set root [exec $driver_path info --root]
-
-    set kwlu [popup_prepend_underscore $kw]
     set htmlfile [file join $root user-doc html $kwlu.html]
     if [file readable $htmlfile] {
 	vmd_open_url $htmlfile
     } else {
-	# TODO lookup online
-	tk_messageBox -icon error -title Error -parent .plumed \
-	    -message "Sorry, help file not found for keyword $kw."
+	# Failure -> remote help
+	puts "Info: local help pages not available, using WWW"
+	set docversion master
+	set htmlpage "$plumed2_online_docbase/$docversion/user-doc/html/$kwlu.html"
+	vmd_open_url $htmlpage
+	#tk_messageBox -icon error -title Error -parent .plumed \
+	#    -message "Sorry, help file not found for keyword $kw."
     }	
 }
 

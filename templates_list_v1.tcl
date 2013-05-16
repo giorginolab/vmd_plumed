@@ -1,4 +1,4 @@
-package provide plumed 1.9
+package provide plumed 2.0
 namespace eval ::Plumed {
     variable templates_list_v1 {
 	"Group definition"			{groupname-> [chain A] groupname<-} 
