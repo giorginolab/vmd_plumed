@@ -32,8 +32,6 @@ namespace eval ::Plumed:: {
 
     variable textfile unnamed.plumed
 
-    variable plumed2_online_docbase "http://plumed2.berlios.de"
-
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
 
     # Header of short help
@@ -1570,20 +1568,22 @@ proc ::Plumed::popup_keyword_underscorify {p} {
     return "_$pu";		    # prepend underscore
 }
 
+# Return a sensible base url for documentation (cached)
 proc ::Plumed::popup_help_url {} {
     variable popup_help_url_cached; # static
     variable driver_path
-    variable plumed2_online_docbase
+
+    set plumed2_online_docbase "http://plumed2.berlios.de"
 
     if {![info exists popup_help_url_cached]} {
 	# 1. try local
-	set root [exec $driver_path info --root]
+	set root [exec $driver_path --standalone-executable info --root]
 	set htmlfile [file join $root user-doc html index.html]
 	if [file readable $htmlfile] {
 	    set popup_help_url_cached [file join $root user-doc html]
 	} else {
 	    # 2. try version-specific remote
-	    set docversion [exec $driver_path info --version]
+	    set docversion [exec $driver_path --standalone-executable info --version]
 	    set ch [::http::geturl "$plumed2_online_docbase/$docversion/user-doc/html/index.html"]
 	    set status  [::http::ncode $ch]
 	    ::http::cleanup $ch
@@ -1592,7 +1592,7 @@ proc ::Plumed::popup_help_url {} {
 		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	    } else {
 		# 3. retry with "master", no check
-		puts "Info: local help pages not available, using remote pages for generic version"
+		puts "Info: neither local nor version-specific ($docversion) help found, using generic remote pages"
 		set docversion master
 		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	    }
