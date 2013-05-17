@@ -59,14 +59,14 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 # ----------------------------------------
 # Distribution (No attempt at tracking deps). Usable for both the wiki
 # and VMD.
-TGZ = $(VMDPLUGINDIR).tar.gz
+ZIP = $(VMDPLUGINDIR).zip
 
-dist: $(TGZ) 
+dist: $(ZIP) 
 
-$(TGZ): default
+$(ZIP): default
 	mkdir $(VMDPLUGINDIR)
 	cp -a ../doc ../*.tcl ../Makefile $(VMDPLUGINDIR)
-	tar -zcvf $@ $(VMDPLUGINDIR)
+	zip -r $@ $(VMDPLUGINDIR)
 	rm -rf $(VMDPLUGINDIR)
 
 
@@ -74,6 +74,6 @@ $(TGZ): default
 # ----------------------------------------
 clean:
 	$(MAKE) -C templates clean
-	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(TGZ) 
+	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(ZIP) 
 
 

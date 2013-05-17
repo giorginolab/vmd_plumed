@@ -16,6 +16,7 @@
 
 package provide plumed 2.0
 package require tile
+package require http
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
 
@@ -31,7 +32,7 @@ namespace eval ::Plumed:: {
 
     variable textfile unnamed.plumed
 
-    variable plumed2_online_docbase "http://plumed2.berlios.de/"
+    variable plumed2_online_docbase "http://plumed2.berlios.de"
 
     variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
 
@@ -1569,27 +1570,44 @@ proc ::Plumed::popup_keyword_underscorify {p} {
     return "_$pu";		    # prepend underscore
 }
 
-# Do what it takes to open Doxygen-generated help on keyword
-proc ::Plumed::popup_local_or_remote_help {kw} {
+proc ::Plumed::popup_help_url {} {
+    variable popup_help_url_cached; # static
     variable driver_path
     variable plumed2_online_docbase
-    if {$kw == ""} { return }
-    set kwlu [popup_keyword_underscorify $kw]
 
-    # Local help: ask Plumed's path
-    set root [exec $driver_path info --root]
-    set htmlfile [file join $root user-doc html $kwlu.html]
-    if [file readable $htmlfile] {
-	vmd_open_url $htmlfile
-    } else {
-	# Failure -> remote help
-	puts "Info: local help pages not available, using WWW"
-	set docversion master
-	set htmlpage "$plumed2_online_docbase/$docversion/user-doc/html/$kwlu.html"
-	vmd_open_url $htmlpage
-	#tk_messageBox -icon error -title Error -parent .plumed \
-	#    -message "Sorry, help file not found for keyword $kw."
-    }	
+    if {![info exists popup_help_url_cached]} {
+	# 1. try local
+	set root [exec $driver_path info --root]
+	set htmlfile [file join $root user-doc html index.html]
+	if [file readable $htmlfile] {
+	    set popup_help_url_cached [file join $root user-doc html]
+	} else {
+	    # 2. try version-specific remote
+	    set docversion [exec $driver_path info --version]
+	    set ch [::http::geturl "$plumed2_online_docbase/$docversion/user-doc/html/index.html"]
+	    set status  [::http::ncode $ch]
+	    ::http::cleanup $ch
+	    if {$status==200} {
+		puts "Info: local help pages not available, using remote pages for version $docversion"
+		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
+	    } else {
+		# 3. retry with "master", no check
+		puts "Info: local help pages not available, using remote pages for generic version"
+		set docversion master
+		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
+	    }
+	}
+    }
+    return $popup_help_url_cached
+}
+
+# Do what it takes to open Doxygen-generated help on keyword
+proc ::Plumed::popup_local_or_remote_help {kw} {
+    if {$kw == ""} { return }
+    set docroot [popup_help_url]
+    set kwlu [popup_keyword_underscorify $kw]
+    set htmlpage "$docroot/$kwlu.html"
+    vmd_open_url $htmlpage
 }
 
 
