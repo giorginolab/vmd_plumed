@@ -393,8 +393,9 @@ proc ::Plumed::location_browse { } {
 
 # Attempt auto install
 proc ::Plumed::help_win32_install {} {
-    puts "Attempting automated installation (may fail for permissions, network, antivirus)."
     set destdir [file join $::env(APPDATA) "Plumed-GUI"]
+    puts "Attempting automated installation into $destdir"
+    puts "Installation may fail for permissions, network, antivirus."
     file mkdir $destdir
 
     set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
@@ -1842,8 +1843,10 @@ proc ::Plumed::do_compute_v1 {} {
     file delete $out
     set pbc [ get_pbc_v1 ]
 
-    puts "Executing: $driver_path -dcd $dcd -pdb $pdb -plumed $meta  $pbc"
-    if { [ catch { eval exec $driver_path -dcd $dcd -pdb $pdb -plumed $meta $pbc } driver_stdout ] } {
+    set cmd [list $driver_path -dcd $dcd -pdb $pdb -plumed $meta $pbc]
+    puts "Executing: $cmd"
+    if { [ catch { eval exec $cmd } driver_stdout ] ||
+	 ! [file readable $out] } {
 	set dontplot 1
     } else {
 	set dontplot 0
@@ -1899,10 +1902,12 @@ proc ::Plumed::do_compute_v2 {} {
     set pdb [file join $tmpd temp.pdb] 
     set xyz [file join $tmpd temp.xyz]
     set colvar [file join $tmpd COLVAR]
+    set xst [file join $tmpd temp.xst]
 
     write_meta_inp_v2 $meta $colvar
     writePlumed [atomselect top all] $pdb
     animate write xyz $xyz waitfor all
+    writexst $xst
     file delete $colvar
 
     set pbc [get_pbc_v2]
