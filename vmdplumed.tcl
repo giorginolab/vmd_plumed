@@ -95,7 +95,6 @@ proc ::Plumed::plumed {} {
     variable pbc_boxx
     variable pbc_boxy
     variable pbc_boxz
-    variable text_instructions
 
     # If already initialized, just turn on
     if { [winfo exists .textview] } {
@@ -249,9 +248,6 @@ proc ::Plumed::plumed {} {
 	   -command [namespace current]::location_browse   ] -side left -expand 0
 
 
-    ## FINALIZE ============================================================
-    plumed_path_lookup;		# sets plumed_version
-
 
     ## TEXT ============================================================
     ttk::frame $w.txt
@@ -259,12 +255,6 @@ proc ::Plumed::plumed {} {
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
 	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {Courier 12}
     ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
-    label $w.txt.text.instructions -text "(...)" -justify left \
-	-relief solid -padx 2m -pady 2m
-    file_new;			# depends on plumed_version
-
-    $w.txt.text window create 1.0 -window $w.txt.text.instructions \
-	-padx 100 -pady 10
     pack $w.txt.label -side top   -fill x 
     pack $w.txt.vscr  -side right -fill y    
     pack $w.txt.text  -side left  -fill both -expand yes
@@ -276,12 +266,17 @@ proc ::Plumed::plumed {} {
     bind $w.txt.text <3> { ::Plumed::popup_menu %x %y %X %Y }
 
 
+    ## FINALIZE ============================================================
+    plumed_path_lookup;		# sets plumed_version
+    file_new;			# inserts skeleton
+    instructions_update;	# 
 }
 
 
 # ==================================================
 
-
+# Returns a text representation of an empty input file, depending on
+# the current plumed_version
 proc ::Plumed::empty_meta_inp {} {
     variable plumed_version
     variable empty_meta_inp_v1
@@ -293,16 +288,18 @@ proc ::Plumed::empty_meta_inp {} {
 }
 
 
-
-
-
 proc ::Plumed::file_new { } {
     variable w
     variable textfile
+    set textfile "untitled.plumed"
 
     $w.txt.text delete 1.0 {end - 1c}
-    set textfile "untitled.plumed"
+    label $w.txt.text.instructions -text "(...)" -justify left \
+	-relief solid -padx 2m -pady 2m
+    $w.txt.text window create 1.0 -window $w.txt.text.instructions \
+	-padx 100 -pady 10
     $w.txt.text insert end [empty_meta_inp]
+    instructions_update
 }
 
 
