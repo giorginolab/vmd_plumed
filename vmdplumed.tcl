@@ -434,7 +434,9 @@ T. Giorgino, Plumed-GUI: an environment for the interactive development of molec
 
 
 
-# ==================================================                                                 
+# ==================================================
+# TCL utility functions (non plumed specific)
+
 
 # http://wiki.tcl.tk/772
 proc ::Plumed::tmpdir { } {
@@ -452,6 +454,93 @@ proc ::Plumed::tmpdir { } {
     }
     return $tmpdir
 }
+
+proc ::Plumed::transpose matrix {
+    set cmd list
+    set i -1
+    foreach col [lindex $matrix 0] {append cmd " \$[incr i]"}
+    foreach row $matrix {
+        set i -1
+        foreach col $row {lappend [incr i] $col}
+    }
+    eval $cmd
+}
+
+
+# Return the contents of a file
+proc ::Plumed::read_file { fname } {
+    set fd [open $fname r]
+    set dtext [read $fd]
+    close $fd
+    return $dtext
+}
+
+# from rmsdtt
+proc ::Plumed::index2rgb {i} {
+  set len 2
+  lassign [colorinfo rgb $i] r g b
+  set r [expr int($r*255)]
+  set g [expr int($g*255)]
+  set b [expr int($b*255)]
+  #puts "$i      $r $g $b"
+  return [format "#%.${len}X%.${len}X%.${len}X" $r $g $b]
+}
+
+proc ::Plumed::dputs { text } {
+    variable debug
+    if {$debug} {
+	puts "DEBUG: $text"
+    }
+}
+
+
+# From current PBC; a glorified [pbc get -namd -all]. May be replaced
+# by the one in pbctools.
+proc ::Plumed::writexst {fn} {
+    set ts 0
+    set ch [open $fn w]
+    puts $ch "# NAMD extended system trajectory file"
+    puts $ch "#\$LABELS step a_x a_y a_z b_x b_y b_z c_x c_y c_z o_x o_y o_z"
+    foreach box [pbc get -namd -all] {
+	set box_f  [concat {*}$box];  # flatten
+	set box_str ""
+	set column 0
+	foreach v $box_f {
+	    set box_str "$box_str [format %8.4f $v]"
+	    incr column
+	    if {$column==3 || $column==6} {
+		set box_str "$box_str    "; # Separate vectors
+	    }
+	}
+	#  %f truncates ~epsilons
+	set ts_str [format %-8d $ts]
+	puts $ch "$ts_str $box_str    0.000 0.000 0.000"
+	incr ts
+    }
+    close $ch
+}
+
+# Return the content of the given URL, or throw error if not
+# found. Only code 200 considered OK.
+proc ::Plumed::get_url {url} {
+    set ch [::http::geturl $url]
+    set status  [::http::ncode $ch]
+    if {$status==200} {
+	set data [::http::data $ch]
+	::http::cleanup $ch
+	return $data
+    } else {
+	set ecode [::http::code $ch]
+	::http::cleanup $ch
+	error $ecode
+    }
+}
+
+
+
+
+# ==================================================
+# TCL utility functions (Plumed specific)
 
 # Write a PDB file using charges and masses in the topology
 # (required by PLUMED's "driver" utility). 
@@ -500,73 +589,6 @@ proc ::Plumed::replace_serials { intxt }  {
     }
     return $out
 }
-
-
-proc ::Plumed::transpose matrix {
-    set cmd list
-    set i -1
-    foreach col [lindex $matrix 0] {append cmd " \$[incr i]"}
-    foreach row $matrix {
-        set i -1
-        foreach col $row {lappend [incr i] $col}
-    }
-    eval $cmd
-}
-
-
-# Return the contents of a file
-proc ::Plumed::read_file { fname } {
-    set fd [open $fname r]
-    set dtext [read $fd]
-    close $fd
-    return $dtext
-}
-
-# from rmsdtt
-proc ::Plumed::index2rgb {i} {
-  set len 2
-  lassign [colorinfo rgb $i] r g b
-  set r [expr int($r*255)]
-  set g [expr int($g*255)]
-  set b [expr int($b*255)]
-  #puts "$i      $r $g $b"
-  return [format "#%.${len}X%.${len}X%.${len}X" $r $g $b]
-}
-
-proc ::Plumed::dputs { text } {
-    variable debug
-    if {$debug} {
-	puts "DEBUG: $text"
-    }
-}
-
-# From current PBC; a glorified [pbc get -namd -all]. Note that the
-# origin will be discarded and values < 1e4 will be rounded to zero.
-proc ::Plumed::writexst {fn} {
-    set ts 0
-    set ch [open $fn w]
-    puts $ch "# NAMD extended system trajectory file"
-    puts $ch "#\$LABELS step a_x a_y a_z b_x b_y b_z c_x c_y c_z o_x o_y o_z"
-    foreach box [pbc get -namd -all] {
-	set box_f  [concat {*}$box];  # flatten
-	set box_str ""
-	set column 0
-	foreach v $box_f {
-	    set box_str "$box_str [format %8.4f $v]"
-	    incr column
-	    if {$column==3 || $column==6} {
-		set box_str "$box_str    "; # Separate vectors
-	    }
-	}
-	#  %f truncates ~epsilons
-	set ts_str [format %-8d $ts]
-	puts $ch "$ts_str $box_str    0.000 0.000 0.000"
-	incr ts
-    }
-    close $ch
-}
-
-	
 
 
 
@@ -939,6 +961,7 @@ proc ::Plumed::secondary_rmsd {N CA C O CB} {
 
 
 # BATCH ==================================================
+# These functions have been removed.
 
 proc ::Plumed::batch_gui {} {
     variable batch_dir
@@ -1589,19 +1612,10 @@ proc ::Plumed::popup_insert_keyword {kw} {
 }
 
 
-# Convert word to doxygen-generated filename
-proc ::Plumed::popup_keyword_underscorify {p} {
-    set pu [string tolower $p];	# lower
-    set pu [join [split $pu ""] _]; # intermix underscore
-    set pu [regsub {___} $pu __];   # ___ -> __
-    return "_$pu";		    # prepend underscore
-}
-
 # Return a sensible base url for documentation (cached)
 proc ::Plumed::popup_help_url {} {
     variable popup_help_url_cached; # static
     variable driver_path
-
     set plumed2_online_docbase "http://plumed2.berlios.de"
 
     if {![info exists popup_help_url_cached]} {
@@ -1611,23 +1625,28 @@ proc ::Plumed::popup_help_url {} {
 	if [file readable $htmlfile] {
 	    set popup_help_url_cached [file join $root user-doc html]
 	} else {
-	    # 2. try version-specific remote
 	    set docversion [exec $driver_path --standalone-executable info --version]
-	    set ch [::http::geturl "$plumed2_online_docbase/$docversion/user-doc/html/index.html"]
-	    set status  [::http::ncode $ch]
-	    ::http::cleanup $ch
-	    if {$status==200} {
+	    set url "$plumed2_online_docbase/$docversion/user-doc/html/index.html"
+	    if {[catch {get_url $url} err]==0} {
+		# 2. try version-specific remote
 		puts "Info: local help pages not available, using remote pages for version $docversion"
-		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	    } else {
-		# 3. retry with "master", no check
+		# 3. Use "master", no check
 		puts "Info: neither local nor version-specific ($docversion) help found, using generic remote pages"
 		set docversion master
-		set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	    }
+	    set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	}
     }
     return $popup_help_url_cached
+}
+
+# Convert word to doxygen-generated filename
+proc ::Plumed::popup_keyword_underscorify {p} {
+    set pu [string tolower $p];	# lower
+    set pu [join [split $pu ""] _]; # intermix underscore
+    set pu [regsub {___} $pu __];   # ___ -> __
+    return "_$pu";		    # prepend underscore
 }
 
 # Do what it takes to open Doxygen-generated help on keyword
