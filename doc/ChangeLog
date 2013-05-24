@@ -1,3 +1,7 @@
+2013-05-24  Toni  <toni@pcgiorgino.isib.cnr.it>
+
+	* 2.1 Auto-download of drivers; online man lookup
+
 2013-05-16  Toni  <toni@pcgiorgino.isib.cnr.it>
 
 	* 2.0 Fallback to online documentation, fixed URLs

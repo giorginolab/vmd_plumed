@@ -27,7 +27,8 @@ namespace eval ::Plumed:: {
 
     variable debug 0;		       # extra log info
     variable highlight_error_ms 12000; # error message held this long
-    variable plumed_version 0;	       # default PLUMED to use if none found
+    variable plumed_default_version 2; # default PLUMED to use if none found
+
     variable plot_points 0;	       # points readout
     variable w;			       # handle to main window
 
@@ -228,7 +229,7 @@ proc ::Plumed::plumed {} {
     pack [  ttk::entry $w.options.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
     pack [  ttk::entry $w.options.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
     pack [  ttk::label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
-    pack [  ttk::checkbutton $w.options.pbc.inspector -text "Show data points" \
+    pack [  ttk::checkbutton $w.options.pbc.inspector -text "Mark data points" \
 	       -variable  [namespace current]::plot_points ] -side left
 
     # ----------------------------------------
@@ -394,11 +395,15 @@ proc ::Plumed::location_browse { } {
 proc ::Plumed::help_win32_install {} {
     puts "Attempting automated installation (may fail for permissions, network, antivirus)."
     set destdir [file join $::env(APPDATA) "Plumed-GUI"]
-    set exe     [file join $destdir driver.exe]
     file mkdir $destdir
+
     set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
-    vmd_mol_urlload $url_driver $exe
-    driver_path_lookup
+    vmd_mol_urlload $url_driver [file join $destdir driver.exe]
+
+    set url_plumed {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe}
+    vmd_mol_urlload $url_plumed      [file join $destdir plumed.exe]
+
+    plumed_path_lookup
 }
 
 
@@ -1454,20 +1459,22 @@ proc ::Plumed::instructions_update {} {
 # Look for plumed (v2), then driver (v1)
 proc ::Plumed::plumed_path_lookup {} {
     variable plumed_version
+    variable plumed_default_version
     variable driver_path_v1 "(Not found)"
     variable driver_path_v2 "(Not found)"
     variable driver_path
 
     set plumed_version 0
-    set dr [ auto_execok driver ]
+    auto_reset
+    set dr [auto_execok driver]
     if {$dr!=""} {
-	set driver_path_v1 $dr
+	set driver_path_v1 [lindex $dr 0]
 	set plumed_version 1
     }
 
-    set dr [ auto_execok plumed ]
+    set dr [auto_execok plumed]
     if {$dr!=""} {
-	set driver_path_v2 $dr
+	set driver_path_v2 [lindex $dr 0]
 	set plumed_version 2
     }
 
@@ -1476,7 +1483,7 @@ proc ::Plumed::plumed_path_lookup {} {
 	after 100 { 
 	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message "Neither `plumed' (v2) nor `driver' (v1) executables were found in path.\n\nAlthough you will be able to edit analysis scripts, you will not be able to run them.\n\nPlease see help menu for installation instructions."
 	}
-	set plumed_version 1;	# default version if none found
+	set plumed_version $plumed_default_version
     } 
     plumed_version_changed
 
