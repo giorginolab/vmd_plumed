@@ -809,10 +809,14 @@ proc ::Plumed::reference_gui { } {
     variable refmeas "name CA"
     variable reffile "reference.pdb"
     variable refmol top
-    variable ref_oneframe 0
+    variable ref_allframes 0
     variable plumed_version
 
-    if {$plumed_version==1} { set ref_oneframe 1 }
+    set ref_allframes_state normal
+    if {$plumed_version==1} { 
+	set ref_allframes_state disabled 
+	set ref_allframes 0
+    }
 
     toplevel .plumedref -bd 4
     wm title .plumedref "Build reference structure"
@@ -825,16 +829,20 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::entry .plumedref.meas.meas -width 20 -textvariable [namespace current]::refmeas ] -side left -expand 1 -fill x
     pack [ ttk::frame .plumedref.mol ] -side top -fill x
     pack [ ttk::label .plumedref.mol.moltext -text "Numbering for molecule: " ] -side left
-    pack [ ttk::entry .plumedref.mol.mol -width 20 -textvariable [namespace current]::refmol ] -side left -expand 1 -fill x
+    pack [ ttk::entry .plumedref.mol.mol -width 20 -textvariable [namespace current]::refmol ]\
+	-side left -expand 1 -fill x
     pack [ ttk::frame .plumedref.file ] -side top -fill x
     pack [ ttk::label .plumedref.file.filetxt -text "File to write: " ] -side left
-    pack [ ttk::entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ] -side left -expand 1 -fill x
-    pack [ ttk::button .plumedref.file.filebrowse -text "Browse..." \
-	       -command { Plumed::reference_set_reffile [ tk_getSaveFile  -initialfile "$::Plumed::reffile" ] }   ] -side left -expand 0
-    pack [ ttk::checkbutton .plumedref.multiframe -text "Only current frame (Plumed 1)" -variable  [namespace current]::ref_oneframe ] -side top -fill x
+    pack [ ttk::entry .plumedref.file.file -width 20 -textvariable [namespace current]::reffile ]\
+	-side left -expand 1 -fill x
+    pack [ ttk::button .plumedref.file.filebrowse -text "Browse..." -command { 
+	Plumed::reference_set_reffile [ tk_getSaveFile  -initialfile "$::Plumed::reffile" ] 
+    } ] -side left -expand 0
+    pack [ ttk::checkbutton .plumedref.multiframe -text "Multi-frame reference (all loaded frames)" \
+	       -variable [namespace current]::ref_allframes -state $ref_allframes_state ] -side top -fill x
     pack [ ttk::frame .plumedref.act ] -side top -fill x
-    pack [ ttk::button .plumedref.act.ok -text "Write" -command \
-	       { Plumed::reference_write } ] -side left -fill x -expand 1
+    pack [ ttk::button .plumedref.act.ok -text "Write" \
+	       -command { Plumed::reference_write } ] -side left -fill x -expand 1
     pack [ ttk::button .plumedref.act.cancel -text "Close" \
 	       -command {  destroy .plumedref }   ] -side left -fill x -expand 1
 }
@@ -846,11 +854,11 @@ proc ::Plumed::reference_set_reffile { x } {
 
 
 proc ::Plumed::reference_write {} {
-    variable ref_oneframe
+    variable ref_allframes
     variable reffile
  
    if [ catch {
-	if { $ref_oneframe == 1 } {
+	if { $ref_allframes == 0 } {
 	    set fn [molinfo top get frame]
 	    reference_write_one $reffile $fn $fn
 	    puts "File $reffile written."

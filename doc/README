@@ -41,7 +41,7 @@
      * utilities
      * PlumedGUI
 
-     A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 2.0)
+     A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 2.1)
 
    To use this plugin, you will need PLUMED's driver and/or plumed
    executables. Download it from the installation section below.
