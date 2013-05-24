@@ -34,8 +34,8 @@ temp_dirs: list.tmp
 
 
 # Generate the templates
-templates_list_v2_autogen.tcl: generate_templates_aux.tcl list.tmp temp_dirs
-	tclsh generate_templates_aux.tcl > $@
+templates_list_v2_autogen.tcl: generator.tcl list.tmp temp_dirs
+	tclsh generator.tcl > $@
 
 
 clean:

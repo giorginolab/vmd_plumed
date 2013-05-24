@@ -14,7 +14,7 @@
 
 
 set unsubst {
-package provide plumed 2.0
+package provide plumed 2.1
 namespace eval ::Plumed {
     variable templates_list_v2 {
 	"Group definition"		"grp:   GROUP ATOMS=[chain A and name CA]"
@@ -60,8 +60,7 @@ namespace eval ::Plumed {
     }
 }
 
-# These will be substituted but left out of the menu
-#  Manually placed
+# These are in the menu, but with a manual template
 #	%%CONTACTMAP 
 #       %%DISTANCES 
 #       %%COM 
@@ -69,36 +68,6 @@ namespace eval ::Plumed {
 #       %%UNITS
 
       
-#  Deliberately left out 
-# %%RESTART
-# %%TEMPLATE
-# %%BIASVALUE
-# %%DEBUG
-# %%DUMPATOMS
-# %%FUNCPATHMSD
-# %%DUMPPROJECTIONS
-# %%VOLUME
-# %%WHOLEMOLECULES
-# %%PROPERTYMAP
-# %%INCLUDE
-# %%LOAD
-# %%TIME
-# %%READ
-# %%DUMPFORCES
-# %%ENERGY
-# %%CENTER
-# %%FLUSH
-# %%PRINT
-# %%DUMPDERIVATIVES
-# %%DENSITY
-# %%SUBCELL
-# %%HISTOGRAM
-
-
-
-#  Do not work
-#
-
 }
 
 

@@ -26,13 +26,14 @@
    Link: Appendix: driver.exe
    Link: Appendix: driver_safe
    Link: Appendix: patch-pdbparser
-   Link: Appendix: plumed_gui_1.9.tar.gz
+   Link: Appendix: plumed.exe
+   Link: Appendix: plumed2.0.zip
+   Link: Appendix: plumed2.1.zip
    Link: Appendix: screenshotmultiplot.png
    Link: Appendix: screenshotnc.png
    Link: Appendix: screenshotplumedcollect.png
    Link: Appendix: screenshotpreparerefere.png
    Link: Appendix: screenshotrama.png
-   Link: Appendix: vmd_plumed.tgz
    Link: Search
    Link: Index
    Link: Glossary
@@ -40,7 +41,7 @@
      * utilities
      * PlumedGUI
 
-     A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 1.9)
+     A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 2.0)
 
    To use this plugin, you will need PLUMED's driver and/or plumed
    executables. Download it from the installation section below.
@@ -197,10 +198,6 @@ Installation
    The path to driver's executable will appear in the "Path to executable"
    box; it can be adjusted manually if outside of the search path (not
    recommended).
-
-   VMD versions 1.9.0 is distributed with PLUMED GUI v0.9. To upgrade,
-   download the plugin and follow the installation instructions in the
-   archive.
 
 License
 

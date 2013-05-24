@@ -11,7 +11,11 @@ dynlibs:
 staticlibs:
 win32staticlibs:
 
-# Toni's plumed_wiki_distrib: make -f private/Makefile
+# Toni: make -C private 
+#
+# If changing the version number, also fix it in
+# templates_list_v1.tcl and in generator.tcl
+
 
 distrib:
 	@echo "Copying plumed $(VMVERSION) files to $(DIR)"

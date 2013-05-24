@@ -269,8 +269,8 @@ proc ::Plumed::plumed {} {
 
     ## FINALIZE ============================================================
     plumed_path_lookup;		# sets plumed_version
-    file_new;			# inserts skeleton
-    instructions_update;	# 
+    file_new;			# inserts skeleton, depends on plumed_version
+    instructions_update;	# because file_new inserts an empty text
 }
 
 
