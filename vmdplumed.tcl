@@ -429,6 +429,7 @@ proc ::Plumed::help_win32_install {} {
     set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
     set code [get_url $url_driver]
     set och [open $exe w]
+    fconfigure $och -translation binary
     puts $och $code
     close $och
 }
