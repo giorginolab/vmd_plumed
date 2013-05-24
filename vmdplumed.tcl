@@ -87,7 +87,9 @@ proc plumed_tk {} {
 }
 
 
-proc ::Plumed::plumed {} { 
+proc ::Plumed::plumed {} {
+    global tcl_platform
+
     variable w
     variable textfile
     variable plugin_name
@@ -111,6 +113,17 @@ proc ::Plumed::plumed {} {
     set w [toplevel ".plumed"]
     wm title $w "$plugin_name"
 #    wm resizable $w 0 0
+
+    # Special handling for Windows
+    set win32_install_state disabled
+    switch $tcl_platform(platform) {
+	windows {
+	    set win32_install_state normal
+	    append ::env(PATH) ";" \
+		[file join $::env(APPDATA) "Plumed-GUI"]
+	}
+    }
+
 
     # Look for plumed (v2), then driver (v1)
     set driver_path_v1 /path/to/driver
@@ -138,6 +151,7 @@ proc ::Plumed::plumed {} {
 	    lassign $vmdcell pbc_boxx pbc_boxy pbc_boxz
 	}
     }
+	
 
 
     ## MENU ============================================================
@@ -195,12 +209,15 @@ proc ::Plumed::plumed {} {
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
     $w.menubar.help.menu add command -label "Help on PLUMED" \
         -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help.menu add command -label "Installation of the 'driver' binary" \
-	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
     $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v1.3)" \
+    $w.menubar.help.menu add command -label "How to install the 'driver' binaries" \
+	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
+    $w.menubar.help.menu add command -label "Attempt download of prebuilt driver binaries (Windows)" \
+	-command ::Plumed::help_win32_install -state $win32_install_state
+    $w.menubar.help.menu add separator
+    $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help.menu add command -label "PLUMED user's guide and CV syntax (v2.0)" \
+    $w.menubar.help.menu add command -label "PLUMED 2.0 user's guide and CV syntax" \
 	-command "vmd_open_url http://plumed2.berlios.de/master/user-doc/html/index.html"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "About the $plugin_name" \
@@ -403,6 +420,21 @@ proc ::Plumed::location_browse { } {
 }
 
 
+# Attempt auto install
+proc ::Plumed::help_win32_install {} {
+    puts "Attempting automated installation (may fail for permissions, network, antivirus)."
+    set destdir [file join $::env(APPDATA) "Plumed-GUI"]
+    file mkdir $destdir
+    set exe     [file join $destdir driver.exe]
+    set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
+    set code [get_url $url_driver]
+    set och [open $exe w]
+    puts $och $code
+    close $och
+}
+
+
+# About dialog
 proc ::Plumed::help_about { {parent .plumed} } {
     variable plugin_name
     variable plugin_version
