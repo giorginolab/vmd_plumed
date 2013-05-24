@@ -27,12 +27,11 @@ namespace eval ::Plumed:: {
 
     variable debug 0;		       # extra log info
     variable highlight_error_ms 12000; # error message held this long
-    variable plumed_version 1;	       # default PLUMED to use if none found
+    variable plumed_version 0;	       # default PLUMED to use if none found
+    variable plot_points 0;	       # points readout
     variable w;			       # handle to main window
 
     variable textfile unnamed.plumed
-
-    variable driver_path "(Plumed not in path. Please install, or click 'Browse...' to locate it.)"
 
     # Header of short help
     variable text_instructions_header \
@@ -88,20 +87,14 @@ proc plumed_tk {} {
 
 
 proc ::Plumed::plumed {} {
-    global tcl_platform
-
     variable w
     variable textfile
     variable plugin_name
-    variable driver_path
-    variable driver_path_v1
-    variable driver_path_v2
     variable plumed_version
     variable pbc_type 1
     variable pbc_boxx
     variable pbc_boxy
     variable pbc_boxz
-    variable plot_points 0
     variable text_instructions
 
     # If already initialized, just turn on
@@ -116,31 +109,13 @@ proc ::Plumed::plumed {} {
 
     # Special handling for Windows
     set win32_install_state disabled
+    global tcl_platform
     switch $tcl_platform(platform) {
 	windows {
 	    set win32_install_state normal
 	    append ::env(PATH) ";" \
-		[file join $::env(APPDATA) "Plumed-GUI"]
+		[file nativename [file join $::env(APPDATA) "Plumed-GUI"]]
 	}
-    }
-
-
-    # Look for plumed (v2), then driver (v1)
-    set driver_path_v1 /path/to/driver
-    set driver_path_v2 /path/to/plumed
-    set can_run 0
-
-    set dr [ auto_execok driver ]
-    if {$dr != ""} {
-	set driver_path_v1 $dr 
-	set plumed_version 1
-	set can_run 1
-    }
-    set dr [ auto_execok plumed ]
-    if {$dr != ""} {
-	set driver_path_v2 $dr 
-	set plumed_version 2
-	set can_run 1
     }
 
     # If PBC exist, use them
@@ -274,6 +249,9 @@ proc ::Plumed::plumed {} {
 	   -command [namespace current]::location_browse   ] -side left -expand 0
 
 
+    ## FINALIZE ============================================================
+    plumed_path_lookup;		# sets plumed_version
+
 
     ## TEXT ============================================================
     ttk::frame $w.txt
@@ -283,7 +261,8 @@ proc ::Plumed::plumed {} {
     ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
     label $w.txt.text.instructions -text "(...)" -justify left \
 	-relief solid -padx 2m -pady 2m
-    file_new
+    file_new;			# depends on plumed_version
+
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
 	-padx 100 -pady 10
     pack $w.txt.label -side top   -fill x 
@@ -296,16 +275,6 @@ proc ::Plumed::plumed {} {
     menu $w.txt.text.popup -tearoff 0
     bind $w.txt.text <3> { ::Plumed::popup_menu %x %y %X %Y }
 
-
-    ## FINALIZE ============================================================
-    plumed_version_changed
-
-    if {$can_run==0} {
-	# Oddly, give time to extensions menu to close
-	after 100 { 
-	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message "Neither `plumed' (v2) nor `driver' (v1) executables were found in path.\n\nAlthough you will be able to edit analysis scripts, you will not be able to run them.\n\nPlease see help menu for installation instructions."
-	}
-    }
 
 }
 
@@ -322,6 +291,10 @@ proc ::Plumed::empty_meta_inp {} {
 	2  {return $empty_meta_inp_v2}
     } 
 }
+
+
+
+
 
 proc ::Plumed::file_new { } {
     variable w
@@ -424,14 +397,11 @@ proc ::Plumed::location_browse { } {
 proc ::Plumed::help_win32_install {} {
     puts "Attempting automated installation (may fail for permissions, network, antivirus)."
     set destdir [file join $::env(APPDATA) "Plumed-GUI"]
-    file mkdir $destdir
     set exe     [file join $destdir driver.exe]
+    file mkdir $destdir
     set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
-    set code [get_url $url_driver]
-    set och [open $exe w]
-    fconfigure $och -translation binary
-    puts $och $code
-    close $och
+    vmd_mol_urlload $url_driver $exe
+    driver_path_lookup
 }
 
 
@@ -1460,12 +1430,6 @@ proc ::Plumed::highlight_error_label {label etext} {
 
 # Handle version changes ==================================================
 
-proc ::Plumed::plumed_version_changed {} {
-    instructions_update
-    templates_populate_menu
-    pbc_dcd_set_state
-    driver_path_update
-}
 
 proc ::Plumed::pbc_dcd_set_state {} {
     variable w
@@ -1489,15 +1453,56 @@ proc ::Plumed::instructions_update {} {
     catch { $w.txt.text.instructions configure -text $txt } err
 }
 
-proc ::Plumed::driver_path_update {} {
+
+# Look for plumed (v2), then driver (v1)
+proc ::Plumed::plumed_path_lookup {} {
     variable plumed_version
+    variable driver_path_v1 "(Not found)"
+    variable driver_path_v2 "(Not found)"
     variable driver_path
+
+    set plumed_version 0
+    set dr [ auto_execok driver ]
+    if {$dr!=""} {
+	set driver_path_v1 $dr
+	set plumed_version 1
+    }
+
+    set dr [ auto_execok plumed ]
+    if {$dr!=""} {
+	set driver_path_v2 $dr
+	set plumed_version 2
+    }
+
+    if {$plumed_version==0} {
+	# Oddly, give time to extensions menu to close
+	after 100 { 
+	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message "Neither `plumed' (v2) nor `driver' (v1) executables were found in path.\n\nAlthough you will be able to edit analysis scripts, you will not be able to run them.\n\nPlease see help menu for installation instructions."
+	}
+	set plumed_version 1;	# default version if none found
+    } 
+    plumed_version_changed
+
+}
+
+
+
+# May be invoked by GUI or upon searching paths. We assume that plumed
+# version is either 1 or 2 (not 0)
+proc ::Plumed::plumed_version_changed {} {
+    variable plumed_version
     variable driver_path_v1
     variable driver_path_v2
+    variable driver_path
+
     switch $plumed_version {
 	1  {set driver_path $driver_path_v1}
 	2  {set driver_path $driver_path_v2}
     } 
+
+    instructions_update
+    templates_populate_menu
+    pbc_dcd_set_state
 }
 
 # ==================================================
