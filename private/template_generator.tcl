@@ -114,9 +114,7 @@ puts "$unsubst"
 # Part 2: popup to insert "short" template
 
 # Generate keyword-help hashes for ALL keywords. 
-puts "namespace eval ::Plumed {"
-puts "  variable template_keyword_hash"
-puts "  array set template_keyword_hash {"
+puts "array set ::Plumed::template_keyword_hash {"
 foreach kw $keyword_list {
     set templ [get_template $kw]
     # Hack to remove spaces in <some selection>
@@ -124,22 +122,18 @@ foreach kw $keyword_list {
     # Keep a list of the templates we've seen
     lappend known_kw_list $kw
 }
-puts "  }"
 puts "}"
 
 
 # ----------------------------------------
 # Part 3: popup to insert full template keywords
 
-puts "namespace eval ::Plumed {"
-puts "  variable template_full_hash"
-puts "  array set ::Plumed::template_full_hash {"
+puts "array set ::Plumed::template_full_hash {"
 foreach kw $keyword_list {
     set templ [get_template_full $kw]
     # Hack to remove spaces in <some selection>
     puts "  {$kw} {$templ}"
 }
-puts "  }"
 puts "}"
 
 
