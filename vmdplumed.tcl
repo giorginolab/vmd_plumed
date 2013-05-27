@@ -517,8 +517,17 @@ proc ::Plumed::writexst {fn} {
     close $ch
 }
 
+# Attempt to access URL, return numeric code.
+proc ::Plumed::get_url_ncode {url} {
+    set ch [::http::geturl $url]
+    set status  [::http::ncode $ch]
+    ::http::cleanup $ch
+    return $status
+}
+
+
 # Return the content of the given URL, or throw error if not
-# found. Only code 200 considered OK.
+# found. Only code 200 considered OK. Unused.
 proc ::Plumed::get_url {url} {
     set ch [::http::geturl $url]
     set status  [::http::ncode $ch]
@@ -1667,10 +1676,10 @@ proc ::Plumed::popup_help_url {} {
 	if [file readable $htmlfile] {
 	    set popup_help_url_cached [file join $root user-doc html]
 	} else {
+	    # 2. try version-specific remote
 	    set docversion [exec $driver_path --standalone-executable info --version]
 	    set url "$plumed2_online_docbase/$docversion/user-doc/html/index.html"
-	    if {[catch {get_url $url} err]==0} {
-		# 2. try version-specific remote
+	    if {[get_url_ncode $url]==200} {
 		puts "Info: local help pages not available, using remote pages for version $docversion"
 	    } else {
 		# 3. Use "master", no check
