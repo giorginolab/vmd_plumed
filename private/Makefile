@@ -31,9 +31,8 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 
 # ----------------------------------------
 # Template generator
-../templates_list_v2_autogen.tcl: 
-	$(MAKE) -C templates
-	cp templates/templates_list_v2_autogen.tcl ..
+../templates_list_v2_autogen.tcl: template_generator.tcl
+	tclsh template_generator.tcl > $@
 
 
 
@@ -73,7 +72,6 @@ $(ZIP): default
 
 # ----------------------------------------
 clean:
-	$(MAKE) -C templates clean
 	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(ZIP) 
 
 
