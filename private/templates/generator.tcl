@@ -27,7 +27,6 @@ namespace eval ::Plumed {
         "Radius of gyration"		"%%GYRATION"
 	"Electric dipole"		"%%DIPOLE"
 	"Coordination"			"%%COORDINATION"
-	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ... SWITCH=(RATIONAL R_0=1.5)"
 	- -
 	"RMSD from reference structure" "%%RMSD"
 	"S- and Z-path variables"	"%%PATHMSD"
@@ -39,13 +38,14 @@ namespace eval ::Plumed {
 	                                "%%ANTIBETARMSD"
 	"Distance RMSD"                 "%%DRMSD"
 	- -
-	"Distance set"                  "DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
-	"Coordination number"		"%%COORDINATIONNUMBER"
-	"Sort CV vector"		"%%SORT"
+	"Polynomial function of CVs"	"%%COMBINE"
+	"Piecewise function of CVs"	"%%PIECEWISE"
+	"Arbitrary function of CVs"	"MATHEVAL ARG=cv1.x,cv2.y VAR=x,y FUNC=sin(x)+y   # If compiled-in"
 	"Distance in CV space"		"%%TARGET"
-	"Polynomial CV function"	"%%COMBINE"
-	"Piecewise CV function"		"%%PIECEWISE"
-	"Arbitrary CV function"		"MATHEVAL ARG=d1.x,d1.y VAR=x,y FUNC=x+y   # If compiled"
+	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ... SWITCH=(RATIONAL R_0=1.5)"
+	"Distance list"			"DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
+	"Coordination number list"	"%%COORDINATIONNUMBER"
+	"Sort CV vector"		"%%SORT"
 	- -
 	"Restraint"			"%%RESTRAINT"
         "Moving restraint"		"%%MOVINGRESTRAINT"
@@ -61,10 +61,10 @@ namespace eval ::Plumed {
 }
 
 # These are in the menu, but with a manual template
-#	%%CONTACTMAP 
-#       %%DISTANCES 
 #       %%COM 
 #       %%GROUP
+#	%%CONTACTMAP 
+#       %%DISTANCES 
 #       %%UNITS
 
       
