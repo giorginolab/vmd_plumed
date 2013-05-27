@@ -8,4 +8,4 @@
 # script is sourced, the variable $dir must contain the
 # full path name of this file's directory.
 
-package ifneeded plumed 2.1 [list source [file join $dir templates_list_v1.tcl]]\n[list source [file join $dir templates_list_v2_autogen.tcl]]\n[list source [file join $dir vmdplumed.tcl]]
+package ifneeded plumed 2.1 [list source [file join $dir templates_list_v2_autogen.tcl]]\n[list source [file join $dir templates_list_v1.tcl]]\n[list source [file join $dir vmdplumed.tcl]]
