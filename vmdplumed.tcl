@@ -32,45 +32,36 @@ namespace eval ::Plumed:: {
     variable plot_points 0;	       # points readout
     variable w;			       # handle to main window
 
-    variable textfile unnamed.plumed
+    variable textfile unnamed.plumed; # new file name
 
-    # Header of short help
+    # Header of short help...
     variable text_instructions_header \
 "Enter collective variable definitions below, in PLUMED syntax.  
 Click 'Plot' to evaluate them on the 'top' trajectory.  
 VMD atom selections in square brackets expand automatically."
 
-    # Plumed v1 ............
-    # ...short help
+    # ...short help V1
     variable text_instructions_example_v1 \
-"For example:
-
+"For example:\n
     protein-> \[chain A and name CA\] protein<-
-    ligand->  \[chain B and noh\]          ligand<-
-
+    ligand->  \[chain B and noh\]          ligand<-\n
     DISTANCE LIST <protein> <ligand>
     COORD LIST <protein> <ligand>  NN 6 MM 12 D_0 5.0 R_0 0.5 "
-    # ...example script
-    variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
 
-    # Plumed v2 ............
-    # ...short help
+    # ...short help V2
     variable text_instructions_example_v2 \
-"For example:
-
+"For example:\n
     protein: COM ATOMS=\[chain A and name CA\]
-    ligand:  COM ATOMS=\[chain B and noh\]
-
-    DISTANCE ATOMS=protein,ligand
-
-*Note*: UNITS are nm, ps and kJ/mol unless specified.
+    ligand:  COM ATOMS=\[chain B and noh\]\n
+    DISTANCE ATOMS=protein,ligand\n
+Default UNITS are nm, ps and kJ/mol unless changed.
 Right mouse button provides help on keywords."
-    # ...example script
-    variable empty_meta_inp_v2 "
-UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps
 
-d1:    DISTANCE ATOMS=1,200                     # Just an example
-"
+    # Example scripts (file new)
+    variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
+    variable empty_meta_inp_v2 "
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps\n
+d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
 
     # Used in file requestors
     variable file_types {
@@ -78,7 +69,6 @@ d1:    DISTANCE ATOMS=1,200                     # Just an example
 	{"Text Files" { .txt .TXT} }
 	{"All Files" * }
     }
-
 }
 
 proc plumed_tk {} {
@@ -297,6 +287,7 @@ proc ::Plumed::file_new { } {
     $w.txt.text delete 1.0 {end - 1c}
     label $w.txt.text.instructions -text "(...)" -justify left \
 	-relief solid -padx 2m -pady 2m
+    # bind $w.txt.text.instructions <1> { destroy %W }  ;# Click to close
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
 	-padx 100 -pady 10
     $w.txt.text insert end [empty_meta_inp]
@@ -402,7 +393,7 @@ proc ::Plumed::help_win32_install {} {
     vmd_mol_urlload $url_driver [file join $destdir driver.exe]
 
     set url_plumed {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe}
-    vmd_mol_urlload $url_plumed      [file join $destdir plumed.exe]
+    vmd_mol_urlload $url_plumed [file join $destdir plumed.exe]
 
     plumed_path_lookup
 }
@@ -526,8 +517,17 @@ proc ::Plumed::writexst {fn} {
     close $ch
 }
 
+# Attempt to access URL, return numeric code.
+proc ::Plumed::get_url_ncode {url} {
+    set ch [::http::geturl $url]
+    set status  [::http::ncode $ch]
+    ::http::cleanup $ch
+    return $status
+}
+
+
 # Return the content of the given URL, or throw error if not
-# found. Only code 200 considered OK.
+# found. Only code 200 considered OK. Unused.
 proc ::Plumed::get_url {url} {
     set ch [::http::geturl $url]
     set status  [::http::ncode $ch]
@@ -1676,10 +1676,10 @@ proc ::Plumed::popup_help_url {} {
 	if [file readable $htmlfile] {
 	    set popup_help_url_cached [file join $root user-doc html]
 	} else {
+	    # 2. try version-specific remote
 	    set docversion [exec $driver_path --standalone-executable info --version]
 	    set url "$plumed2_online_docbase/$docversion/user-doc/html/index.html"
-	    if {[catch {get_url $url} err]==0} {
-		# 2. try version-specific remote
+	    if {[get_url_ncode $url]==200} {
 		puts "Info: local help pages not available, using remote pages for version $docversion"
 	    } else {
 		# 3. Use "master", no check
