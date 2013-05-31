@@ -25,7 +25,7 @@ namespace eval ::Plumed {
 	"Electric dipole"		"%%DIPOLE"
 	"Coordination"			"%%COORDINATION"
 	- -
-	"RMSD from reference structure" "%%RMSD"
+	"RMSD from reference structure" "RMSD REFERENCE=ref.pdb TYPE=OPTIMAL"
 	"S- and Z-path variables"	"%%PATHMSD"
 	"Amount of \u03b1-helical structure"        
 	                                "%%ALPHARMSD"
@@ -60,6 +60,7 @@ namespace eval ::Plumed {
 # These are in the menu, but with a manual template
 #       %%COM 
 #       %%GROUP
+#       %%RMSD
 #	%%CONTACTMAP 
 #       %%DISTANCES 
 #       %%UNITS
