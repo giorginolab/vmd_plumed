@@ -11,7 +11,7 @@ dynlibs:
 staticlibs:
 win32staticlibs:
 
-# Toni: make -C private 
+# Toni: make -C maintainer
 #
 # If changing the version number, also fix it in
 # templates_list_v1.tcl and in generator.tcl
