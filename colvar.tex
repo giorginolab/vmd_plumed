@@ -28,10 +28,10 @@
 %% \usepackage{graphics}
 %% or use the graphicx package for more complicated commands
 
-\usepackage[utf8]{inputenc}
+%\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{subfigure}
-\usepackage{datetime}
+%\usepackage{datetime}
 \usepackage{hyperref}
 
 %% or use the epsfig package if you prefer to use the old commands
@@ -204,7 +204,7 @@ Corso Stati Uniti 4, I-35127 Padua, Italy}
 {\em Operating system:}                                       
  Linux/Unix, OSX, Windows. \\
 {\em RAM:}                                               
- Sufficient to run Plumed [1] and VMD [2]. \\
+ Sufficient to run Plumed \cite{plumed2_this} and VMD \cite{Humphrey_Dalke_Schulten_1996}. \\
 {\em Number of processors used:}                              
  1 \\
 % {\em Supplementary material:}                                 \\
@@ -248,11 +248,6 @@ Corso Stati Uniti 4, I-35127 Padua, Italy}
   variables, performed by the underlying Plumed code, depends on the
   size of the system and the length  of the trajectory; it is 
   generally negligible with respect to simulation time.  \\
-\begin{thebibliography}{0}
-\bibitem{1}See paper in this issue.
-\bibitem{2}Humphrey, W., A. Dalke, and K. Schulten. ``VMD: Visual
-  Molecular Dynamics.'' J Mol Graph 14, no. 1 (February 1996): 33-38.
-\end{thebibliography}
 
 %* Items marked with an asterisk are only required for new versions
 %of programs previously published in the CPC Program Library.\\
@@ -409,7 +404,7 @@ syntax.)
 \subsection{Analysis and visualization}
 
 Pressing the \emph{Plot} button at the bottom of the window evaluates
-the displayed script to the currently selected trajectory (known
+the displayed script on the currently selected trajectory (known
 within VMD as the all-important \emph{top} molecule). Assuming that
 Plumed executable is properly installed, the GUI will execute Plumed's
 \emph{driver} function, which will evaluate the values of the CVs
@@ -419,18 +414,18 @@ Once the evaluation is successful, the time series of the collective
 variables are displayed graphically in a plot.  The purpose of the
 plot is to quickly inspect the values yielded by the current CV
 definitions, and provide a way to iteratively refine them. The plot
-layout is basic, showing time on the abscissa, and the CV values in
-different line colors; data points can be optionally read out hovering the
+layout  shows time on the abscissa and the CV values in
+different line styles; data points can be optionally read out hovering the
 mouse pointer.  More complex visualizations can be obtained exporting
 data to external plotting programs; data can be exported 
 either as a matrix (time running as rows, and CVs as
 columns), or as consecutive time-value vectors separated by empty
 lines.
 
-Should the evaluation of the script generates an error, it will be
+Should the evaluation of the script generate an error, it will be
 displayed in the VMD textual console.  In most instances Plumed
 identifies the specific problem and corresponding script line; when
-this happens, the error line will be marked as such in the text area.
+this happens, the error line will be highlighted as such in the text area.
 
 
 
@@ -487,10 +482,10 @@ elsewhere~\cite{Humphrey_Dalke_Schulten_1996}.
 Plumed-GUI allows the use of VMD's atom selections in Plumed scripts
 through  square brackets. As shown in Figure~\ref{fig:main},
 bracketed textual expressions  are evaluated with respect to
-the top molecule and frame, and transparently replaced with the
+the current frame of the top molecule, and transparently replaced with the
 resulting list of atoms. In this way, Plumed users can 
 avoid the use of numeric atom IDs altogether in favor of human-readable
-labels such as \texttt{[protein and name CA]}.
+expressions such as \texttt{[protein and name CA]}.
 
 This is especially advantageous when switching between multiple
 systems; it is the case, for example, when several all-atom systems
@@ -537,13 +532,13 @@ foresees modifiers to define the shape and functional form of the
 switching function; to ignore periodic boundary conditions; to compute
 derivatives numerically; and several others. The richness of the
 syntax may make it unwieldy to recall the syntax of lesser-used
-keywords.
+options.
 
 % Although templates include placeholders for most
 % common options, it would be impractical to include all of the optional
 % parameters in each template line.
 
-Plumed-GUI provides a comprehensive context-dependent help facility
+To this end, Plumed-GUI provides a comprehensive context-dependent help facility
 through a pop-up menu, which is be invoked pressing the right mouse
 button on any action keyword. The topmost menu item, \emph{Lookup in
   documentation}, opens up a web browser displaying the full manual
@@ -595,7 +590,7 @@ requiring modifications to the GUI code.
 %Some CVs require too much information to be defined by one script command.
 
 Functions in the \emph{Structure} menu provide assistance in the
-definition of CVs that depend upon the topology and coordinates of
+definition of more complex CVs that depend upon the topology and coordinates of
 the currently loaded system.  Each of the menu entries opens up a
 dialog with a number of tunable options. Structure-based CVs
 generally involve long lists of statements and/or auxiliary files;
@@ -671,9 +666,9 @@ set~\cite{plumed_manual}.
 The dialog allows the use of atom selections to indicate the subset of
 the atoms to be involved, respectively, in the computation of the
 optimal alignment, and the measure of the RMSD. A check-box provides
-the choice on whether to export all of the frames of the current
+a choice on whether to export all of the frames of the current
 trajectory (convenient when specifying a complex path), or just the
-current frame (for simple RMSD calculations, or to facilitate the
+current frame (for basic RMSD calculations, or to facilitate the
 manual construction of paths).
 
 By default, the reference file generated is suitable for computing
@@ -780,7 +775,7 @@ the symbolic atom selections in the current script and replaces them
 with the corresponding numerical lists. The exported script is thus
 devoid of VMD-specific constructs, and can then be employed for
 simulations.  The exported file contains comments to remind how the
-numeric atom lists were computed, although, for the sake of
+numeric atom lists were obtained although, for the sake of
 reproducibility, it is generally advisable to keep the original
 script with unsubstituted, symbolic atom selections.
 
@@ -881,10 +876,9 @@ and reweighting schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
 Part of the work described in this paper was conducted while at the
 Computational Biophysics Laboratory at the Universitat Pompeu Fabra
-(Barcelona). Financial support from the ``Beatriu de Pin\'os'' scheme
-of the AGAUR (Generalitat de Catalunya) is gratefully acknowledged.
-
-
+(Barcelona). Former support from the ``Beatriu de Pin\'os'' scheme of
+the Ag\`encia de Gesti\'o d'Ajuts Universitaris i de Recerca
+(Generalitat de Catalunya) is gratefully acknowledged.
 
 %% References with bibTeX database:
 
@@ -893,7 +887,7 @@ of the AGAUR (Generalitat de Catalunya) is gratefully acknowledged.
 
 \vspace{2cm}
 
-\texttt{Version of \longdate \today \, \currenttime}
+% \texttt{Version of \longdate \today \, \currenttime}
 % \begin{verbatim}
 % Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
 % Istituto di Ingegneria Biomedica              tel +39 049 8295761
