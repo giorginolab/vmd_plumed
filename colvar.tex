@@ -847,10 +847,10 @@ the fact that atom selections are evaluated only once, before the
 computation is started; thus, it is not possible to employ
 time-varying atom lists (nor PLUMED engine would support them):
 analysis protocols involving time-varying atom sets are outside of the
-scope of the programs. It is worthwhile noting, however, that PLUMED's
-switching functions (such as \texttt{DISTANCES LESS\_THAN}) can
-provide sensible approximations to discrete quantities such as the
-number of atoms satisfying a given property.
+scope of the programs. It is worthwhile noting, however, that PLUMED~2
+provides switching functions (such as \texttt{DISTANCES LESS\_THAN})
+that are continuous approximations to discrete quantities
+such as the number of atoms satisfying a given property.
 
 One of the objectives of the GUI is to lower the barrier for the
 adoption of meaningful metrics in the analysis tasks of simulation
@@ -874,14 +874,13 @@ and reweighting schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
 \section{Acknowledgments}
 
-I would like to acknowledge the authors of PLUMED and VMD for
-creating, distributing and supporting the corresponding software
-packages. A thank goes to Prof. G.\ De Fabritiis at the Computational
+I would like to thank the authors of PLUMED and VMD for creating,
+distributing and supporting the corresponding software packages. An
+acknowledgment goes to Prof. G.\ De Fabritiis and colleagues at the Computational
 Biophysics Laboratory at the Universitat Pompeu Fabra (Barcelona),
-where part of the work described in this paper was conducted. Former
-support from the ``Beatriu de Pin\'os'' scheme of the Ag\`encia de
-Gesti\'o d'Ajuts Universitaris i de Recerca (Generalitat de Catalunya)
-is also gratefully acknowledged.
+where this work was started. Former support from the ``Beatriu de
+Pin\'os'' scheme of the Ag\`encia de Gesti\'o d'Ajuts Universitaris i
+de Recerca (Generalitat de Catalunya) is gratefully acknowledged.
 
 %% References with bibTeX database:
 
