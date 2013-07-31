@@ -25,6 +25,9 @@ namespace eval ::Plumed:: {
     variable plugin_version [package versions plumed]
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
+    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.0/user-doc/html"
+
+
     variable debug 0;		       # extra log info
     variable highlight_error_ms 12000; # error message held this long
     variable plumed_default_version 2; # default PLUMED to use if none found
@@ -177,7 +180,7 @@ proc ::Plumed::plumed {} {
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "How to install the 'driver' binaries" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
-    $w.menubar.help.menu add command -label "Attempt download of prebuilt driver binaries (Windows)" \
+    $w.menubar.help.menu add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
@@ -1667,7 +1670,7 @@ proc ::Plumed::popup_insert_keyword {kw} {
 proc ::Plumed::popup_help_url {} {
     variable popup_help_url_cached; # static
     variable driver_path
-    set plumed2_online_docbase "http://plumed2.berlios.de"
+    variable plumed2_online_docbase
 
     if {![info exists popup_help_url_cached]} {
 	# 1. try local
@@ -1675,18 +1678,17 @@ proc ::Plumed::popup_help_url {} {
 	set htmlfile [file join $root user-doc html index.html]
 	if [file readable $htmlfile] {
 	    set popup_help_url_cached [file join $root user-doc html]
+	    puts "Info: using local help pages."
 	} else {
 	    # 2. try version-specific remote
-	    set docversion [exec $driver_path --standalone-executable info --version]
-	    set url "$plumed2_online_docbase/$docversion/user-doc/html/index.html"
+	    set url "$plumed2_online_docbase/index.html"
 	    if {[get_url_ncode $url]==200} {
-		puts "Info: local help pages not available, using remote pages for version $docversion"
+		puts "Info: local help pages not available, using remote pages at $url"
+		set popup_help_url_cached $plumed2_online_docbase
 	    } else {
-		# 3. Use "master", no check
-		puts "Info: neither local nor version-specific ($docversion) help found, using generic remote pages"
-		set docversion master
+		puts "Warning: local and remote help pages not available, using fallback"
+		set popup_help_url_cached http://plumed2.berlios.de/master/user-doc/html/
 	    }
-	    set popup_help_url_cached "$plumed2_online_docbase/$docversion/user-doc/html"
 	}
     }
     return $popup_help_url_cached
