@@ -57,8 +57,10 @@ ZIP = $(VMDPLUGINDIR).zip
 dist: $(ZIP) 
 
 $(ZIP): default
+	rm -rf $(VMDPLUGINDIR)
 	mkdir $(VMDPLUGINDIR)
 	cp -a ../doc ../*.tcl ../Makefile $(VMDPLUGINDIR)
+	rm -f $@ $(VMDPLUGINDIR)/doc/*~
 	zip -r $@ $(VMDPLUGINDIR)
 	rm -rf $(VMDPLUGINDIR)
 

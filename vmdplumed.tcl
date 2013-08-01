@@ -66,6 +66,22 @@ Right mouse button provides help on keywords."
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps\n
 d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
 
+    # Not found text
+    variable plumed_not_found_message \
+"Neither PLUMED binaries 'plumed' (2.0) nor 'driver' (1.3) were found
+in the systems' executable path.\n
+You will be able to edit analysis scripts but not to evaluate them.\n
+Please see the Help menu for installation instructions or to attempt
+to download and install prebuilt Windows executables."
+
+    # Attempt download message
+    variable help_win32_install_query \
+"Attempt download and installation of PLUMED binaries from the Plumed-GUI website?"
+
+    variable help_win32_install_error \
+"Sorry - automatic download and installation of one or both PLUMED
+binaries failed. Check user permissions, network, antivirus."
+
     # Used in file requestors
     variable file_types {
 	{"Plumed Files" { .plumed .metainp .meta_inp } }
@@ -387,6 +403,13 @@ proc ::Plumed::location_browse { } {
 
 # Attempt auto install
 proc ::Plumed::help_win32_install {} {
+    variable help_win32_install_query
+    variable help_win32_install_error
+
+    set r [tk_messageBox -title "Attempt binary installation" -parent .plumed \
+	       -message $help_win32_install_query -type okcancel -icon question ]
+    if { $r != "ok" } { return }
+
     set destdir [file join $::env(APPDATA) "Plumed-GUI"]
     puts "Attempting automated installation into $destdir"
     puts "Installation may fail for permissions, network, antivirus."
@@ -1475,6 +1498,7 @@ proc ::Plumed::plumed_path_lookup {} {
     variable driver_path_v1 "(Not found)"
     variable driver_path_v2 "(Not found)"
     variable driver_path
+    variable plumed_not_found_message
 
     set plumed_version 0
     auto_reset
@@ -1493,7 +1517,7 @@ proc ::Plumed::plumed_path_lookup {} {
     if {$plumed_version==0} {
 	# Oddly, give time to extensions menu to close
 	after 100 { 
-	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message "Neither `plumed' (v2) nor `driver' (v1) executables were found in path.\n\nAlthough you will be able to edit analysis scripts, you will not be able to run them.\n\nPlease see help menu for installation instructions."
+	    tk_messageBox -icon warning -title "PLUMED not found" -parent .plumed -message $Plumed::plumed_not_found_message
 	}
 	set plumed_version $plumed_default_version
     } 
