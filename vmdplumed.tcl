@@ -26,7 +26,7 @@ namespace eval ::Plumed:: {
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
     variable plumed2_online_docbase "http://plumed.github.io/doc-v2.0/user-doc/html"
-
+    variable plumed2_online_docbase_fallback "http://plumed2.berlios.de/master/user-doc/html/"
 
     variable debug 0;		       # extra log info
     variable highlight_error_ms 12000; # error message held this long
@@ -1671,13 +1671,13 @@ proc ::Plumed::popup_help_url {} {
     variable popup_help_url_cached; # static
     variable driver_path
     variable plumed2_online_docbase
+    variable plumed2_online_docbase_fallback
 
     if {![info exists popup_help_url_cached]} {
 	# 1. try local
-	set root [exec $driver_path --standalone-executable info --root]
-	set htmlfile [file join $root user-doc html index.html]
+	set htmlfile [exec $driver_path --standalone-executable info --user-doc]
 	if [file readable $htmlfile] {
-	    set popup_help_url_cached [file join $root user-doc html]
+	    set popup_help_url_cached [file dirname $htmlfile]
 	    puts "Info: using local help pages."
 	} else {
 	    # 2. try version-specific remote
@@ -1687,7 +1687,7 @@ proc ::Plumed::popup_help_url {} {
 		set popup_help_url_cached $plumed2_online_docbase
 	    } else {
 		puts "Warning: local and remote help pages not available, using fallback"
-		set popup_help_url_cached http://plumed2.berlios.de/master/user-doc/html/
+		set popup_help_url_cached $plumed2_online_docbase_fallback
 	    }
 	}
     }
