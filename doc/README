@@ -1,9 +1,9 @@
 
-
 The authoritative and up-to-date documentation is at
 
 http://www.multiscalelab.org/utilities/PlumedGUI
 
+A dump of the webpage is distributed with the archive for convenience.
 
 
 				* * *
@@ -24,13 +24,13 @@ Toni Giorgino, Plumed-GUI: an environment for the interactive
 Content of the distribution archive:
 
 plumedX.X/
-	Makefile		Only used when rebuilding VMD from source
-	*.tcl			Package files
-	doc/
-		README		This file
-		INSTALL		Installation directions
-		EXAMPLE 	Quickstart tutorial 
-		EXAMPLE.plumed2     ''        ''    input
-		EXAMPLE.plumed2.out ''        ''    output
-
+  *.tcl				Package files
+  Makefile			Only used when rebuilding VMD from source
+  doc/
+	README			This file
+	INSTALL			Installation directions
+	PlumedGUI.html		Dump of the plugin's web page (possibly outdated)
+	EXAMPLE 		Quickstart tutorial 
+	EXAMPLE.plumed2         Quickstart tutorial: input
+	EXAMPLE.plumed2.out     Quickstart tutorial: output
 

@@ -6,7 +6,7 @@
 VMVERSION = $(shell awk '/VMVERSION =/ {print $$NF}' ../Makefile)
 VMDPLUGINDIR = plumed$(VMVERSION)
 
-GENERATED_DOCFILES = ../doc/versionId
+GENERATED_DOCFILES = ../doc/versionId ../doc/PlumedGUI.html
 
 
 
@@ -45,6 +45,8 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 	  echo "========"; \
 	  git show -s --oneline ) > $@
 
+../doc/PlumedGUI.html:
+	wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.0.19) Gecko/2011032314 Iceweasel/3.0.6 (Debian-3.0.6-3)" -k 'http://www.multiscalelab.org/utilities/PlumedGUI?action=print' -O $@
 
 
 # ----------------------------------------
@@ -64,6 +66,6 @@ $(ZIP): default
 
 # ----------------------------------------
 clean:
-	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(ZIP) 
+	rm -rf ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES) $(ZIP) ../doc/*~
 
 
