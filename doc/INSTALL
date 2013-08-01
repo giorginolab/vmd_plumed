@@ -1,22 +1,39 @@
 
-Manual installation (recommended)
+VMD already comes with Plumed-GUI installed. To upgrade to the latest
+version, please follow the instructions provided below.
+
+
+Prerequisite
 ----------------------------------------
 
+Plumed-GUI REQUIRES that the "plumed" (PLUMED 2.0) and/or "driver"
+(PLUMED 1.3) executables are installed in the path. See
+http://www.multiscalelab.org/utilities/PlumedGUI for
+instructions. Under Windows, you may attempt an automatic installation
+(in Plumed-GUI's "Help" menu).
+
+
+
+Manual upgrade
+----------------------------------------
+
+Note that you will need write privileges in VMD's program directory.
 Installation requires these steps:
 
 1. Identify your VMD installation directory (let's call it
    $VMDDIR). In VMD's console, you can use:
       puts $env(VMDDIR)
 
-2. Copy the script's distribution directory (after archive extraction)
-   into $VMDDIR/plugins/noarch/tcl
+2. Extract the distribution directory and replace the plugin files in
+   $VMDDIR/plugins/noarch/tcl/plumed* . There should be at least:
+       vmdplumed.tcl
+       templates_list_v1.tcl
+       templates_list_v2_autogen.tcl    
+       pkgIndex.tcl
 
-3. Copy or move the file <PACKAGENAME>_init.tcl into
-   $VMDDIR/scripts/init.d , creating said directory if it does not
-   exist already.
 
-Note that you will need write privileges in VMD's program directory.
-The plugin should appear in the "Extensions" menu upon VMD's next run.
+The plugin should appear in the "Extensions>Analysis>Collective
+Variable Analysis (PLUMED)" menu upon VMD's next run.
 
 
 

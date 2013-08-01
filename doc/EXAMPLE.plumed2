@@ -1,0 +1,18 @@
+# Switch to Angstroms
+UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps
+
+# Carbon-alphas
+kixCA:   GROUP ATOMS=[chain A and name CA]
+kidCA:   GROUP ATOMS=[chain B and name CA]
+
+# Center of masses for the above
+kidCOM:  COM ATOMS=kidCA
+kixCOM:  COM ATOMS=kixCA
+
+# The four collective variables
+nc: COORDINATION GROUPA=kidCA GROUPB=kixCA NN=6  MM=12  D_0=0.0  R_0=7.0
+g1: GYRATION ATOMS=kidCA TYPE=RADIUS 
+g2: GYRATION ATOMS=kixCA TYPE=RADIUS 
+d: DISTANCE ATOMS=kidCOM,kixCOM
+
+# METAD ARG=d     SIGMA=1.0     HEIGHT=0.1     PACE=1000     FILE=HILLS

@@ -6,7 +6,7 @@
 VMVERSION = $(shell awk '/VMVERSION =/ {print $$NF}' ../Makefile)
 VMDPLUGINDIR = plumed$(VMVERSION)
 
-GENERATED_DOCFILES = ../doc/index.html ../doc/README ../doc/versionId
+GENERATED_DOCFILES = ../doc/versionId
 
 
 
@@ -38,14 +38,6 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 
 # ----------------------------------------
 # Doc generator, as per
-# http://stackoverflow.com/questions/4669105/makefile-dependencies-on-directory-content-when-creating-a-tar-file
-
-# These are automatically generated. The whole dir is included anyway.
-../doc/README: ../doc/index.html
-	links -dump $< | cat README_header.txt - > $@
-
-../doc/index.html:
-	wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.0.19) Gecko/2011032314 Iceweasel/3.0.6 (Debian-3.0.6-3)" -k 'http://www.multiscalelab.org/utilities/PlumedGUI?action=print' -O $@
 
 ../doc/versionId:
 	( echo -n "Package generated on "; \
