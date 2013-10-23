@@ -112,7 +112,7 @@ proc ::Plumed::plumed {} {
 	return
     }
 
-    set w [toplevel ".plumed"]
+    set w [toplevel ".plumed" -bg [ttk::style lookup . -background]]
     wm title $w "$plugin_name"
 #    wm resizable $w 0 0
 
@@ -844,7 +844,7 @@ proc ::Plumed::reference_gui { } {
 	set ref_allframes 0
     }
 
-    toplevel .plumedref -bd 4
+    toplevel .plumedref -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumedref "Build reference structure"
     pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" ] -side top
     pack [ ttk::frame .plumedref.align ] -side top -fill x
@@ -1253,7 +1253,7 @@ proc ::Plumed::nc_gui { } {
     variable nc_destmol top
     variable nc_groupname nc
 
-    toplevel .plumednc -bd 4
+    toplevel .plumednc -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumednc "Insert native contacts CV"
     pack [ ttk::label .plumednc.head1 -text "Insert a CV and group definitions required to define a native contacts CV.
 The current frame of the top molecule is taken as the native state." ] -side top -fill x 
