@@ -155,16 +155,6 @@ Corso Stati Uniti 4, I-35127 Padua, Italy}
   development cycle for molecular metrics.
 \end{abstract}
 
-% whose features include the ability to load and visualize
-%  and manipulate multiple molecules and long trajectories.  
-
-% its
-%   scripting language, one can compute a wide range of collective
-%   variables on existing molecular dynamics trajectories, or bias
-%   simulations according to protocols such as metadynamics and
-%   steering
-
-%  make it an ideal environment to visualize and select parts of   complex molecular systems;
 
 \begin{keyword}
 \mykeywords
@@ -204,7 +194,7 @@ Corso Stati Uniti 4, I-35127 Padua, Italy}
 {\em Operating system:}                                       
  Linux/Unix, OSX, Windows. \\
 {\em RAM:}                                               
- Sufficient to run PLUMED \cite{plumed2_this} and VMD \cite{Humphrey_Dalke_Schulten_1996}. \\
+ Sufficient to run PLUMED \cite{tribello_plumed_2013} and VMD \cite{Humphrey_Dalke_Schulten_1996}. \\
 {\em Number of processors used:}                              
  1 \\
 % {\em Supplementary material:}                                 \\
@@ -319,7 +309,7 @@ a concise and human-readable definition of both the functional form
 ``molecules close to residue X'', \dots).
 
 A step forward in this direction is PLUMED, a flexible CV engine
-recently upgraded to version 2.0~\cite{plumed2_this}. PLUMED provides
+recently upgraded to version 2.0~\cite{tribello_plumed_2013}. PLUMED provides
 an extensive set of pre-defined \emph{actions}, i.e.\ self-explanatory
 keywords that concisely define a CV on the basis of the geometry of a
 system. Auxiliary actions also exist to define center of masses, ghost
@@ -790,22 +780,23 @@ executable behind the scenes. PLUMED distributions provide
 instructions on how to build the executable on Unix-like systems; a
 precompiled version for Windows is provided for convenience.
 
+The current version of the plugin, PLUMED-GUI 2.2, supports both
+PLUMED 1.3 and PLUMED 2.0, with minor functional differences.  For
+clarity, this manuscript focused on the features available when using
+PLUMED version 2.0 as a back-end.  Language syntax and \emph{driver}
+invocation method differ between the two PLUMED versions.  The GUI
+detects which version is installed and adapts templates and syntax
+accordingly.  If both PLUMED versions are available, the user can
+switch manually between the two.
+
 Recent VMD distributions contain a preinstalled version of PLUMED-GUI.
-This paper describes version 2.0 of the GUI, which supports PLUMED 2.0
-and earlier.  Users may manually update their GUI to the latest
-version.  To update the GUI, it is sufficient to identify VMD's
-installation path, and replace the files contained in the subdirectory
+Users may manually update their GUI to the latest version.  To update
+the GUI, it is sufficient to identify VMD's installation path, and
+replace the files contained in the subdirectory
 \texttt{plugins/noarch/tcl/plumed} with those contained in the latest
 distribution of PLUMED-GUI.  As customary, the \emph{About} menu item
 displays the currently installed version of the GUI.
 
-For clarity, this paper focuses on the features available with PLUMED
-2.0. The current version of the plugin, PLUMED-GUI 2.0, supports both
-PLUMED 1.3 and PLUMED 2.0, with minor functional differences.
-Language syntax and \emph{driver} invocation method differ between the
-two PLUMED versions.  The GUI detects which version is installed and
-adapts templates and syntax accordingly.  If both PLUMED versions are
-available, the user can switch manually between the two.
 
 
 
@@ -876,15 +867,15 @@ and reweighting schemes~\cite{Bonomi_Barducci_Parrinello_2009}.
 
 I would like to thank the authors of PLUMED and VMD for creating,
 distributing and supporting the corresponding software packages. An
-acknowledgment goes to Prof. G.\ De Fabritiis and colleagues at the Computational
-Biophysics Laboratory at the Universitat Pompeu Fabra (Barcelona),
-where this work was started. Former support from the ``Beatriu de
-Pin\'os'' scheme of the Ag\`encia de Gesti\'o d'Ajuts Universitaris i
-de Recerca (Generalitat de Catalunya) is gratefully acknowledged.
+acknowledgment goes to Prof.\ G.\ De Fabritiis and colleagues at the
+Computational Biophysics Laboratory at the Universitat Pompeu Fabra
+(Barcelona), where this work was started. Former support from the
+Ag\`encia de Gesti\'o d'Ajuts Universitaris i de Recerca, Generalitat
+de Catalunya (2009 BP-B 00109) is gratefully acknowledged.
 
 %% References with bibTeX database:
 
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{model1-num-names}
 \bibliography{colvar}
 
 \vspace{2cm}

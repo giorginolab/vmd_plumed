@@ -5,17 +5,18 @@ Corresponding author: %CORRAUTHOR%
 Article title: %ARTICLE_TITLE%
 Manuscript number: %MS_NUMBER%
 
-Dear Prof. Truhlar,
+Dear Prof. Truhlar, 
 
-thank you for managing my manuscript. I am writing to you to kindly inquire about whether there are any updates in the review process of said paper. Sorry for this request, but together with the authors of the PLUMED paper (which is now in press) we were wondering if the two manuscripts were going to appear more or less in the same time frame.
+thank you for managing my "PLUMED-GUI" manuscript. I am writing to you to kindly inquire about whether there are any updates in the review process of said paper. Sorry for my request, but I was wondering - together with the authors of the companion PLUMED paper (which is now in press) - if the two manuscripts were going to appear more or less in the same time frame, in order to synchronize the projects' releases.
 
-I remain faithfully yours,
+I remain yours sincerely,
 
 Toni Giorgino
 
+Istituto di Ingegneria Biomedica       
+Consiglio Nazionale delle Ricerche
+corso Stati Uniti 4                                
+I-35127 Padova
 
-Toni Giorgino, PhD                      toni.giorgino@isib.cnr.it
-Istituto di Ingegneria Biomedica              tel +39 049 8295761
-Consiglio Nazionale delle Ricerche            fax +39 049 8295763
-corso Stati Uniti 4                                I-35127 Padova
-
+toni.giorgino@isib.cnr.it
+Tel +39 049 8295761
