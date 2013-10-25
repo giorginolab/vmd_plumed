@@ -1,6 +1,6 @@
 Suggested reviewers:
 
-1. 	Dr. Xevi Biarnés Fontal
+* 	Dr. Xevi Biarnés Fontal
 	Laboratory of Biochemistry
 	Bioinformatics and Molecular Modeling Unit
 	IQS, Universitat Ramon Llull
@@ -10,9 +10,9 @@ Suggested reviewers:
 	the post-processing of metadynamics simulations.
 
 
-2.	Prof. Gianni De Fabritiis
+*	Prof. Gianni De Fabritiis
 	Computational Biophysics Laboratory
-	Research Group on Biomedical Informatics (GRIB) – IMIM
+	Research Group on Biomedical Informatics (GRIB) - IMIM
 	Universitat Pompeu Fabra
 	gianni.defabritiis@upf.edu
 
@@ -23,40 +23,7 @@ Suggested reviewers:
 	group.
 
 
-3.	Prof. Jana Selent
-	Computer-Assisted Drug Design Laboratory (CADD)
-	Research Group on Biomedical Informatics (GRIB) – IMIM
-	Universitat Pompeu Fabra
-	jana.selent@upf.edu 
-
-	Prof. Selent is an expert on the modeling of GPCRs and
-	authored several all-atom studies of receptor’s interactions
-	with the lipid environment with metadynamics/PLUMED.
-
-
-4.	Prof. Alessandro Laio
-	Statistical and Biological Physics 
-	International School for Advanced Studies (SISSA)
-	laio@sissa.it
-
-	Prof. Laio published extensively in the field of enhanced
-	sampling and is one of the authors of METAGUI, a VMD GUI for
-	the post-processing of PLUMED-based simulations.
- 
-
-5.	Prof. Francesco Gervasio
-	Chair of Biomolecular Modeling
-	Department of Chemistry
-	University College London
-	f.l.gervasio@ucl.ac.uk
-
-	Prof. Gervasio, besides authoring many cornerstone papers on
-	the application of metadynamics to drug design, is one of the
-	developers of the original PLUMED software, and also an early
-	tester of the PLUMED-GUI.
-
-
-6.	Dr. Gareth Tribello
+* 	Dr. Gareth Tribello
 	Department of Physics and Astronomy
 	School of Mathematics and Physics
 	Queen's University Belfast
@@ -66,4 +33,48 @@ Suggested reviewers:
 	authored GISMO/SketchMap a VMD plugin performing
 	dimensionality reduction calculations and to visualize their
 	results.
+
+
+* 	Prof. Jana Selent
+	Computer-Assisted Drug Design Laboratory (CADD)
+	Research Group on Biomedical Informatics (GRIB) - IMIM
+	Universitat Pompeu Fabra
+	jana.selent@upf.edu 
+
+	Prof. Selent is an expert on the modeling of GPCRs and
+	authored several all-atom studies of receptors' interactions
+	with the lipid environment with metadynamics/PLUMED.
+
+
+*	Santi Esteban-Martín
+	Laboratory of Molecular Biophysics
+	Chemistry and Molecular Pharmacology Programme
+	Institute for Research in Biomedicine (IRB Barcelona)
+	santiago.esteban@irbbarcelona.org
+
+	Dr. Esteban-Martín is an expert in lipid bilayers and NMR
+	orientational studies.
+
+
+* 	Prof. Alessandro Laio
+	Statistical and Biological Physics 
+	International School for Advanced Studies (SISSA)
+	laio@sissa.it
+
+	Prof. Laio published extensively in the field of enhanced
+	sampling and is one of the authors of METAGUI, a VMD GUI for
+	the post-processing of PLUMED-based simulations.
+ 
+
+* 	Prof. Francesco Gervasio
+	Chair of Biomolecular Modeling
+	Department of Chemistry
+	University College London
+	f.l.gervasio@ucl.ac.uk
+
+	Prof. Gervasio, besides authoring many cornerstone papers on
+	the application of metadynamics to drug design, is one of the
+	developers of the original PLUMED software, and also an early
+	user of PLUMED-GUI.
+
 

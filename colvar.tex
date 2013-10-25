@@ -469,16 +469,16 @@ sophisticated syntax can query atoms on the basis of numerical
 names) and/or other properties, as documented
 elsewhere~\cite{Humphrey_Dalke_Schulten_1996}.
 
-PLUMED-GUI allows the use of VMD's atom selections in PLUMED scripts
+PLUMED-GUI enables the use of VMD's  selections in PLUMED scripts
 through  square brackets. As shown in Figure~\ref{fig:main},
 bracketed textual expressions  are evaluated with respect to
 the current frame of the top molecule, and transparently replaced with the
 resulting list of atoms. In this way, PLUMED users can 
 avoid the use of numeric atom IDs altogether in favor of human-readable
-expressions such as \texttt{[protein and name CA]}.
+expressions such as \texttt{[helix and name CA]}.
 
-This is especially advantageous when switching between multiple
-systems; it is the case, for example, when several all-atom systems
+The use of symbolic expressions is especially advantageous when analyzing multiple
+systems; this is the case, for example, when several all-atom systems
 are prepared containing same protein and a series of compounds.
 Whereas atom indices depend on the specific system and the details of
 how it was prepared, expressions such as \texttt{[not protein
@@ -488,7 +488,7 @@ valid regardless of the specific system being analyzed.
 Symbolic atom expressions are interpreted at the moment the analysis is
 started by pressing the \emph{Plot} button. They can also be
 permanently replaced with atom numbers to be used independently of PLUMED-GUI, via the
-\emph{Export} function presented in section~\ref{sec:export-use-simul}.
+\emph{Export} function (section~\ref{sec:export-use-simul}).
 
 
 
@@ -760,11 +760,11 @@ as well as the CVs to be biased.  Atoms have to be specified
 through their serial numbers, which makes the iteration of complex
 scripts through different systems an error-prone exercise.
 
-The \emph{Export} function, accessible from the File menu, removes all
+The \emph{Export} function, accessible from the \emph{File} menu, removes all
 the symbolic atom selections in the current script and replaces them
 with the corresponding numerical lists. The exported script is thus
 devoid of VMD-specific constructs, and can then be employed for
-simulations.  The exported file contains comments to remind how the
+simulations.  The exported file contains comments to document how the
 numeric atom lists were obtained although, for the sake of
 reproducibility, it is generally advisable to keep the original
 script with unsubstituted, symbolic atom selections.
@@ -777,8 +777,9 @@ The GUI supports the same wide range of platforms as VMD, encompassing
 all major variants of Linux/Unix, OSX, and Windows.  Trajectory
 analysis is performed invoking the platform-specific \emph{driver}
 executable behind the scenes. PLUMED distributions provide
-instructions on how to build the executable on Unix-like systems; a
-precompiled version for Windows is provided for convenience.
+instructions on how to build the executable on Unix-like systems; 
+a precompiled version for Windows is available for convenience, which
+can downloaded and installed automatically.
 
 The current version of the plugin, PLUMED-GUI 2.2, supports both
 PLUMED 1.3 and PLUMED 2.0, with minor functional differences.  For
@@ -843,7 +844,7 @@ provides switching functions (such as \texttt{DISTANCES LESS\_THAN})
 that are continuous approximations to discrete quantities
 such as the number of atoms satisfying a given property.
 
-One of the objectives of the GUI is to lower the barrier for the
+One of the objectives of PLUMED-GUI is to lower the barrier for the
 adoption of meaningful metrics in the analysis tasks of simulation
 data. In the future, the interface may be expanded integrating more
 ``function building'' features and providing interfaces with external
