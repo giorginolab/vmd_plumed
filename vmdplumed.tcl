@@ -1541,17 +1541,19 @@ proc ::Plumed::do_compute {} {
 	} 
     }
 
-    # Run
+    # Run. V1 requires pushd
     puts "Executing: $cmd"
-    cd_push $tmpd
+
+    if {$plumed_version==1} { cd_push $tmpd }
     if { [ catch { exec {*}$cmd } driver_stdout ] ||
 	 ! [file readable $colvar]  } {
 	set dontplot 1
     } else {
 	set dontplot 0
     }
-    cd_push -
+    if {$plumed_version==1} { cd_push - }
 
+    # Results
     puts $driver_stdout
     puts "-----------"
     puts "Temporary files are in directory $tmpd"
@@ -1700,6 +1702,7 @@ proc ::Plumed::write_meta_inp_v2 { meta colvar } {
     close $fd
 }
 
+# Box is in nm
 proc ::Plumed::get_pbc_v2 { } {
     variable pbc_type
     variable pbc_boxx
@@ -1709,15 +1712,12 @@ proc ::Plumed::get_pbc_v2 { } {
     set pbc [ switch $pbc_type {
 	1 {format "--box $largebox,$largebox,$largebox"}
 	2 {format "" }
-	3 {format "--box $pbc_boxx,$pbc_boxy,$pbc_boxz" } } ]
+	3 {format "--box %f,%f,%f" \
+	       [expr $pbc_boxx/10.0] \
+	       [expr $pbc_boxy/10.0] \
+	       [expr $pbc_boxz/10.0] } } ]
     return $pbc
 }
-
-
-
-
-
-
 
 
 
