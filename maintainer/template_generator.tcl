@@ -42,12 +42,10 @@ namespace eval ::Plumed {
 	"Contact map"			"CONTACTMAP ATOMS1=1,2 ATOMS2=3,4 ... SWITCH=(RATIONAL R_0=1.5)"
 	"Distance list"			"DISTANCES ATOMS1=3,5 ATOMS2=1,2 MIN={BETA=0.1}"
 	"Coordination number list"	"%%COORDINATIONNUMBER"
-	"Sort CV vector"		"%%SORT"
 	- -
 	"Restraint"			"%%RESTRAINT"
         "Moving restraint"		"%%MOVINGRESTRAINT"
 	"Metadynamics"			"%%METAD"
-	"External"			"%%EXTERNAL"
 	"Adiabatic bias"		"%%ABMD"
 	"Lower wall (allow higher)"	"%%LOWER_WALLS"
 	"Upper wall (allow lower)"	"%%UPPER_WALLS"

@@ -1324,6 +1324,8 @@ proc ::Plumed::templates_populate_menu {} {
 		-command [list [namespace current]::templates_insert_line $insr]
 	}
     }
+    $w.menubar.insert.menu add separator
+    $w.menubar.insert.menu add command -label "...see manual for the full list" -state disabled
 
     switch $plumed_version {
 	1 {
