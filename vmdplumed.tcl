@@ -1532,12 +1532,12 @@ proc ::Plumed::do_compute {} {
 	1 {
 	    Plumed::write_meta_inp_v1 $meta
 	    set pbc [ get_pbc_v1 ]
-	    set cmd [concat $driver_path -dcd $dcd -pdb $pdb -plumed $meta $pbc]
+	    set cmd [list $driver_path -dcd $dcd -pdb $pdb -plumed $meta {*}$pbc]
 	}
 	2 {
 	    write_meta_inp_v2 $meta $colvar
 	    set pbc [get_pbc_v2]
-	    set cmd [concat $driver_path --standalone-executable driver $pbc --mf_dcd $dcd --pdb $pdb --plumed $meta  ]
+	    set cmd [list $driver_path --standalone-executable driver {*}$pbc --mf_dcd $dcd --pdb $pdb --plumed $meta  ]
 	} 
     }
 
