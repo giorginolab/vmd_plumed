@@ -143,7 +143,7 @@ proc ::Plumed::plumed {} {
     pack $w.menubar -padx 1 -fill x
 
     ## file menu
-     menubutton $w.menubar.file -text File -underline 0 -menu $w.menubar.file.menu
+    menubutton $w.menubar.file -text File -underline 0 -menu $w.menubar.file.menu
     menu $w.menubar.file.menu -tearoff no
     $w.menubar.file.menu add command -label "New" -command  Plumed::file_new
     $w.menubar.file.menu add command -label "Open..." -command Plumed::file_open
@@ -151,13 +151,13 @@ proc ::Plumed::plumed {} {
     $w.menubar.file.menu add command -label "Save as..." -command  Plumed::file_saveas
     $w.menubar.file.menu add command -label "Export..." -command  Plumed::file_export
     $w.menubar.file.menu add separator
-#    FIXME REIMPLEMENT
+    # batch was here
     $w.menubar.file.menu add command -label "Quit" -command  Plumed::file_quit
     $w.menubar.file config -width 5
     bind $w <Control-s> Plumed::file_save
 
     ## edit
-     menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
+    menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
     menu $w.menubar.edit.menu -tearoff no
     $w.menubar.edit.menu add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce Ctrl-Z
     $w.menubar.edit.menu add command -label "Redo" -command  "$::Plumed::w.txt.text edit redo"
@@ -171,12 +171,12 @@ proc ::Plumed::plumed {} {
     bind $w <Control-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
 
     ## Templates
-     menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
+    menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
     menu $w.menubar.insert.menu -tearoff yes
     $w.menubar.insert config -width 10
 
     ## Structural
-     menubutton $w.menubar.structure -text Structure -underline 0 -menu $w.menubar.structure.menu
+    menubutton $w.menubar.structure -text Structure -underline 0 -menu $w.menubar.structure.menu
     menu $w.menubar.structure.menu -tearoff no
     $w.menubar.structure.menu add command -label "Build reference structure..." -command Plumed::reference_gui
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
@@ -1233,14 +1233,6 @@ proc ::Plumed::highlight_error_label {label etext} {
 # Handle version changes ==================================================
 
 
-proc ::Plumed::pbc_dcd_set_state {} {
-    variable w
-    variable plumed_version
-    switch $plumed_version {
-	1 { $w.options.pbc.pbcdcd configure -state normal }
-	2 { $w.options.pbc.pbcdcd configure -state disabled }
-    }
-}
 
 proc ::Plumed::instructions_update {} {
     variable w
@@ -1307,7 +1299,6 @@ proc ::Plumed::plumed_version_changed {} {
 
     instructions_update
     templates_populate_menu
-    pbc_dcd_set_state
 }
 
 # ==================================================
@@ -1520,10 +1511,62 @@ proc ::Plumed::do_compute {} {
 	    "The plumed executable is required. See manual for installation instructions."
 	return }
 
-    # Delegate
+
+    # Prepare temp. dir and files
+    set tmpd [file join [tmpdir] vmdplumed.[pid]]
+    file mkdir $tmpd
+
+    set meta [file join $tmpd META_INP]
+    set pdb [file join $tmpd temp.pdb] 
+    set dcd [file join $tmpd temp.dcd]
+    set colvar [file join $tmpd COLVAR]
+
+    writePlumed [atomselect top all] $pdb
+    animate write dcd $dcd waitfor all
+    file delete $colvar
+
+    # Prepare command
     switch $plumed_version {
-	1 do_compute_v1
-	2 do_compute_v2
+	1 {
+	    Plumed::write_meta_inp_v1 $meta
+	    set pbc [ get_pbc_v1 ]
+	    set cmd [concat $driver_path -dcd $dcd -pdb $pdb -plumed $meta $pbc]
+	}
+	2 {
+	    write_meta_inp_v2 $meta $colvar
+	    set pbc [get_pbc_v2]
+	    set cmd [concat $driver_path --standalone-executable driver $pbc --mf_dcd $dcd --pdb $pdb --plumed $meta  ]
+	} 
+    }
+
+    # Run
+    puts "Executing: $cmd"
+    cd_push $tmpd
+    if { [ catch { exec {*}$cmd } driver_stdout ] ||
+	 ! [file readable $colvar]  } {
+	set dontplot 1
+    } else {
+	set dontplot 0
+    }
+    cd_push -
+
+    puts $driver_stdout
+    puts "-----------"
+    puts "Temporary files are in directory $tmpd"
+
+    # Parse if v2
+    if { $dontplot } {
+	puts "Something went wrong. Check above messages."
+	tk_messageBox -title "Error" -parent .plumed -message \
+	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
+	if {$plumed_version==2 && \
+		[regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
+				       $driver_stdout junk label etext] } {
+	    dputs "Trying to highlight label $label -- $etext "
+	    highlight_error_label $label $etext
+	}
+    } else {
+	Plumed::do_plot $colvar $driver_stdout
     }
 
 }
@@ -1595,6 +1638,25 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
 
 }
 
+# V1 output file can't be changed so we need to CD
+# http://wiki.tcl.tk/1034
+proc ::Plumed::cd_push {{dir {}}} {
+    variable ::Plumed::cd_lastdir
+    set pwd [pwd]
+    if {$dir eq "-"} {
+        if {![info exists cd_lastdir]} { return }
+        set dir $cd_lastdir
+    } elseif {[llength [info level 0]] == 1} {
+        # no $dir specified - go home
+        set code [catch {cd } res]
+    }
+    if {![info exists code]} {
+        set code [catch {cd $dir} res]
+    }
+    if {!$code} { set cd_lastdir $pwd }
+    return -code $code $res
+}
+
 
 # ==================================================                                                 
 # V1-specific stuff
@@ -1621,47 +1683,6 @@ proc ::Plumed::get_pbc_v1 { } {
     return $pbc
 }
 
-proc ::Plumed::do_compute_v1 {} {
-    variable driver_path
-
-    set tmpd "[ Plumed::tmpdir ]/vmdplumed.[pid]"
-    file mkdir $tmpd
-    set owd [ pwd ]
-    cd $tmpd;			# because "COLVAR" is hardcoded
-
-    set dcd temp.dcd
-    animate write dcd $dcd waitfor all
-
-    set pdb temp.pdb
-    Plumed::writePlumed [atomselect top all] $pdb
-
-    set meta META_INP
-    Plumed::write_meta_inp_v1 $meta
-
-    set out COLVAR
-    file delete $out
-    set pbc [ get_pbc_v1 ]
-
-    set cmd [list $driver_path -dcd $dcd -pdb $pdb -plumed $meta $pbc]
-    puts "Executing: $cmd"
-    if { [ catch { eval exec $cmd } driver_stdout ] ||
-	 ! [file readable $out] } {
-	set dontplot 1
-    } else {
-	set dontplot 0
-    }
-
-    puts $driver_stdout
-    puts "-----------"
-    puts "Temporary files are in directory $tmpd"
-    cd $owd
-
-    if { $dontplot } {
-	puts "Something went wrong. Check above messages."
-    } else {
-	Plumed::do_plot "$tmpd/$out" "$driver_stdout"
-    }
-}
 
 
 # ==================================================                                                 
@@ -1684,57 +1705,12 @@ proc ::Plumed::get_pbc_v2 { } {
     variable pbc_boxz
     set largebox 100000
     set pbc [ switch $pbc_type {
-	1 {format "$largebox,$largebox,$largebox"}
-	2 {format "$largebox,$largebox,$largebox" }
-	3 {format "$pbc_boxx,$pbc_boxy,$pbc_boxz" } } ]
+	1 {format "--box $largebox,$largebox,$largebox"}
+	2 {format "" }
+	3 {format "--box $pbc_boxx,$pbc_boxy,$pbc_boxz" } } ]
     return $pbc
 }
 
-# Unlike v1, there is no need to cd 
-proc ::Plumed::do_compute_v2 {} {
-    variable driver_path
-
-    set tmpd [file join [tmpdir] vmdplumed.[pid]]
-    file mkdir $tmpd
-
-    set meta [file join $tmpd META_INP]
-    set pdb [file join $tmpd temp.pdb] 
-    set xyz [file join $tmpd temp.xyz]
-    set colvar [file join $tmpd COLVAR]
-    set xst [file join $tmpd temp.xst]
-
-    write_meta_inp_v2 $meta $colvar
-    writePlumed [atomselect top all] $pdb
-    animate write xyz $xyz waitfor all
-    writexst $xst
-    file delete $colvar
-
-    set pbc [get_pbc_v2]
-    set cmd [list $driver_path --standalone-executable driver --ixyz $xyz --pdb $pdb --plumed $meta --box $pbc --length-units A]
-
-    puts "Executing: $cmd"
-    if { [ catch { eval exec $cmd } driver_stdout ] ||
-	 ! [file readable $colvar]  } {
-	set dontplot 1
-    } else {
-	set dontplot 0
-    }
-
-    puts $driver_stdout
-    puts "-----------"
-    puts "Temporary files are in directory $tmpd"
-
-    if { $dontplot } {
-	puts "Something went wrong. Check above messages."
-	if [regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
-		$driver_stdout junk label etext] {
-	    dputs "Trying to highlight label $label -- $etext "
-	    highlight_error_label $label $etext
-	}
-    } else {
-	Plumed::do_plot $colvar $driver_stdout
-    }
-}
 
 
 
