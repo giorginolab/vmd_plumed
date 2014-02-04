@@ -187,20 +187,22 @@ proc ::Plumed::plumed {} {
     ## help menu
      menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
-    $w.menubar.help.menu add command -label "Getting started" \
+    $w.menubar.help.menu add command -label "Getting started with Plumed-GUI" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
-    $w.menubar.help.menu add command -label "Help on PLUMED" \
+    $w.menubar.help.menu add command -label "How to cite" \
+        -command "vmd_open_url http://dx.doi.org/10.1016/j.cpc.2013.11.019"
+    $w.menubar.help.menu add separator
+    $w.menubar.help.menu add command -label "What is PLUMED?" \
         -command "vmd_open_url http://www.plumed-code.org"
+    $w.menubar.help.menu add command -label "PLUMED 2.0 user's guide and CV syntax" \
+	-command "vmd_open_url http://plumed2.berlios.de/master/user-doc/html/index.html"
+    $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
+	-command "vmd_open_url http://www.plumed-code.org/documentation"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "How to install the 'driver' binaries" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
     $w.menubar.help.menu add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
-    $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
-	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help.menu add command -label "PLUMED 2.0 user's guide and CV syntax" \
-	-command "vmd_open_url http://plumed2.berlios.de/master/user-doc/html/index.html"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -437,18 +439,21 @@ Version $plugin_version
 
 Toni Giorgino <toni.giorgino${at}isib.cnr.it>
 
-Institute of Biomedical Engineering (ISIB)
+Institute of Biomedical Engineering (ISIB),
 National Research Council of Italy (CNR)
 
 Previous versions: 
 
-Computational Biophysics Group
+Computational Biophysics Group,
 Research Programme on 
-   Biomedical Informatics (GRIB-IMIM)
+   Biomedical Informatics (GRIB-IMIM),
 Universitat Pompeu Fabra (UPF)
 
 Citation:
-T. Giorgino, Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts.
+Giorgino T. PLUMED-GUI: An environment for the interactive development of molecular dynamics analysis and biasing scripts. 
+Comp. Phys. Comm. 2014 Mar;185(3):1109-14. 
+doi:10.1016/j.cpc.2013.11.019
+
 
 "
 }
