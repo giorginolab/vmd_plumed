@@ -1,5 +1,5 @@
 name: Your Blog's Name
 description: A description for your blog
-
+repository_url: "https://github.com/tonigi/vmd_plumed"
 markdown: kramdown
 
