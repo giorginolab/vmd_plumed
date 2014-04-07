@@ -2,7 +2,7 @@
 
 VMFILES = vmdplumed.tcl pkgIndex.tcl \
 	  templates_list_v1.tcl templates_list_v2_autogen.tcl
-VMVERSION = 2.2
+VMVERSION = 2.3
 DIR = $(PLUGINDIR)/noarch/tcl/plumed$(VMVERSION)
 
 bins:

@@ -14,7 +14,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.1
+package provide plumed 2.3
 package require tile
 package require http
 

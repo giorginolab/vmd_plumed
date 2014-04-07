@@ -11,7 +11,7 @@
 
 # Curated menu template
 set unsubst {
-package provide plumed 2.1
+package provide plumed 2.3
 namespace eval ::Plumed {
     variable templates_list_v2 {
 	"Group definition"		"grp:   GROUP ATOMS=[chain A and name CA]"

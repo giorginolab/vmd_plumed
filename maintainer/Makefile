@@ -6,14 +6,14 @@
 VMVERSION = $(shell awk '/VMVERSION =/ {print $$NF}' ../Makefile)
 VMDPLUGINDIR = plumed$(VMVERSION)
 
-GENERATED_DOCFILES =  ../doc/PlumedGUI.html
 
 
 
 # ----------------------------------------
 # Default is: Pkg Index, Templates, Doc files
 
-default: ../pkgIndex.tcl ../templates_list_v2_autogen.tcl $(GENERATED_DOCFILES)
+default: ../pkgIndex.tcl ../templates_list_v2_autogen.tcl 
+
 
 
 
@@ -40,8 +40,8 @@ TCLLIST  = ../vmdplumed.tcl ../templates_list_v1.tcl \
 # Doc generator, as per
 
 
-../doc/PlumedGUI.html:
-	wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.0.19) Gecko/2011032314 Iceweasel/3.0.6 (Debian-3.0.6-3)" -k 'http://www.multiscalelab.org/utilities/PlumedGUI?action=print' -O $@
+# ../doc/PlumedGUI.html:
+# 	wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; it; rv:1.9.0.19) Gecko/2011032314 Iceweasel/3.0.6 (Debian-3.0.6-3)" -k 'http://www.multiscalelab.org/utilities/PlumedGUI?action=print' -O $@
 
 
 # ----------------------------------------
