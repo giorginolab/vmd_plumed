@@ -24,8 +24,9 @@ Note that you will need write privileges in VMD's program directory.
 Installation requires these steps:
 
 1. Identify your VMD installation directory (let's call it
-   _$VMDDIR_). In VMD's console, you can use:
-        puts $env(VMDDIR)
+   _$VMDDIR_). You can get the path typing the following
+   command in VMD's TkConsole:
+   - puts $env(VMDDIR)
 
 2. Extract the distribution directory and replace the plugin files in
    _$VMDDIR/plugins/noarch/tcl/plumed*_ with those provided. Don't worry
@@ -46,4 +47,4 @@ Usage without installation
 
 As a last resort, plugins may be loaded without installation by
 issuing a "source xxx.tcl" command for each of the distributed .tcl
-files, with the exclusion of "<PACKAGENAME>_init.tcl" and examples.
+files, with the exclusion of "<PACKAGENAME>_init.tcl".
