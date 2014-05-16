@@ -1,8 +1,10 @@
 Plumed-GUI
 ==========
 
-Toni Giorgino
-
+Toni Giorgino <br>
+Consiglio Nazionale delle Ricerche (ISIB-CNR)
+ 
+ 
 
 A Plumed collective variable analysis tool for VMD
 ------------
