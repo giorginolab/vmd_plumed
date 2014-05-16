@@ -26,7 +26,7 @@ Installation requires these steps:
 
 2. Extract the distribution directory and replace the plugin files in
    $VMDDIR/plugins/noarch/tcl/plumed* with those provided. Don't worry
-   for version number mismatches. There should be at least:
+   about version number mismatches. The files to copy are:
        vmdplumed.tcl
        templates_list_v1.tcl
        templates_list_v2_autogen.tcl    
