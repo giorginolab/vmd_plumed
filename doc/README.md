@@ -19,7 +19,7 @@ For a primer on the use of PLUMED engine, see www.plumed-code.org .
 Installation/upgrade of PLUMED-GUI
 ------------
 
-Please see the [INSTALL](https://github.com/tonigi/vmd_plumed/blob/master/doc/INSTALL.md) file.
+Please see the [INSTALL](doc/INSTALL.md) file.
 
 
 

@@ -17,8 +17,8 @@ Documentation
 -------------
 
 - Documentation for this tool is found at http://www.multiscalelab.org/utilities/PlumedGUI
- and in the doc/README.md file
-- For installation instructions, see the doc/INSTALL file
+ and in the [README](doc/README.md) file
+- For installation instructions, see the [INSTALL](doc/INSTALL.md) file
 - For a primer on the PLUMED engine, see www.plumed-code.org 
-- For an extensive description, please read and cite the paper 
-  * Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, dx.doi.org/10.1016/j.cpc.2013.11.019 or http://arxiv.org/abs/1312.3190 . 
+- For an extensive description, please see (and cite) the paper 
+  > Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, dx.doi.org/10.1016/j.cpc.2013.11.019 or http://arxiv.org/abs/1312.3190 . 
