@@ -1,6 +1,9 @@
 Plumed-GUI
 ==========
- 
+
+Toni Giorgino
+
+
 A Plumed collective variable analysis tool for VMD
 ------------
 
