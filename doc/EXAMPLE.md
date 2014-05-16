@@ -13,12 +13,12 @@ Example 1: Analysis
 Use PLUMED 2.0 to compute and compare, for all frames provided by the
 PDB:1KDX (CREB:CBP binding) structure, the following quantities
 
-CV  | Description
---- | -------------
-nc  | the number of contacts (<5 Å) between Cα atoms of CREB (KID domain, chain B) and CBP (KIX domain, chain A) 
-g1  | the radius of gyration of the KID domain
-g2  | the radius of gyration of the KIX domain
-d   | the distance between the center of mass of the two
+CV    | Description
+----- | -------------
+_nc_  | the number of contacts (<5 Å) between Cα atoms of CREB (KID domain, chain B) and CBP (KIX domain, chain A) 
+_g1_  | the radius of gyration of the KID domain
+_g2_  | the radius of gyration of the KIX domain
+_d_   | the distance between the center of mass of the two
 
 
 Solution
