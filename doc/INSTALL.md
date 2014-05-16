@@ -24,11 +24,11 @@ Note that you will need write privileges in VMD's program directory.
 Installation requires these steps:
 
 1. Identify your VMD installation directory (let's call it
-   $VMDDIR). In VMD's console, you can use:
-      puts $env(VMDDIR)
+   _$VMDDIR_). In VMD's console, you can use:
+        puts $env(VMDDIR)
 
 2. Extract the distribution directory and replace the plugin files in
-   $VMDDIR/plugins/noarch/tcl/plumed* with those provided. Don't worry
+   _$VMDDIR/plugins/noarch/tcl/plumed*_ with those provided. Don't worry
    about version number mismatches.  Files to be copied are:
    * vmdplumed.tcl
    * templates_list_v1.tcl
