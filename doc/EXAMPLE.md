@@ -9,31 +9,30 @@ structures from the PDB repository.
 Example 1: Analysis
 ===================
 
+
 Use PLUMED 2.0 to compute and compare, for all frames provided by the
 PDB:1KDX (CREB:CBP binding) structure, the following quantities
 
-nc:  the number of contacts (<5 Å) between Cα atoms of CREB (KID
-     domain, chain B) and CBP (KIX domain, chain A) 
-
-g1:  the radius of gyration of the KID domain
-
-g2:  the radius of gyration of the KIX domain
-
-d:   the distance between the center of mass of the two
+CV  | Description
+--- | -------------
+nc  | the number of contacts (<5 Å) between Cα atoms of CREB (KID domain, chain B) and CBP (KIX domain, chain A) 
+g1  | the radius of gyration of the KID domain
+g2  | the radius of gyration of the KIX domain
+d   | the distance between the center of mass of the two
 
 
 Solution
 --------
 
-Step 1. Load the structure: invoke VMD's "Extensions>Data>PDB Database
-        Query" menu entry, type "1KDX" and click "Load into new
-        molecule".
+1. Load the structure: invoke VMD's _Extensions>Data>PDB Database
+        Query_ menu entry, enter _1KDX_ and select _Load into new
+        molecule_.
 
-Step 2. Open the GUI via "Extensions>Analysis>Collective Variable
-        Analysis (PLUMED)".
+2. Open the GUI via _Extensions>Analysis>Collective Variable
+        Analysis (PLUMED)_.
 
-Step 3. Enter the analysis scripts below (also provided in
-        "EXAMPLE.plumed2"). Click "Plot" to evaluate and plot the
+3. Enter the analysis scripts below (also provided in
+        [EXAMPLE.plumed2](EXAMPLE.plumed2)). Click _Plot_ to evaluate and plot the
         results. If no plot appears, check the console for
         errors. Right click on any keyword to get help.
 
@@ -55,10 +54,10 @@ Step 3. Enter the analysis scripts below (also provided in
 	    d: DISTANCE ATOMS=kidCOM,kixCOM
 
 
-Step 4. (Optional) In the plot window, use "File->Export as matrix" to
+4. (Optional) In the plot window, use _File>Export as matrix_ to
         get the data for external analysis and plot. The result should
-        be as follows (time, followed by the four CV values - also
-        provided in "EXAMPLE.plumed2.out"):
+        be as follows (time, followed by the four CV values - should match
+        [EXAMPLE.plumed2.out](EXAMPLE.plumed2.out)):
 
 	    0.000000 36.722447 10.303459 13.210119 14.374999 
 	    1.000000 38.522232 10.422169 13.191604 14.171861 
@@ -86,14 +85,19 @@ Example 2: Biasing script
 
 Suppose that the fourth coordinate has been identified as a candidate
 for 1-D metadynamics, with gaussian width of 1 Å, height of 0.1
-kcal/mol, stride of 1 ns. 
-
-Step 1. Add the following line to the input file
-
-     METAD ARG=d     SIGMA=1.0     HEIGHT=0.1     PACE=1000     FILE=HILLS
+kcal/mol, stride of 1 ns. Generate the corresponding biasing script for 
+use in a simulation.
 
 
-Step 2. Use the GUI's File>Export function to get a biasing script
+Solution
+--------
+
+1. Add the following line to the input file
+
+            METAD ARG=d     SIGMA=1.0     HEIGHT=0.1     PACE=1000     FILE=HILLS
+
+
+2. Use the GUI's _File>Export_ function to get a biasing script
      	that can be used in PLUMED-based metadynamic simulations. The
      	result will contain numeric atom selections and should look
      	like as the one below (abridged):
