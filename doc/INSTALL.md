@@ -1,3 +1,6 @@
+Installation instructions
+========================================
+
 
 VMD already comes with Plumed-GUI installed. To upgrade to the latest
 version, please follow the instructions provided below.
@@ -26,11 +29,11 @@ Installation requires these steps:
 
 2. Extract the distribution directory and replace the plugin files in
    $VMDDIR/plugins/noarch/tcl/plumed* with those provided. Don't worry
-   about version number mismatches. The files to copy are:
-       vmdplumed.tcl
-       templates_list_v1.tcl
-       templates_list_v2_autogen.tcl    
-       pkgIndex.tcl
+   about version number mismatches.  Files to be copied are:
+   * vmdplumed.tcl
+   * templates_list_v1.tcl
+   * templates_list_v2_autogen.tcl    
+   * pkgIndex.tcl
 
 3. Done. The plugin should appear in the "Extensions>Analysis>Collective
    Variable Analysis (PLUMED)" menu upon VMD's next run.
