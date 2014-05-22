@@ -43,7 +43,7 @@ Square brackets can be used to conveniently define atom groups (Ctrl-G). During 
 
 When Plot is clicked, the currently loaded trajectory is exported to a temporary directory (shown in the console), and the driver utility is invoked. If there are no errors, a plot will show the CVs evaluated on the frames of the current trajectory.
 
-Troubleshooting: In case of errors, the console will provide diagnostics and the location of the temporary directory where computations are run. Common sources of error are:
+Troubleshooting: In case of errors, the console will provide diagnostics and the location of the temporary directory where computations are run. 
 
 See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below:
 
