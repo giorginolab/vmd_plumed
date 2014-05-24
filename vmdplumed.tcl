@@ -1017,6 +1017,13 @@ proc ::Plumed::nc_gui { } {
     variable nc_dresid 0
     variable nc_destmol top
     variable nc_groupname nc
+    variable nc_implementation coordination
+    variable plumed_version
+
+    set nc_impl_state normal
+    if {$plumed_version==1} { 
+	set nc_impl_state disabled 
+    }
 
     toplevel .plumednc -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumednc "Insert native contacts CV"
@@ -1032,7 +1039,7 @@ The current frame of the top molecule is taken as the native state." ] -side top
     pack [ ttk::entry .plumednc.sel2.sel -width 40 -textvariable [namespace current]::nc_selB ] -side left -expand 1 -fill x
 
     pack [ ttk::frame .plumednc.cutoff ] -side top -fill x
-    pack [ ttk::label .plumednc.cutoff.txt -text "Distance cutoff (A): " ] -side left -fill x
+    pack [ ttk::label .plumednc.cutoff.txt -text "Distance cutoff (\u00C5): " ] -side left -fill x
     pack [ ttk::entry .plumednc.cutoff.sel -width 10 -textvariable [namespace current]::nc_cutoff ] -side left -expand 1 -fill x
     pack [ ttk::label .plumednc.cutoff.txt2 -text "      Single selection: |\u0394 resid| \u2265 " ] -side left -fill x
     pack [ ttk::entry .plumednc.cutoff.dresid -width 10 -textvariable [namespace current]::nc_dresid ] -side left -expand 1 -fill x
@@ -1042,12 +1049,19 @@ The current frame of the top molecule is taken as the native state." ] -side top
    2 - also ignore contacts between neighboring monomers; and so on."
 
     pack [ ttk::frame .plumednc.destmol ] -side top -fill x
-    pack [ ttk::label .plumednc.destmol.txt -text "Target molecule ID: " ] -side left -fill x
+    pack [ ttk::label .plumednc.destmol.txt -text "Renumber for molecule id: " ] -side left -fill x
     pack [ ttk::entry .plumednc.destmol.sel -width 10 -textvariable [namespace current]::nc_destmol ] -side left -expand 1 -fill x
 
     pack [ ttk::frame .plumednc.groupname ] -side top -fill x
-    pack [ ttk::label .plumednc.groupname.txt -text "Prefix for PLUMED groups: " ] -side left -fill x
+    pack [ ttk::label .plumednc.groupname.txt -text "Label for PLUMED groups/CV: " ] -side left -fill x
     pack [ ttk::entry .plumednc.groupname.sel -width 20 -textvariable [namespace current]::nc_groupname ] -side left -expand 1 -fill x
+
+    pack [ ttk::frame .plumednc.impl ] -side top -fill x
+    pack [ ttk::label .plumednc.impl.txt -text "Implementation: " ] -side left -fill x
+    pack [ ttk::radiobutton .plumednc.impl.coordination -value coordination -text "COORDINATION  " \
+	       -variable [namespace current]::nc_implementation -state $nc_impl_state   	  ] -side left 
+    pack [ ttk::radiobutton .plumednc.impl.distances -value distances -text "DISTANCES  "        \
+	       -variable [namespace current]::nc_implementation -state $nc_impl_state    	  ] -side left 
 
     pack [ ttk::label .plumednc.preview -text "Click `Count' to compute the number of contacts." ] -side top -fill x 
 
@@ -1154,6 +1168,7 @@ proc ::Plumed::nc_preview { } {
 proc ::Plumed::nc_insert { } {
     variable nc_groupname 
     variable nc_cutoff
+    variable nc_implementation
     variable plumed_version
     variable w
 
@@ -1167,20 +1182,33 @@ proc ::Plumed::nc_insert { } {
 
     switch $plumed_version {
 	1 {
-	    set txt1 "${nc_groupname}_1-> [lindex $ncl 0] ${nc_groupname}_1<-"
-	    set txt2 "${nc_groupname}_2-> [lindex $ncl 1] ${nc_groupname}_2<-"
-	    set txt3 "COORD LIST <${nc_groupname}_1> <${nc_groupname}_2> PAIR NN 6 MM 12 D_0 $nc_cutoff R_0 0.5"
-	    $w.txt.text insert 1.0 "$txt1\n$txt2\n\n"
-	    $w.txt.text insert insert "$txt3\n"
+	    append txt1 "${nc_groupname}_1-> [lindex $ncl 0] ${nc_groupname}_1<-\n"
+	    append txt1 "${nc_groupname}_2-> [lindex $ncl 1] ${nc_groupname}_2<-\n\n"
+	    append txtX "COORD LIST <${nc_groupname}_1> <${nc_groupname}_2> PAIR NN 6 MM 12 D_0 $nc_cutoff R_0 0.5\n"
 	} 
 	2 {
-	    set txt1 "${nc_groupname}_a: GROUP ATOMS={[lindex $ncl 0]}"
-	    set txt2 "${nc_groupname}_b: GROUP ATOMS={[lindex $ncl 1]}"
-	    set txt3 "nc:   COORDINATION GROUPA=${nc_groupname}_a GROUPB=${nc_groupname}_b  PAIR  D_0=$nc_cutoff R_0=0.5"
-	    $w.txt.text insert insert "\n$txt1\n$txt2\n$txt3\n"
+	    switch $nc_implementation {
+		coordination {
+		    append txt1 ""
+		    append txtX "${nc_groupname}_a: GROUP ATOMS={[lindex $ncl 0]}\n"
+		    append txtX "${nc_groupname}_b: GROUP ATOMS={[lindex $ncl 1]}\n"
+		    append txtX "$nc_groupname:   COORDINATION GROUPA=${nc_groupname}_a GROUPB=${nc_groupname}_b  PAIR  D_0=$nc_cutoff R_0=0.5\n"
+		}
+		distances {
+		    set i 0
+		    set tmp ""
+		    foreach a1 [lindex $ncl 0] a2 [lindex $ncl 1] {
+			incr i
+			append tmp " ATOMS$i=$a1,$a2"
+		    }
+		    append txt1 ""
+		    append txtX "$nc_groupname:   DISTANCES   LESS_THAN={RATIONAL R_0=0.5 D_0=$nc_cutoff}  $tmp\n"
+		}
+	    }
 	}
     }
-
+    $w.txt.text insert 1.0 "$txt1"
+    $w.txt.text insert insert "$txtX"
 }
 
 # ERROR HANDLING ==================================================
