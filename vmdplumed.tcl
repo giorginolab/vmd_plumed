@@ -857,7 +857,7 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::label .plumedref.meas.meastext -text "Displacement set: " ] -side left
     pack [ ttk::entry .plumedref.meas.meas -width 20 -textvariable [namespace current]::refmeas ] -side left -expand 1 -fill x
     pack [ ttk::frame .plumedref.mol ] -side top -fill x
-    pack [ ttk::label .plumedref.mol.moltext -text "Numbering for molecule: " ] -side left
+    pack [ ttk::label .plumedref.mol.moltext -text "Renumber for molecule id: " ] -side left
     pack [ ttk::entry .plumedref.mol.mol -width 20 -textvariable [namespace current]::refmol ]\
 	-side left -expand 1 -fill x
     pack [ ttk::frame .plumedref.file ] -side top -fill x
