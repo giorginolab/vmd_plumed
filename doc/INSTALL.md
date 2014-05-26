@@ -14,24 +14,23 @@ Note that you will **need write privileges** in VMD's program
 directory. Should you lack write permissions, either ask your
 sysadmin, or perform a private installation of VMD.
 
-1. Identify your VMD installation directory (let's call it
+1. Download and extract the latest Plumed-GUI release from GitHub.
+
+2. Identify your VMD installation directory (let's call it
    _$VMDDIR_). This is easiest typing the following command in VMD's
    TkConsole:
 
           puts $env(VMDDIR)
 
-2. Download and extract the latest Plumed-GUI release from GitHub.
-
 3. Replace files in _$VMDDIR/plugins/noarch/tcl/plumed*_ with those
    just extracted. (Disregard the version mismatch in the directory
    name).  These are the important files to copy:
-
    * vmdplumed.tcl
    * templates_list_v1.tcl
    * templates_list_v2_autogen.tcl    
    * pkgIndex.tcl
 
-3. Done. The plugin should appear in the _Extensions > Analysis >
+4. Done. The plugin should appear in the _Extensions > Analysis >
    Collective Variable Analysis (PLUMED)_ menu upon VMD's next
    start. Verify the running version from _Help > About_.
 
