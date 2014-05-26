@@ -43,7 +43,7 @@ Plumed-GUI **requires** a _driver_  executable for your architecture to be locat
 executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) and _driver_ (PLUMED 1.3). You can have either or both installed.  
 
 
- * **Linux/Unix** and **OSX**:   download the code from the [[http://www.plumed-code.org|PLUMED home page]] and build it according to the instructions.  
+ * **Linux/Unix** and **OSX**:   download the code from the [PLUMED home page](http://www.plumed-code.org) and build it according to the instructions.  
  * **Windows**: Plumed-GUI (version > 2.1) provides a _Help > Attempt download of prebuilt Windows driver binaries_.
  menu entry which attempts to get precompiled binaries and to install them in a (system specific) directory. The same directory is temporarily added to the search path. The method requires enough permissions and network access. 
  * **Windows (fallback)**: if automated installation above fails, please manually download the pre-compiled binaries for Win32 ([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe) and [plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe)) and copy them e.g. in ''c:\windows'' or in VMD's directory. 
