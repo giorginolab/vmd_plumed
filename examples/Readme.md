@@ -15,7 +15,7 @@ trajectories out of 772 total analyzed in T. Giorgino, I. Buch, and G. De Fabrit
 File                          | Description
 ------------------------------|-------------
 SH2_pYEEI_binding.psf         | Structure file (TIP3P water removed)
-SH2_pYEEI_binding_170.xtc     | Trajectory data in XTC format
+SH2_pYEEI_binding_170_1ns.xtc | Trajectory data in XTC format. 1 ns per frame.
 
 
 
