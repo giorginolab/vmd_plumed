@@ -7,12 +7,22 @@ Plumed-GUI version update
 ----------------------------------------
 
 VMD 1.9.1 comes with a very old version of Plumed-GUI pre-installed,
-which does not support PLUMED 2.0. To upgrade Plumed-GUI to the latest
-version, please follow the instructions provided below.  
+which does not support PLUMED 2.0. Updating Plumed-GUI to the latest
+version is easy and  highly recommended. To upgrade Plumed-GUI, please
+follow the instructions provided below.  
 
 Note that you will **need write privileges** in VMD's program
 directory. Should you lack write permissions, either ask your
 sysadmin, or perform a private installation of VMD.
+
+
+### How to upgrade (one-sentence version) ###
+
+Replace the _plumed0.9_ directory in VMD's plugins subdirectory with
+the current archive downloaded from GitHub.
+
+
+### How to upgrade (detailed version) ###
 
 1. Download and extract the latest Plumed-GUI release from GitHub.
 
