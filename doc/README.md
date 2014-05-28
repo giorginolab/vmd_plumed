@@ -16,17 +16,12 @@ For a primer on the use of PLUMED engine, see www.plumed-code.org .
 
 
 
-Installation/upgrade of PLUMED-GUI
+Installation
 ------------
 
 Please see the [INSTALL](INSTALL.md) file.
 
 
-
-Installation of the PLUMED backend engine
-------------
-
-To use this plugin, you will need PLUMED's driver and/or plumed executables. See the installation section at http://www.multiscalelab.org/utilities/PlumedCVTool#installation .
 
 
 Quickstart
