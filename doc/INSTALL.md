@@ -22,15 +22,17 @@ sysadmin, or perform a private installation of VMD.
 
           puts $env(VMDDIR)
 
-3. Replace files in _$VMDDIR/plugins/noarch/tcl/plumed*_ with those
-   just extracted. (Disregard the version mismatch in the directory
-   name).  These are the important files to copy:
+3. Delete the directory  _$VMDDIR/plugins/noarch/tcl/plumed0.9_, 
+   which contains the old version of the plugin.
+
+4. Unzip the archive downloaded at step 1 as a subdirectory of _$VMDDIR/plugins/noarch/tcl/_.  At least the following files should be present:
    * vmdplumed.tcl
    * templates_list_v1.tcl
-   * templates_list_v2_autogen.tcl    
+   * templates_list_v2_autogen.tcl
    * pkgIndex.tcl
 
-4. Done. The plugin should appear in the _Extensions > Analysis >
+
+5. Done. The plugin should appear in the _Extensions > Analysis >
    Collective Variable Analysis (PLUMED)_ menu upon VMD's next
    start. Verify the running version from _Help > About_.
 
