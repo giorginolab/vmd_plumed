@@ -19,3 +19,17 @@ SH2_pYEEI_binding_170.xtc     | Trajectory data in XTC format
 
 
 
+
+CREB:CBP binding
+----------------
+
+An example based on the PDB:1KDX structure. See the instructions therein.
+
+File                          | Description
+------------------------------|-------------
+EXAMPLE.md                    | Instructions                         
+EXAMPLE.plumed2               | Analysis script
+EXAMPLE.plumed2.out           | Analysis script - expected output
+
+
+
