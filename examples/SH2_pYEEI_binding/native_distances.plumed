@@ -1,0 +1,29 @@
+pep-> [chain B and noh] pep<-
+sh2-> [chain A and noh] sh2<-
+
+pY1-> [name P1] pY1<-
+! E2-> [chain B and resid 253 and name CD ] E2<-
+E2N-> [chain B and resid 253 and name N] E2N<-
+E3-> [chain B and resid 254 and name CD ] E3<-
+I4-> [chain B and resid 255 and name CD CG1 ] I4<-
+
+Ppocket-> [chain A and ((resid 154 and name CZ) or (resid 164 and name CB)) ] Ppocket<-
+Ppre1-> [chain A and resid 182 and name NZ ] Ppre1<-
+Ppre2-> [chain A and resid 134 and name CZ ] Ppre2<-
+
+
+E2pocket-> [chain A and resid 180 and name O] E2pocket<-
+E3pocket-> [chain A and resid 184 and name CZ] E3pocket<-
+hpocket-> [chain A and resid 194 215 and noh] hpocket<-
+
+
+
+DISTANCE LIST <pY1> <Ppocket>    DIR XYZ
+
+DISTANCE LIST <E2N> <E2pocket>    DIR XYZ
+DISTANCE LIST <E3> <E3pocket>    DIR XYZ
+DISTANCE LIST <I4> <hpocket>    DIR XYZ
+
+
+TARGETED TYPE RMSD FRAMESET /store/SH2-MSM/gpugrid/analysis/reference.pdb SQRT
+
