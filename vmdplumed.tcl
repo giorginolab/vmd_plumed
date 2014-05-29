@@ -871,11 +871,12 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::checkbutton .plumedref.multiframe -text "Multi-frame reference (all loaded frames)" \
 	       -variable [namespace current]::ref_allframes -state $ref_allframes_state ] -side top -fill x
     pack [ ttk::frame .plumedref.subset ] -side top -fill x
-    pack [ ttk::label .plumedref.subset.text -text "Minimum RMSD(i->i+1) (Å): " ] -side left
+    pack [ ttk::label .plumedref.subset.text -text "Minimum RMSD between consecutive frames (Å): " ] -side left
     pack [ ttk::entry .plumedref.subset.val -width 20 -textvariable [namespace current]::ref_mindrmsd ]\
 	-side left -expand 1 -fill x
     
-    pack [ ttk::label .plumedref.status -text "Subsetting result:\n  frames: 5\n  average RMSD(i->i+1): 5 Å\n  suggested λ=2.3" ]  -side top -fill x
+    pack [ ttk::labelframe .plumedref.status  -text "Output" -padding 3]  -side top -fill x
+    pack [ ttk::label .plumedref.status.text  -text "Frames: 5\nAverage ΔRMSD: 5 Å\nSuggested λ~2.3 1/Å" ] -side top 
 
     pack [ ttk::frame .plumedref.act ] -side top -fill x
     pack [ ttk::button .plumedref.act.ok -text "Write" \
