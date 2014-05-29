@@ -834,12 +834,13 @@ proc ::Plumed::reference_gui { } {
 	return
     }
 
+    variable plumed_version
     variable refalign "backbone"
     variable refmeas "name CA"
     variable reffile "reference.pdb"
     variable refmol top
-    variable ref_allframes 0
-    variable plumed_version
+    variable ref_allframes 1
+    variable ref_mindrmsd 0
 
     set ref_allframes_state normal
     if {$plumed_version==1} { 
@@ -849,7 +850,7 @@ proc ::Plumed::reference_gui { } {
 
     toplevel .plumedref -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumedref "Build reference structure"
-    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" ] -side top
+    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" -justify center] -side top -fill x
     pack [ ttk::frame .plumedref.align ] -side top -fill x
     pack [ ttk::label .plumedref.align.aligntext -text "Alignment set: " ] -side left
     pack [ ttk::entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
@@ -869,6 +870,13 @@ proc ::Plumed::reference_gui { } {
     } ] -side left -expand 0
     pack [ ttk::checkbutton .plumedref.multiframe -text "Multi-frame reference (all loaded frames)" \
 	       -variable [namespace current]::ref_allframes -state $ref_allframes_state ] -side top -fill x
+    pack [ ttk::frame .plumedref.subset ] -side top -fill x
+    pack [ ttk::label .plumedref.subset.text -text "Minimum RMSD(i->i+1) (Å): " ] -side left
+    pack [ ttk::entry .plumedref.subset.val -width 20 -textvariable [namespace current]::ref_mindrmsd ]\
+	-side left -expand 1 -fill x
+    
+    pack [ ttk::label .plumedref.status -text "Subsetting result:\n  frames: 5\n  average RMSD(i->i+1): 5 Å\n  suggested λ=2.3" ]  -side top -fill x
+
     pack [ ttk::frame .plumedref.act ] -side top -fill x
     pack [ ttk::button .plumedref.act.ok -text "Write" \
 	       -command { Plumed::reference_write } ] -side left -fill x -expand 1
