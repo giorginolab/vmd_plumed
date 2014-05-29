@@ -18,8 +18,8 @@ sysadmin, or perform a private installation of VMD.
 
 ### How to upgrade (one-sentence version) ###
 
-Replace the _plumed0.9_ directory in VMD's plugins subdirectory with
-the current archive downloaded from GitHub.
+Replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
+the archive downloaded from GitHub.
 
 
 ### How to upgrade (detailed version) ###
