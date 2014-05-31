@@ -78,14 +78,9 @@ If you cannot make a proper installation, you might have some success with the f
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
-2. Remove the "package provide" lines from the TCL files. One quick way to achieve this under Unix is to run the command 
+2. Add the following line to your _.vmdrc_ startup file (name and location differs under Windows)
 
-        sed -i 's/package provide/#/' *.tcl
-
-3. Add the following line to your _.vmdrc_ startup file (name and location differs under Windows)
-
-        set vmd_plumed_dir <<wherever_you_installed_it>>
-        foreach i {vmdplumed.tcl templates_list_v1.tcl templates_list_v2_autogen.tcl} \
-               { source $vmd_plumed_dir/$i }
+        lappend auto_path  WHEREVER_YOU_EXTRACTED_THE_ARCHIVE_
+        menu main on
 
 
