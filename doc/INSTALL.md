@@ -12,8 +12,9 @@ version is easy and  highly recommended. To upgrade Plumed-GUI, please
 follow the instructions provided below.  
 
 Note that you will **need write privileges** in VMD's program
-directory. Should you lack write permissions, either ask your
-sysadmin, or perform a private installation of VMD.
+directory. Should you lack them, you have three options: 
+(a) ask the system administrator; (b)  
+perform a private installation of VMD, or (c) try the _non-root instructions_ below.
 
 
 ### How to upgrade (one-sentence version) ###
@@ -65,4 +66,23 @@ If executables are correctly installed, their location will appear in the "Path 
 
 Users willing to compile the engine themselves under Windows can see the [windows build instructions](http://www.multiscalelab.org/utilities/PlumedGUI/BuildWin32).
 
+
+
+
+
+Emergency non-root installation
+----------------------------------------
+
+If you cannot make a proper installation, you might have some success with the following, unsupported, trick:
+
+1. Unzip the _vmd_plumed_ distribution anywhere in your system
+
+2. Remove the "package provide" lines from the TCL files. One quick way to achieve this under Unix is to run the command ```sed -i 's/package provide/#/' *.tcl```
+
+3. Add the following line to your _.vmdrc_ startup file (name and location differs under Windows)
+``` 
+       set vmd_plumed_dir <<wherever_you_installed_it>>
+       foreach i {vmdplumed.tcl templates_list_v1.tcl templates_list_v2_autogen.tcl} \
+            { source $vmd_plumed_dir/$i }
+```
 
