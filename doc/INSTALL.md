@@ -71,16 +71,16 @@ Users willing to compile the engine themselves under Windows can see the [window
 
 
 
-Emergency non-root installation
-----------------------------------------
+Non-root installation
+---------------------
 
 If you cannot make a proper installation, you might have some success with the following, unsupported, trick:
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
-2. Add the following line to your _.vmdrc_ startup file (name and location differs under Windows)
+2. Add the following line to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
-        lappend auto_path  WHEREVER_YOU_EXTRACTED_THE_ARCHIVE_
+        lappend auto_path  WHEREVER_YOU_EXTRACTED_THE_ARCHIVE
         menu main on
 
 
