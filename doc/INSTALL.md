@@ -13,8 +13,8 @@ follow the instructions provided below.
 
 Note that you will **need write privileges** in VMD's program
 directory. Should you lack them, you have three options: 
-(a) ask the system administrator; (b)  
-perform a private installation of VMD, or (c) try the _non-root instructions_ below.
+(a) ask the system administrator; (b) perform a private installation of VMD, 
+or (c) try the _non-root instructions_ below.
 
 
 ### How to upgrade (one-sentence version) ###
@@ -53,7 +53,8 @@ Prerequisite: PLUMED engine
 ----------------------------------------
 
 Plumed-GUI **requires** a _driver_  executable for your architecture to be located somewhere in the
-executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) and _driver_ (PLUMED 1.3). You can have either or both installed.  
+executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) and _driver_ (PLUMED 1.3).
+You can have either or both installed.  
 
 
  * **Linux/Unix** and **OSX**:   download the code from the [PLUMED home page](http://www.plumed-code.org) and build it according to the instructions.  
@@ -77,12 +78,14 @@ If you cannot make a proper installation, you might have some success with the f
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
-2. Remove the "package provide" lines from the TCL files. One quick way to achieve this under Unix is to run the command ```sed -i 's/package provide/#/' *.tcl```
+2. Remove the "package provide" lines from the TCL files. One quick way to achieve this under Unix is to run the command 
+
+        sed -i 's/package provide/#/' *.tcl
 
 3. Add the following line to your _.vmdrc_ startup file (name and location differs under Windows)
-``` 
-       set vmd_plumed_dir <<wherever_you_installed_it>>
-       foreach i {vmdplumed.tcl templates_list_v1.tcl templates_list_v2_autogen.tcl} \
-            { source $vmd_plumed_dir/$i }
-```
+
+        set vmd_plumed_dir <<wherever_you_installed_it>>
+        foreach i {vmdplumed.tcl templates_list_v1.tcl templates_list_v2_autogen.tcl} \
+               { source $vmd_plumed_dir/$i }
+
 
