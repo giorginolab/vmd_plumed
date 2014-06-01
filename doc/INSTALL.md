@@ -79,7 +79,7 @@ If you cannot make a proper installation, you might have some success with the f
 
 2. Add the following line to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
-        lappend auto_path  WHEREVER_YOU_EXTRACTED_THE_ARCHIVE
+        lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
         menu main on
 
 
