@@ -12,9 +12,8 @@ version is easy and  highly recommended. To upgrade Plumed-GUI, please
 follow the instructions provided below.  
 
 Note that you will **need write privileges** in VMD's program
-directory. Should you lack them, you have three options: 
-(a) ask the system administrator; (b) perform a private installation of VMD, 
-or (c) try the _non-root instructions_ below.
+directory. Should you lack them, perform a private installation of VMD 
+or, alternatively, try the _non-root instructions_ below (need testing).
 
 
 ### How to upgrade (one-sentence version) ###
@@ -74,7 +73,7 @@ Users willing to compile the engine themselves under Windows can see the [window
 Non-root installation
 ---------------------
 
-If you cannot make a proper installation, you might have some success with the following, unsupported, trick:
+If you cannot make a proper installation, you might have some success with the following trick:
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
