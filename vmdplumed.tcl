@@ -722,7 +722,7 @@ proc ::Plumed::rama_gui { } {
     pack [ ttk::label .plumedrama.head1 -text "Insert torsion CVs for the backbone of the matched residues.
 N-CA-C atom naming is assumed for backbone atoms.
 Dihedrals involving atoms outside the selection are skipped.
-" ] -side top -fill x 
+"  -justify center -anchor center -pad 3 ] -side top -fill x 
 
     pack [ ttk::frame .plumedrama.sel ] -side top -fill x
     pack [ ttk::label .plumedrama.sel.txt -text "Selection: backbone and " ] -side left -fill x
@@ -851,7 +851,7 @@ proc ::Plumed::reference_gui { } {
 
     toplevel .plumedref -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumedref "Build reference structure"
-    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" -justify center] -side top -fill x
+    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" -justify center -anchor center -pad 3] -side top -fill x -expand 1
     pack [ ttk::frame .plumedref.align ] -side top -fill x
     pack [ ttk::label .plumedref.align.aligntext -text "Alignment set: " ] -side left
     pack [ ttk::entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
@@ -1117,7 +1117,7 @@ proc ::Plumed::nc_gui { } {
     toplevel .plumednc -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumednc "Insert native contacts CV"
     pack [ ttk::label .plumednc.head1 -text "Insert a CV and group definitions required to define a native contacts CV.
-The current frame of the top molecule is taken as the native state." ] -side top -fill x 
+The current frame of the top molecule is taken as the native state."  -justify center -anchor center -pad 3 ] -side top -fill x 
 
     pack [ ttk::frame .plumednc.sel1 ] -side top -fill x
     pack [ ttk::label .plumednc.sel1.txt -text "Selection 1: " ] -side left -fill x
