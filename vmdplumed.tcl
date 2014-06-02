@@ -924,18 +924,27 @@ proc ::Plumed::reference_write {} {
 proc ::Plumed::reference_write_many { fileout } {
     variable refalign
     variable refmeas
-    variable refmol
     variable ref_mindrmsd
+
+    set N [molinfo top get numframes]
+    if {$N<2} {	error "At least two frames needed" }
+
+    set selalign_i [atomselect top $refalign]
+    set selalign_j [atomselect top $refalign]
+    set selmeas_i [atomselect top $refmeas]
+    set selmeas_j [atomselect top $refmeas]
 
     set sel_fr {};		# selected frames
     set sel_dr {};		# selected delta rmsd
-    set N [molinfo top get numframes]
-    
-    if {$N<2} {	error "At least two frames needed" }
-
+    set curd 0
     for {set i 0} {$i<[expr $N-1]} {incr i} {
+	$selalign_i frame $i
+	$selmeas_i frame $i
 	for {set j [expr $i+1]} {$j<$N} {incr j} {
-	
+	    $selalign_j frame $j
+	    $selmeas_j frame $j
+	    set rmsd_ij [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]
+	    
 	}
     }
 
