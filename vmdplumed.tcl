@@ -841,6 +841,7 @@ proc ::Plumed::reference_gui { } {
     variable refmol top
     variable ref_allframes 1
     variable ref_mindrmsd 0
+    variable ref_status_text "(Computed if DRMSD>0)"
 
     set ref_allframes_state normal
     if {$plumed_version==1} { 
@@ -876,7 +877,7 @@ proc ::Plumed::reference_gui { } {
 	-side left -expand 1 -fill x
     
     pack [ ttk::labelframe .plumedref.status  -text "Output" -padding 3]  -side top -fill x
-    pack [ ttk::label .plumedref.status.text  -text "Frames: 5\nAverage ΔRMSD: 5 Å\nSuggested λ~2.3 1/Å" ] -side top 
+    pack [ ttk::label .plumedref.status.text  -textvariable [namespace current]::ref_status_text ] -side top 
 
     pack [ ttk::frame .plumedref.act ] -side top -fill x
     pack [ ttk::button .plumedref.act.ok -text "Write" \
@@ -885,10 +886,18 @@ proc ::Plumed::reference_gui { } {
 	       -command {  destroy .plumedref }   ] -side left -fill x -expand 1
 }
 
+
 proc ::Plumed::reference_set_reffile { x } { 
     variable reffile; 
     if { $x != "" } {set reffile $x} 
 }; # why??
+
+
+# Set the status message
+proc ::Plumed::reference_update_status {nf adrmsd lambda} {
+    variable ref_status_text;
+    set ref_status_text [format "Frames: %d\nAverage ΔRMSD: %.2f Å\nSuggested λ~%.2f 1/Å" $nf $adrmsd $lambda]
+}
 
 
 proc ::Plumed::reference_write {} {
@@ -898,22 +907,65 @@ proc ::Plumed::reference_write {} {
    if [ catch {
 	if { $ref_allframes == 0 } {
 	    set fn [molinfo top get frame]
-	    reference_write_one $reffile $fn $fn
+	    reference_write_one $reffile $fn 
 	    puts "File $reffile written."
 	} else {
-	    reference_write_one $reffile 0 -1
+	    reference_write_many $reffile 
 	    puts "Multi-frame $reffile written with full trajectory."
 	}
     } exc ] {
 	tk_messageBox -title "Error" -parent .plumedref -message $exc
     }
+}
+
+
+# Subset the trajectory according to the "skip until rmsd at least"
+# criterion. Assemble result
+proc ::Plumed::reference_write_many { fileout } {
+    variable refalign
+    variable refmeas
+    variable refmol
+    variable ref_mindrmsd
+
+    set sel_fr {};		# selected frames
+    set sel_dr {};		# selected delta rmsd
+    set N [molinfo top get numframes]
+    
+    if {$N<2} {	error "At least two frames needed" }
+
+    for {set i 0} {$i<[expr $N-1]} {incr i} {
+	for {set j [expr $i+1]} {$j<$N} {incr j} {
+	
+	}
+    }
+
+
 
 }
 
 
+# Compute rmsd of all frames of sel wrt currently selected frame in
+# ref.  Align ref1 to ref2, and measure RMSD of sel1
+# wrt sel2. sel1 and ref1 should belong to the same molecule (the
+# trajectory under study, multiple frames).  Sel2 and ref2 should
+# belong to the same molecule (the reference frame).  
+proc ::Plumed::rmsd_1 { sel1 sel2 ref1 ref2 } {
+    set oco [ $sel1 get { x y z } ]
+    $ref1 frame $fn
+    set xform [measure fit $ref1 $ref2]
+    $sel1 move $xform
+    if {$sel2 != "ROTATE"} {
+	set rmsd [measure rmsd $sel1 $sel2]
+	$sel1 set {x y z} $oco
+    }
+    return $rmsd
+}
+
+
+
 
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write_one { fileout fbeg fend } {
+proc ::Plumed::reference_write_one { fileout fn } {
     variable refalign
     variable refmeas
     variable refmol
@@ -947,7 +999,7 @@ proc ::Plumed::reference_write_one { fileout fbeg fend } {
     $asref   set segname YYYY
 
     set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
-    animate write pdb $tmpf beg $fbeg end $fend
+    animate write pdb $tmpf beg $fn end $fn
 
     $asall set {occupancy beta segname} $old; # restore
     $asall delete
@@ -979,29 +1031,6 @@ proc ::Plumed::reference_write_one { fileout fbeg fend } {
     file delete $tmpf
 }
 
-
-
-# Compute rmsd of all frames of sel wrt currently selected frame in
-# ref. Per each frame, align ref1 to ref2, and measure RMSD of sel1
-# wrt sel2. sel1 and ref1 should belong to the same molecule (the
-# trajectory under study, multiple frames).  Sel2 and ref2 should
-# belong to the same molecule (the reference frame). Return a list of
-# RMSD values (one per frame in sel). If sel2 is the string ROTATE,
-# rmsd is not computed, but sel1 is rotated instead.
-proc ::Plumed::rmsdOf { sel1 sel2 ref1 ref2 } {
-    set rmsdlist {}
-    forFrames fn $sel1 {
-	set oco [ $sel1 get { x y z } ]
-	$ref1 frame $fn
-	set xform [measure fit $ref1 $ref2]
-	$sel1 move $xform
-	if {$sel2 != "ROTATE"} {
-	    lappend rmsdlist [measure rmsd $sel1 $sel2]
-	    $sel1 set {x y z} $oco
-	}
-    }
-    return $rmsdlist
-}
 
 
 # Alpha, parabeta, antibeta ordered lists ==================================================                                                 
