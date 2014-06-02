@@ -907,10 +907,11 @@ proc ::Plumed::reference_write {} {
    if [ catch {
 	if { $ref_allframes == 0 } {
 	    set fn [molinfo top get frame]
-	    reference_write_one $reffile $fn 
+	    reference_write $reffile $fn 
 	    puts "File $reffile written."
 	} else {
-	    reference_write_many $reffile 
+	    set subset [reference_compute_subset]
+	    reference_write $reffile $subset
 	    puts "Multi-frame $reffile written with full trajectory."
 	}
     } exc ] {
@@ -921,7 +922,7 @@ proc ::Plumed::reference_write {} {
 
 # Subset the trajectory according to the "skip until rmsd at least"
 # criterion. Assemble result
-proc ::Plumed::reference_write_many { fileout } {
+proc ::Plumed::reference_compute_subset {} {
     variable refalign
     variable refmeas
     variable ref_mindrmsd
@@ -934,19 +935,33 @@ proc ::Plumed::reference_write_many { fileout } {
     set selmeas_i [atomselect top $refmeas]
     set selmeas_j [atomselect top $refmeas]
 
-    set sel_fr {};		# selected frames
+    set sel_fr 0;		# selected frames (first is always selected)
     set sel_dr {};		# selected delta rmsd
-    set curd 0
-    for {set i 0} {$i<[expr $N-1]} {incr i} {
+    
+    set i 0;
+    while {$i<[expr $N-1]} {
 	$selalign_i frame $i
 	$selmeas_i frame $i
 	for {set j [expr $i+1]} {$j<$N} {incr j} {
 	    $selalign_j frame $j
 	    $selmeas_j frame $j
 	    set rmsd_ij [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]
-	    
+	    puts "RMSD($i->$j) = $rmsd_ij"
+	    if {$rmsd_ij>$ref_mindrmsd} {
+		lappend sel_dr $rmsd_ij
+		lappend sel_fr $j
+		set i $j
+		puts "Selected $j"
+		break
+	    }
 	}
     }
+
+    set nsel [llength $sel_fr]
+    set avg [vecmean $sel_dr]
+    set lambda [expr 2.3/$avg]
+
+    reference_update_status $nsel $avg $lambda
 
 
 
@@ -973,8 +988,10 @@ proc ::Plumed::rmsd_1 { sel1 sel2 ref1 ref2 } {
 
 
 
+
+
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write_one { fileout fn } {
+proc ::Plumed::reference_write { fileout subset } {
     variable refalign
     variable refmeas
     variable refmol
@@ -1008,7 +1025,15 @@ proc ::Plumed::reference_write_one { fileout fn } {
     $asref   set segname YYYY
 
     set tmpf [ file join [ Plumed::tmpdir ] "reftmp.[pid].pdb" ]
-    animate write pdb $tmpf beg $fn end $fn
+    set pdb_text {}
+    
+    foreach fn $subset {
+	animate write pdb $tmpf beg $fn end $fn waitfor all
+	set fd [open $tmpf r]
+	append pdb_text [read $fd]
+	close $fd
+    }
+    file delete $tmpf
 
     $asall set {occupancy beta segname} $old; # restore
     $asall delete
@@ -1019,10 +1044,9 @@ proc ::Plumed::reference_write_one { fileout fn } {
     # i.e. grep YYYY $tmpd/reftmp.pdb > $fileout
     # plumed <1.3 had a bug in PDB reader, which required
     # non-standard empty chain: ## set line [string replace $line 21 21 " "]
-    set fdr [ open $tmpf r ]
     set fdw [ open $fileout w ]
     set i 0
-    while { [gets $fdr line] != -1 } {
+    foreach line [split $pdb_text "\n"] {
 	# Only passthrough lines marked with YYYY
 	if [ regexp {YYYY} $line ] {
 	    # replace serial
@@ -1035,15 +1059,12 @@ proc ::Plumed::reference_write_one { fileout fn } {
 	    set i 0
 	}
     }
-    close $fdr
     close $fdw
-    file delete $tmpf
 }
 
 
 
-# Alpha, parabeta, antibeta ordered lists ==================================================                                                 
-
+# Alpha, parabeta, antibeta ordered lists ==================================================  
 proc ::Plumed::secondary_rmsd {N CA C O CB} {
     set Nsel [atomselect top $N]
     set CAsel [atomselect top $CA]
