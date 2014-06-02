@@ -981,6 +981,28 @@ proc ::Plumed::reference_write_one { fileout fbeg fend } {
 
 
 
+# Compute rmsd of all frames of sel wrt currently selected frame in
+# ref. Per each frame, align ref1 to ref2, and measure RMSD of sel1
+# wrt sel2. sel1 and ref1 should belong to the same molecule (the
+# trajectory under study, multiple frames).  Sel2 and ref2 should
+# belong to the same molecule (the reference frame). Return a list of
+# RMSD values (one per frame in sel). If sel2 is the string ROTATE,
+# rmsd is not computed, but sel1 is rotated instead.
+proc ::Plumed::rmsdOf { sel1 sel2 ref1 ref2 } {
+    set rmsdlist {}
+    forFrames fn $sel1 {
+	set oco [ $sel1 get { x y z } ]
+	$ref1 frame $fn
+	set xform [measure fit $ref1 $ref2]
+	$sel1 move $xform
+	if {$sel2 != "ROTATE"} {
+	    lappend rmsdlist [measure rmsd $sel1 $sel2]
+	    $sel1 set {x y z} $oco
+	}
+    }
+    return $rmsdlist
+}
+
 
 # Alpha, parabeta, antibeta ordered lists ==================================================                                                 
 
