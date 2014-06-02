@@ -12,8 +12,8 @@ version is easy and  highly recommended. To upgrade Plumed-GUI, please
 follow the instructions provided below.  
 
 Note that you will **need write privileges** in VMD's program
-directory. Should you lack write permissions, either ask your
-sysadmin, or perform a private installation of VMD.
+directory. Should you lack them, perform a private installation of VMD 
+or, alternatively, try the _non-root instructions_ below (need testing).
 
 
 ### How to upgrade (one-sentence version) ###
@@ -52,7 +52,8 @@ Prerequisite: PLUMED engine
 ----------------------------------------
 
 Plumed-GUI **requires** a _driver_  executable for your architecture to be located somewhere in the
-executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) and _driver_ (PLUMED 1.3). You can have either or both installed.  
+executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) and _driver_ (PLUMED 1.3).
+You can have either or both installed.  
 
 
  * **Linux/Unix** and **OSX**:   download the code from the [PLUMED home page](http://www.plumed-code.org) and build it according to the instructions.  
@@ -64,5 +65,21 @@ executable path.  The executables are named _plumed_ (PLUMED 2.0, recommended) a
 If executables are correctly installed, their location will appear in the "Path to executable" box; it can be adjusted manually if not found (not recommended). 
 
 Users willing to compile the engine themselves under Windows can see the [windows build instructions](http://www.multiscalelab.org/utilities/PlumedGUI/BuildWin32).
+
+
+
+
+
+Non-root installation
+---------------------
+
+If you cannot make a proper installation, you might have some success with the following trick:
+
+1. Unzip the _vmd_plumed_ distribution anywhere in your system
+
+2. Add the following line to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
+
+        lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
+        menu main on
 
 

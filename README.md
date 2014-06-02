@@ -15,8 +15,7 @@ The PLUMED-GUI collective variable analysis tool is a plugin for the Visual Mole
 - use VMD's atom selection keywords to define atom groups and ready-made templates for common CVs
 - export the CV definition file for use in MD simulations
 - prepare reference files for RMSD, path-variable, native contacts, etc.
-- analyze DCD files in batches 
-
+ 
 
 Documentation
 -------------
