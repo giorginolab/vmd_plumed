@@ -907,11 +907,11 @@ proc ::Plumed::reference_write {} {
    if [ catch {
 	if { $ref_allframes == 0 } {
 	    set fn [molinfo top get frame]
-	    reference_write $reffile $fn 
+	    reference_write_subset $reffile $fn 
 	    puts "File $reffile written."
 	} else {
 	    set subset [reference_compute_subset]
-	    reference_write $reffile $subset
+	    reference_write_subset $reffile $subset
 	    puts "Multi-frame $reffile written with full trajectory."
 	}
     } exc ] {
@@ -975,7 +975,6 @@ proc ::Plumed::reference_compute_subset {} {
 # belong to the same molecule (the reference frame).  
 proc ::Plumed::rmsd_1 { sel1 sel2 ref1 ref2 } {
     set oco [ $sel1 get { x y z } ]
-    $ref1 frame $fn
     set xform [measure fit $ref1 $ref2]
     $sel1 move $xform
     if {$sel2 != "ROTATE"} {
@@ -991,7 +990,7 @@ proc ::Plumed::rmsd_1 { sel1 sel2 ref1 ref2 } {
 
 
 # Uses class variables to get the selection strings
-proc ::Plumed::reference_write { fileout subset } {
+proc ::Plumed::reference_write_subset { fileout subset } {
     variable refalign
     variable refmeas
     variable refmol
