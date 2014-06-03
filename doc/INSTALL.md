@@ -82,4 +82,8 @@ If you cannot make a proper installation, you might have some success with the f
         lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
         menu main on
 
+   or, alternatively, set the following environment variable (e.g. via modules)
+
+        export TCLLIBPATH=/PATH/TO/VMD_PLUMED:$TCLLIBPATH
+
 
