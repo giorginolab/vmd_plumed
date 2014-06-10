@@ -950,11 +950,11 @@ proc ::Plumed::reference_compute_subset {} {
 	    if {$msd_ij>$ref_mindmsd} {
 		lappend sel_dr $msd_ij
 		lappend sel_fr $j
-		set i $j
 		puts "Selected $j"
 		break
 	    }
 	}
+	set i $j
     }
 
     set nsel [llength $sel_fr]
@@ -962,9 +962,6 @@ proc ::Plumed::reference_compute_subset {} {
     set lambda [expr 2.3/$avg]
 
     reference_update_status $nsel $avg $lambda
-
-
-
 }
 
 

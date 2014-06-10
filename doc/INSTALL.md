@@ -6,10 +6,10 @@ Installation instructions
 Plumed-GUI version update
 ----------------------------------------
 
-VMD 1.9.1 comes with a very old version of Plumed-GUI pre-installed,
-which does not support PLUMED 2.0. Updating Plumed-GUI to the latest
-version is easy and  highly recommended. To upgrade Plumed-GUI, please
-follow the instructions provided below.  
+VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
+pre-installed, which does not support PLUMED 2.0. Updating Plumed-GUI
+to the latest version is easy and highly recommended. To upgrade,
+please follow the instructions provided below.
 
 Note that you will **need write privileges** in VMD's program
 directory. Should you lack them, perform a private installation of VMD 
@@ -77,7 +77,7 @@ If you cannot make a proper installation, you might have some success with the f
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
-2. Add the following line to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
+2. Add the following lines to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
         lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
         menu main on
