@@ -893,12 +893,6 @@ proc ::Plumed::reference_set_reffile { x } {
 }; # why??
 
 
-# Set the status message
-proc ::Plumed::reference_update_status {nf admsd lambda} {
-    variable ref_status_text;
-    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %.2f Å²\nSuggested λ: %.2f/Å²" $nf $admsd $lambda]
-}
-
 
 proc ::Plumed::reference_write {} {
     variable ref_allframes
@@ -946,11 +940,11 @@ proc ::Plumed::reference_compute_subset {} {
 	    $selalign_j frame $j
 	    $selmeas_j frame $j
 	    set msd_ij [expr [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]**2]
-	    puts "MSD($i->$j) = $msd_ij"
+#	    puts "MSD($i->$j) = $msd_ij"
 	    if {$msd_ij>=$ref_mindmsd} {
 		lappend sel_dr $msd_ij
 		lappend sel_fr $j
-		puts "Selected $j"
+#		puts "Selected $j"
 		break
 	    }
 	}
@@ -958,10 +952,23 @@ proc ::Plumed::reference_compute_subset {} {
     }
 
     set nsel [llength $sel_fr]
-    set avg [vecmean $sel_dr]
-    set lambda [expr 2.3/$avg]
+    if [catch {
+	set avg [format "%.2f" [vecmean $sel_dr]]
+	set lambda [format "%.2f" [expr 2.3/$avg]]
+    }] {
+	set avg "---"
+	set lambda "---"
+    }
 
+    puts "Frames selected: $sel_fr"
     reference_update_status $nsel $avg $lambda
+}
+
+
+# Set the status message
+proc ::Plumed::reference_update_status {nf admsd lambda} {
+    variable ref_status_text;
+    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %s Å²\nSuggested λ: %s/Å²" $nf $admsd $lambda]
 }
 
 
