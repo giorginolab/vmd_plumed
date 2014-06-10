@@ -1,7 +1,7 @@
 # VMD Plumed tool  - a GUI to compute collective variables
 # over a trajectory
 #
-#     Copyright (C) 2012  National Research Council of Italy and
+#     Copyright (C) 2014  National Research Council of Italy and
 #                         Universitat Pompeu Fabra 
 #
 #     Author              Toni Giorgino  (toni.giorgino@isib.cnr.it)
@@ -896,7 +896,7 @@ proc ::Plumed::reference_set_reffile { x } {
 # Set the status message
 proc ::Plumed::reference_update_status {nf admsd lambda} {
     variable ref_status_text;
-    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %.2f Å²\nSuggested λ~%.2f 1/Å²" $nf $admsd $lambda]
+    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %.2f Å²\nSuggested λ: %.2f/Å²" $nf $admsd $lambda]
 }
 
 
@@ -904,7 +904,7 @@ proc ::Plumed::reference_write {} {
     variable ref_allframes
     variable reffile
  
-   if [ catch {
+    if [ catch {
 	if { $ref_allframes == 0 } {
 	    set fn [molinfo top get frame]
 	    reference_write_subset $reffile $fn 
@@ -947,7 +947,7 @@ proc ::Plumed::reference_compute_subset {} {
 	    $selmeas_j frame $j
 	    set msd_ij [expr [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]**2]
 	    puts "MSD($i->$j) = $msd_ij"
-	    if {$msd_ij>$ref_mindmsd} {
+	    if {$msd_ij>=$ref_mindmsd} {
 		lappend sel_dr $msd_ij
 		lappend sel_fr $j
 		puts "Selected $j"
