@@ -840,8 +840,8 @@ proc ::Plumed::reference_gui { } {
     variable reffile "reference.pdb"
     variable refmol top
     variable ref_allframes 1
-    variable ref_mindrmsd 0
-    variable ref_status_text "(Computed if DRMSD>0)"
+    variable ref_mindmsd 0
+    variable ref_status_text "(No reference written yet)"
 
     set ref_allframes_state normal
     if {$plumed_version==1} { 
@@ -851,7 +851,7 @@ proc ::Plumed::reference_gui { } {
 
     toplevel .plumedref -bd 4 -bg [ttk::style lookup . -background]
     wm title .plumedref "Build reference structure"
-    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for RMSD-type analysis:" -justify center -anchor center -pad 3] -side top -fill x -expand 1
+    pack [ ttk::label .plumedref.title -text "Convert top molecule's frames into\na reference file for MSD-type analysis:" -justify center -anchor center -pad 3] -side top -fill x -expand 1
     pack [ ttk::frame .plumedref.align ] -side top -fill x
     pack [ ttk::label .plumedref.align.aligntext -text "Alignment set: " ] -side left
     pack [ ttk::entry .plumedref.align.align -width 20 -textvariable [namespace current]::refalign ] -side left -expand 1 -fill x
@@ -872,8 +872,8 @@ proc ::Plumed::reference_gui { } {
     pack [ ttk::checkbutton .plumedref.multiframe -text "Multi-frame reference (all loaded frames)" \
 	       -variable [namespace current]::ref_allframes -state $ref_allframes_state ] -side top -fill x
     pack [ ttk::frame .plumedref.subset ] -side top -fill x
-    pack [ ttk::label .plumedref.subset.text -text "Minimum RMSD between consecutive frames (Å): " ] -side left
-    pack [ ttk::entry .plumedref.subset.val -width 20 -textvariable [namespace current]::ref_mindrmsd ]\
+    pack [ ttk::label .plumedref.subset.text -text "Minimum MSD between consecutive frames (Å²): " ] -side left
+    pack [ ttk::entry .plumedref.subset.val -width 20 -textvariable [namespace current]::ref_mindmsd ]\
 	-side left -expand 1 -fill x
     
     pack [ ttk::labelframe .plumedref.status  -text "Output" -padding 3]  -side top -fill x
@@ -894,9 +894,9 @@ proc ::Plumed::reference_set_reffile { x } {
 
 
 # Set the status message
-proc ::Plumed::reference_update_status {nf adrmsd lambda} {
+proc ::Plumed::reference_update_status {nf admsd lambda} {
     variable ref_status_text;
-    set ref_status_text [format "Frames: %d\nAverage ΔRMSD: %.2f Å\nSuggested λ~%.2f 1/Å" $nf $adrmsd $lambda]
+    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %.2f Å²\nSuggested λ~%.2f 1/Å²" $nf $admsd $lambda]
 }
 
 
@@ -925,7 +925,7 @@ proc ::Plumed::reference_write {} {
 proc ::Plumed::reference_compute_subset {} {
     variable refalign
     variable refmeas
-    variable ref_mindrmsd
+    variable ref_mindmsd
 
     set N [molinfo top get numframes]
     if {$N<2} {	error "At least two frames needed" }
@@ -936,7 +936,7 @@ proc ::Plumed::reference_compute_subset {} {
     set selmeas_j [atomselect top $refmeas]
 
     set sel_fr 0;		# selected frames (first is always selected)
-    set sel_dr {};		# selected delta rmsd
+    set sel_dr {};		# selected delta MSD
     
     set i 0;
     while {$i<[expr $N-1]} {
@@ -945,10 +945,10 @@ proc ::Plumed::reference_compute_subset {} {
 	for {set j [expr $i+1]} {$j<$N} {incr j} {
 	    $selalign_j frame $j
 	    $selmeas_j frame $j
-	    set rmsd_ij [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]
-	    puts "RMSD($i->$j) = $rmsd_ij"
-	    if {$rmsd_ij>$ref_mindrmsd} {
-		lappend sel_dr $rmsd_ij
+	    set msd_ij [expr [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]**2]
+	    puts "MSD($i->$j) = $msd_ij"
+	    if {$msd_ij>$ref_mindmsd} {
+		lappend sel_dr $msd_ij
 		lappend sel_fr $j
 		set i $j
 		puts "Selected $j"
