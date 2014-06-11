@@ -47,7 +47,7 @@ the archive downloaded from GitHub.
    start. Verify the running version from _Help > About_.
 
 
-### Non-root upgrade instructions ###
+### How to upgrade (if you have no root access) ###
 
 If you cannot replace files in VMD's directory, you might have some success with the following trick:
 
