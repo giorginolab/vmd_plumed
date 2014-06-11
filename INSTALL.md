@@ -47,6 +47,25 @@ the archive downloaded from GitHub.
    start. Verify the running version from _Help > About_.
 
 
+### Non-root upgrade instructions ###
+
+If you cannot replace files in VMD's directory, you might have some success with the following trick:
+
+1. Unzip the _vmd_plumed_ distribution anywhere in your system
+
+2. Add the following lines to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
+
+        lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
+        menu main on
+
+   or, alternatively, set the following environment variable (e.g. via modules)
+
+        export TCLLIBPATH=/PATH/TO/VMD_PLUMED:$TCLLIBPATH
+
+
+
+
+
 
 Prerequisite: PLUMED engine
 ----------------------------------------
@@ -67,23 +86,5 @@ If executables are correctly installed, their location will appear in the "Path 
 Users willing to compile the engine themselves under Windows can see the [windows build instructions](http://www.multiscalelab.org/utilities/PlumedGUI/BuildWin32).
 
 
-
-
-
-Non-root installation
----------------------
-
-If you cannot make a proper installation, you might have some success with the following trick:
-
-1. Unzip the _vmd_plumed_ distribution anywhere in your system
-
-2. Add the following lines to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
-
-        lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
-        menu main on
-
-   or, alternatively, set the following environment variable (e.g. via modules)
-
-        export TCLLIBPATH=/PATH/TO/VMD_PLUMED:$TCLLIBPATH
 
 
