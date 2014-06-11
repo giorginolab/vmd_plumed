@@ -1,9 +1,18 @@
-PLUMED-GUI usage examples
-====================
+CREB:CBP binding
+================
 
 
-The following examples require an internet connection to download
-structures from the PDB repository.
+An example based on the PDB:1KDX structure.  The examples require an
+internet connection to download structures from the PDB repository.
+
+
+File                          | Description
+------------------------------|-------------
+EXAMPLE.md                    | Instructions                         
+EXAMPLE.plumed2               | Analysis script
+EXAMPLE.plumed2.out           | Analysis script - expected output
+
+
 
 
 Example 1: Analysis
