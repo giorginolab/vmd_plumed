@@ -906,7 +906,7 @@ proc ::Plumed::reference_write {} {
 	} else {
 	    set subset [reference_compute_subset]
 	    reference_write_subset $reffile $subset
-	    puts "Multi-frame $reffile written with full trajectory."
+	    puts "Multi-frame $reffile written with full trajectory. See $reffile.log."
 	}
     } exc ] {
 	tk_messageBox -title "Error" -parent .plumedref -message $exc
@@ -920,18 +920,21 @@ proc ::Plumed::reference_compute_subset {} {
     variable refalign
     variable refmeas
     variable ref_mindmsd
+    variable reffile
 
     set N [molinfo top get numframes]
     if {$N<2} {	error "At least two frames needed" }
 
+    set lf [open "$reffile.log" w]
+
+    set sel_fr 0;		# selected frames (first is always selected)
+    set sel_dr {};		# selected delta MSD
+    
     set selalign_i [atomselect top $refalign]
     set selalign_j [atomselect top $refalign]
     set selmeas_i [atomselect top $refmeas]
     set selmeas_j [atomselect top $refmeas]
 
-    set sel_fr 0;		# selected frames (first is always selected)
-    set sel_dr {};		# selected delta MSD
-    
     set i 0;
     while {$i<[expr $N-1]} {
 	$selalign_i frame $i
@@ -940,16 +943,34 @@ proc ::Plumed::reference_compute_subset {} {
 	    $selalign_j frame $j
 	    $selmeas_j frame $j
 	    set msd_ij [expr [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]**2]
-#	    puts "MSD($i->$j) = $msd_ij"
+	    puts $lf "# MSD($i->$j) = $msd_ij"
 	    if {$msd_ij>=$ref_mindmsd} {
 		lappend sel_dr $msd_ij
 		lappend sel_fr $j
-#		puts "Selected $j"
+		puts $lf "# Frame $j selected"
 		break
 	    }
 	}
 	set i $j
     }
+
+    # Iterate over all selected pairs
+    for {set ii 0} {$ii<[llength $sel_fr]} {incr ii} {
+	set i [lindex $sel_fr $ii]
+	$selalign_i frame $i
+	$selmeas_i frame $i
+	for {set jj 0} {$jj<[llength $sel_fr]} {incr jj} {
+	    set j [lindex $sel_fr $jj]
+	    $selalign_j frame $j
+	    $selmeas_j frame $j
+	    set msd_ij [expr [rmsd_1 $selmeas_i $selmeas_j $selalign_i $selalign_j]**2]
+	    puts $lf "$ii $jj $msd_ij"
+	}
+	puts $lf "";		# keep gnuplot pm3d happy
+    }
+
+    $selalign_i delete;     $selalign_j delete;
+    $selmeas_i delete;      $selmeas_j delete; 
 
     set nsel [llength $sel_fr]
     if [catch {
@@ -960,15 +981,22 @@ proc ::Plumed::reference_compute_subset {} {
 	set lambda "---"
     }
 
-    puts "Frames selected: $sel_fr"
+    puts $lf "# Frames selected: [llength $sel_fr]"
+    puts $lf "# Frames: $sel_fr"
+    puts $lf "# Average MSD: $avg"
+    close $lf
+
     reference_update_status $nsel $avg $lambda
+    return $sel_fr
 }
 
 
 # Set the status message
 proc ::Plumed::reference_update_status {nf admsd lambda} {
     variable ref_status_text;
-    set ref_status_text [format "Frames written: %d\nAverage ΔMSD: %s Å²\nSuggested λ: %s/Å²" $nf $admsd $lambda]
+    set ref_status_text [format "Frames written: %d
+Average ΔMSD: %s Å²
+Suggested λ: %s/Å²" $nf $admsd $lambda]
 }
 
 
