@@ -66,7 +66,7 @@ Citation
 
 You are kindly requested to cite the following paper in any publication resulting from the use of Plumed-GUI (in addition to other possibly relevant Plumed citations):
 
-- Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, dx.doi.org/10.1016/j.cpc.2013.11.019 or http://arxiv.org/abs/1312.3190 . 
+- Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, [doi:10.1016/j.cpc.2013.11.019](http://dx.doi.org/10.1016/j.cpc.2013.11.019) or http://arxiv.org/abs/1312.3190 . 
 
 
 
