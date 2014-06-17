@@ -2,8 +2,8 @@ CREB:CBP binding
 ================
 
 
-An example based on the PDB:1KDX structure.  The examples require an
-internet connection to download structures from the PDB repository.
+An example based on the PDB:1KDX structure.  Before proceeding, 
+please download the [1KDX PDB file from RCSB PDB](http://www.rcsb.org/pdb/download/downloadFile.do?fileFormat=pdb&compression=NO&structureId=1KDX).
 
 
 File                          | Description
