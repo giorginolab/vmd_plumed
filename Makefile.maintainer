@@ -15,3 +15,17 @@ clean:
 	-rm templates_list_v2_autogen.tcl pkgIndex.tcl
 
 
+# Cross-compiling plumed2
+# ./configure --host=i686-w64-mingw32   --disable-shared LDFLAGS=-static
+
+# Linking all molfiles (useless) ---------
+# Extract catdcd-5.1.tar.gz
+# make -k win32
+# olist=`( cd Obj_win32 ; echo *.o |sed 's/\.o//g')`
+# bash config/create_static_header.sh MOLFILE molfile include/libmolfile_plugin.h $olist
+# ar rcs libmolfile_plugin.a Obj_win32/*.o
+# i686-w64-mingw32-ranlib libmolfile_plugin.a
+#
+# In plumed
+# ./configure --host=i686-w64-mingw32 --disable-shared LDFLAGS="-static -L/tmp/catdcd-5.1" CPPFLAGS=-I/tmp/catdcd-5.1/include
+# -----------------------------------------
