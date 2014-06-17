@@ -9,10 +9,13 @@ to the latest version is easy and highly recommended. To upgrade,
 please follow the directions in this file.
 
 Instructions are different depending on whether you have
-write privileges in VMD's program directory or not. 
+write privileges in VMD's program directory (because you
+are the administrator, or VMD was installed as a user) 
+or not. 
 
 
-## I have write privileges (or VMD is installed as a user) ##
+I have write privileges
+----------------------------------------
 
 In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
 the archive downloaded from GitHub. 
@@ -42,10 +45,10 @@ If you need step-by-step directions:
    start. Verify the running version from _Help > About_.
 
 
-## I have no write privileges ##
+I have no write privileges
+----------------------------------------
 
-If you cannot replace files in VMD's program directory,
-you may install the plugin as an unprivileged user as follows:
+You may install the plugin as an unprivileged user as follows:
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
