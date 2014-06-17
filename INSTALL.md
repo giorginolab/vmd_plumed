@@ -3,9 +3,6 @@
 
 
 
-Plumed-GUI version update
-----------------------------------------
-
 VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
 pre-installed, which does not support PLUMED 2.0. Updating Plumed-GUI
 to the latest version is easy and highly recommended. To upgrade,
