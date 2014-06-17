@@ -1,20 +1,18 @@
 ~~Installation~~ Upgrade instructions
 ========================================
 
-
-
 VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
-pre-installed, which does not support PLUMED 2.0. Updating Plumed-GUI
-to the latest version is easy and highly recommended. To upgrade,
+pre-installed. Since the built-in version does not support PLUMED 2.0, updating 
+to the latest version highly recommended. To upgrade,
 please follow the directions in this file.
 
-Instructions are different depending on whether you have
-write privileges in VMD's program directory (because you
+Instructions differ depending on whether you have
+write privileges in VMD's program directory (if you
 are the administrator, or VMD was installed as a user) 
 or not. 
 
 
-I have write privileges
+With write privileges
 ----------------------------------------
 
 In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
@@ -45,12 +43,12 @@ If you need step-by-step directions:
    start. Verify the running version from _Help > About_.
 
 
-I have no write privileges
+Without write privileges
 ----------------------------------------
 
 You may install the plugin as an unprivileged user as follows:
 
-1. Unzip the _vmd_plumed_ distribution anywhere in your system
+1. Download and extract the latest Plumed-GUI release from GitHub.
 
 2. Add the following lines to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
@@ -67,7 +65,7 @@ You may install the plugin as an unprivileged user as follows:
 
 
 Prerequisite: PLUMED engine
-----------------------------------------
+========================================
 
 Plumed-GUI **requires** a _driver_  executable for your architecture to be located somewhere in the
 executable path.  The executables are named _plumed_ (PLUMED 2.1, recommended) and _driver_ (PLUMED 1.3).
