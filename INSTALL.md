@@ -1,4 +1,4 @@
-Installation instructions
+~~Installation~~ Upgrade instructions
 ========================================
 
 
@@ -9,20 +9,18 @@ Plumed-GUI version update
 VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
 pre-installed, which does not support PLUMED 2.0. Updating Plumed-GUI
 to the latest version is easy and highly recommended. To upgrade,
-please follow the instructions provided below.
+please follow the directions in this file.
 
-Note that you will **need write privileges** in VMD's program
-directory. Should you lack them, perform a private installation of VMD 
-or, alternatively, try the _non-root instructions_ below (need testing).
-
-
-### How to upgrade (one-sentence version) ###
-
-Replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
-the archive downloaded from GitHub.
+Instructions are different depending on whether you have
+write privileges in VMD's program directory or not. 
 
 
-### How to upgrade (detailed version) ###
+## I have write privileges (or VMD is installed as a user) ##
+
+In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
+the archive downloaded from GitHub. 
+
+If you need step-by-step directions:
 
 1. Download and extract the latest Plumed-GUI release from GitHub.
 
@@ -47,9 +45,10 @@ the archive downloaded from GitHub.
    start. Verify the running version from _Help > About_.
 
 
-### How to upgrade (if you have no root access) ###
+## I have no write privileges ##
 
-If you cannot replace files in VMD's directory, you might have some success with the following trick:
+If you cannot replace files in VMD's program directory,
+you may install the plugin as an unprivileged user as follows:
 
 1. Unzip the _vmd_plumed_ distribution anywhere in your system
 
