@@ -2,9 +2,10 @@
 ========================================
 
 VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
-pre-installed. Since the built-in version does not support PLUMED 2.0, updating 
-to the latest version highly recommended. To upgrade,
-please follow the directions in this file.
+pre-installed. Since the built-in version does not support PLUMED 2.0,
+updating to the latest version highly recommended. 
+
+To upgrade, please follow the directions in this file.
 
 Instructions differ depending on whether you have
 write privileges in VMD's program directory (if you
@@ -12,11 +13,11 @@ are the administrator, or VMD was installed as a user)
 or not. 
 
 
-With write privileges
+You have write privileges
 ----------------------------------------
 
-In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in VMD's installation with
-the archive downloaded from GitHub. 
+In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in
+VMD's installation with the archive downloaded from GitHub.
 
 If you need step-by-step directions:
 
@@ -50,7 +51,9 @@ You may install the plugin as an unprivileged user as follows:
 
 1. Download and extract the latest Plumed-GUI release from GitHub.
 
-2. Add the following lines to your _.vmdrc_ startup file (name and location [differs under Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
+2. Add the following lines to your _.vmdrc_ startup file (name and
+   location [differs under
+   Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
         lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
         menu main on
@@ -67,24 +70,79 @@ You may install the plugin as an unprivileged user as follows:
 Prerequisite: PLUMED engine
 ========================================
 
-Plumed-GUI **requires** a _driver_  executable for your architecture to be located somewhere in the
-executable path.  The executables are named _plumed_ (PLUMED 2.1, recommended) and _driver_ (PLUMED 1.3).
-You can have either or both installed.  
+Plumed-GUI **requires** a _driver_ executable for your architecture to
+be located somewhere in the executable path.  The executables are
+named _plumed_ (PLUMED 2.1, recommended) and _driver_ (PLUMED 1.3).
+You can have either or both installed.
 
-Until PLUMED 2.1 is officially released, please use the _master_ development branch, which you
-can obtain from https://github.com/plumed/plumed2 .
-
-
- * **Linux/Unix** and **OSX**:   download the code from the [PLUMED home page](http://www.plumed-code.org) and build it according to the instructions.  
- * **Windows**: Plumed-GUI (version > 2.1) provides a _Help > Attempt download of prebuilt Windows driver binaries_.
- menu entry which attempts to get precompiled binaries and to install them in a (system specific) directory. The same directory is temporarily added to the search path. The method requires enough permissions and network access. 
- * **Windows (fallback)**: if automated installation above fails, please manually download the pre-compiled binaries for Win32 ([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe) and [plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe)) and copy them e.g. in ''c:\windows'' or in VMD's directory. 
+Until PLUMED 2.1 is officially released, please use the _master_
+development branch, which you can obtain from
+https://github.com/plumed/plumed2 .
 
 
-If executables are correctly installed, their location will appear in the "Path to executable" box; it can be adjusted manually if not found (not recommended). 
+ * **Linux/Unix** and **OSX**: download the code from the [PLUMED home
+     page](http://www.plumed-code.org) and build it according to the
+     instructions.
 
-Users willing to compile the engine themselves under Windows can see the [windows build instructions](http://www.multiscalelab.org/utilities/PlumedGUI/BuildWin32).
+ * **Windows**: Plumed-GUI (version > 2.1) provides a _Help > Attempt
+   download of prebuilt Windows driver binaries_.  menu entry which
+   attempts to get precompiled binaries and to install them in a
+   (system specific) directory. The same directory is temporarily
+   added to the search path. The method requires enough permissions
+   and network access.
+
+
+If the Windows-specific automated installation above fails, try one of the following:
+
+   - manually download the pre-compiled binaries for Win32
+     ([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe)
+     and
+     [plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe))
+     and copy them e.g. in ''c:\windows'' or in VMD's directory.
+
+   - cross-compile, as shown below 
+
+If executables are correctly installed, their location will appear in
+the "Path to executable" box; the path can be adjusted manually (not
+recommended).
+
+
+Cross-compiling PLUMED under WIN32
+--------------------
+
+First, download the MINGW build system for windows or your linux
+distribution. Under Fedora, for example, packages are called
+_mingw32-gcc-*_.
+
+**Plumed 2.0 (autoconf)**
+
+It's as simple as:
+
+	./configure --host=i686-w64-mingw32  --disable-shared LDFLAGS="-static -s"
+	make -j8
+	ln -s src/lib/plumed plumed.exe
 
 
 
+**Plumed 1.3**
+
+Step 1. Download PLUMED 1.3, go to the *driver* directory, and modify the Makefile adding the following lines (adapt to your system) 
+
+	ifeq ($(arch),gfortran-mingw)
+	    F90 = i686-w64-mingw32-gfortran -O3 -fno-second-underscore  
+	    CC  = i686-w64-mingw32-gcc -O3 -DDRIVER 
+	    CXX = i686-w64-mingw32-g++ -O3 -DDRIVER -DDEBUG
+	    LINK = i686-w64-mingw32-gfortran -static
+	    LIBS = 
+
+	driver.exe: driver
+		cp $< $@
+
+	# Add missing drand48 on w32
+	restraint_spath.o: restraint_spath.c
+		$(CC) $(CFLAGS) '-Ddrand48(X)=((double)rand()/RAND_MAX)' -c  -o $@ $< 
+
+	endif
+
+Step 2. Issue  `make arch=gfortran-mingw` . 
 
