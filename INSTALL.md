@@ -92,31 +92,31 @@ https://github.com/plumed/plumed2 .
    and network access.
 
 
-If the Windows-specific automated installation above fails, try one of the following:
-
-   - manually download the pre-compiled binaries for Win32
-     ([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe)
-     and
-     [plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe))
-     and copy them e.g. in ''c:\windows'' or in VMD's directory.
-
-   - cross-compile, as shown below 
-
 If executables are correctly installed, their location will appear in
 the "Path to executable" box; the path can be adjusted manually (not
 recommended).
 
+If the Windows-specific automated installation above fails, try to
+manually download the pre-compiled binaries for Win32
+([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe)
+and
+[plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe))
+and copy them e.g. in ''c:\windows'' or in VMD's directory.  If all
+else fails, you can try to cross-compile yourself, as shown below.
+
+
 
 Cross-compiling PLUMED under WIN32
---------------------
+==================================
 
 First, download the MINGW build system for windows or your linux
 distribution. Under Fedora, for example, packages are called
 _mingw32-gcc-*_.
 
-**Plumed 2.0 (autoconf)**
+Plumed 2.0 (autoconf)
+---------------------
 
-It's as simple as:
+It should be as easy as:
 
 	./configure --host=i686-w64-mingw32  --disable-shared LDFLAGS="-static -s"
 	make -j8
@@ -124,9 +124,10 @@ It's as simple as:
 
 
 
-**Plumed 1.3**
+Plumed 1.3
+----------
 
-Step 1. Download PLUMED 1.3, go to the *driver* directory, and modify the Makefile adding the following lines (adapt to your system) 
+**Step 1.** Download PLUMED 1.3, go to the *driver* directory, and modify the Makefile adding the following lines (adapt to your system) 
 
 	ifeq ($(arch),gfortran-mingw)
 	    F90 = i686-w64-mingw32-gfortran -O3 -fno-second-underscore  
@@ -144,5 +145,5 @@ Step 1. Download PLUMED 1.3, go to the *driver* directory, and modify the Makefi
 
 	endif
 
-Step 2. Issue  `make arch=gfortran-mingw` . 
+**Step 2.** Issue  `make arch=gfortran-mingw` . 
 
