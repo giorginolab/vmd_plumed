@@ -28,7 +28,7 @@ You may install the plugin in any directory, follows:
 
    or, alternatively, set the following environment variable (e.g. via modules)
 
-        export TCLLIBPATH=/PATH/TO/EXTRACTED/VMD_PLUMED:$TCLLIBPATH
+        export TCLLIBPATH="/PATH/TO/EXTRACTED/VMD_PLUMED $TCLLIBPATH"
 
 
 
