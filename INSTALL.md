@@ -3,17 +3,36 @@
 
 VMD 1.9.1 comes with a very old (0.9) version of Plumed-GUI
 pre-installed. Since the built-in version does not support PLUMED 2.0,
-updating to the latest version highly recommended. 
+updating to the latest version highly recommended.
 
 To upgrade, please follow the directions in this file.
 
-Instructions differ depending on whether you have
-write privileges in VMD's program directory (if you
-are the administrator, or VMD was installed as a user) 
-or not. 
+There are two ways to install, depending on whether you have write
+privileges in VMD's program directory (i.e. you are the administrator,
+or installed VMD as a user).
 
 
-You have write privileges
+Without write privileges
+----------------------------------------
+
+You may install the plugin in any directory, follows:
+
+1. Download and extract the latest Plumed-GUI release from GitHub.
+
+2. Add the following lines to your `.vmdrc` startup file (name and
+   location [differs under
+   Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
+
+        lappend auto_path /PATH/TO/EXTRACTED/VMD_PLUMED
+        menu main on
+
+   or, alternatively, set the following environment variable (e.g. via modules)
+
+        export TCLLIBPATH=/PATH/TO/EXTRACTED/VMD_PLUMED:$TCLLIBPATH
+
+
+
+With write privileges
 ----------------------------------------
 
 In short, replace the _plugins/noarch/tcl/plumed0.9_ directory in
@@ -43,24 +62,6 @@ If you need step-by-step directions:
    Collective Variable Analysis (PLUMED)_ menu upon VMD's next
    start. Verify the running version from _Help > About_.
 
-
-Without write privileges
-----------------------------------------
-
-You may install the plugin as an unprivileged user as follows:
-
-1. Download and extract the latest Plumed-GUI release from GitHub.
-
-2. Add the following lines to your _.vmdrc_ startup file (name and
-   location [differs under
-   Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
-
-        lappend auto_path  /PATH/TO/THE/EXTRACTED/DISTRIBUTION
-        menu main on
-
-   or, alternatively, set the following environment variable (e.g. via modules)
-
-        export TCLLIBPATH=/PATH/TO/VMD_PLUMED:$TCLLIBPATH
 
 
 
@@ -92,9 +93,9 @@ https://github.com/plumed/plumed2 .
    and network access.
 
 
-If executables are correctly installed, their location will appear in
-the "Path to executable" box; the path can be adjusted manually (not
-recommended).
+If the executables are correctly installed, their location will appear
+in the "Path to executable" box; the path can be adjusted manually
+(not recommended).
 
 If the Windows-specific automated installation above fails, try to
 manually download the pre-compiled binaries for Win32
