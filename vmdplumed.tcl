@@ -107,8 +107,8 @@ proc ::Plumed::plumed {} {
     variable pbc_boxz
 
     # If already initialized, just turn on
-    if { [winfo exists .textview] } {
-	wm deiconify $w
+    if { [winfo exists .plumed] } {
+	wm deiconify .plumed
 	return
     }
 
@@ -1647,7 +1647,8 @@ proc ::Plumed::popup_local_or_remote_help {kw} {
 # ==================================================
 # Version-independent stuff
 
-proc ::Plumed::do_compute {} {
+# If outfile is not given, plot
+proc ::Plumed::do_compute {{outfile ""}} {
     variable plumed_version 
     variable driver_path
 
@@ -1719,7 +1720,11 @@ proc ::Plumed::do_compute {} {
 	    highlight_error_label $label $etext
 	}
     } else {
-	Plumed::do_plot $colvar $driver_stdout
+	if {$outfile != ""} {
+	    file copy -force $colvar $outfile
+	} else {
+	    Plumed::do_plot $colvar $driver_stdout
+	}
     }
 
 }
