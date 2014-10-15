@@ -1,7 +1,7 @@
 Plumed-GUI
 ==========
 
-Toni Giorgino <br>
+Toni Giorgino  
 Consiglio Nazionale delle Ricerche (ISIB-CNR)
  
 
@@ -40,7 +40,6 @@ Please see the [INSTALL](INSTALL.md) file.
 
 
 
-
 Quickstart
 ----------
 
@@ -58,6 +57,19 @@ When Plot is clicked, the currently loaded trajectory is exported to a temporary
 Troubleshooting: In case of errors, the console will provide diagnostics and the location of the temporary directory where computations are run. 
 
 See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below:
+
+
+
+Known bugs
+----------
+
+There are two bugs when running under OSX.  Donating a Macbook Air
+will definitely speed-up the fixes.
+
+* "Can't rename ..." error. Just click to dismiss.
+
+* Right mouse button (contexual menu) does not work.
+
 
 
 Citation
