@@ -36,7 +36,8 @@ You will find
 Installation
 ------------
 
-Please see the [INSTALL](INSTALL.md) file.
+VMD includes a (possibly obsolete) version of this software.  Please
+find upgrade instructions in the [INSTALL](INSTALL.md) file.
 
 
 
