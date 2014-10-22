@@ -862,11 +862,12 @@ proc ::Plumed::ncacocb_gui {} {
 	return
     }
 
+    variable ncacocb_com  "protein"
     variable ncacocb_N    "name N"
     variable ncacocb_CA   "name CA"
     variable ncacocb_C    "name C"
     variable ncacocb_O    "name O"
-    variable ncacocb_CB   "name CB or (resname GLY and name H)"
+    variable ncacocb_CB   "name CB or (resname GLY and name HA2)"
     variable ncacocb_grp  "bb"
 
     toplevel $n -bd 4
@@ -881,8 +882,16 @@ proc ::Plumed::ncacocb_gui {} {
 
     # http://wiki.tcl.tk/1433
     pack [ ttk::frame $n.tab ] -side top -fill x -expand 1
+    
+    set a com
+    set l [ttk::label $n.tab.l$a -text "Selection "]
+    set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_com" ]
+    grid $l $e 
+    grid $l -sticky e
+    grid $e -sticky ew
+    grid x [ttk::label $n.tab.and -text "and"] 
     foreach a {N CA C O CB} {
-	set l [ttk::label $n.tab.l$a -text "Selection for $a "]
+	set l [ttk::label $n.tab.l$a -text "selection for $a "]
 	set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_$a" ]
 	grid $l $e 
 	grid $l -sticky e
@@ -901,17 +910,21 @@ proc ::Plumed::ncacocb_gui {} {
 }
 
 proc ::Plumed::ncacocb_insert {} {
+    variable w
+    variable ncacocb_com
     variable ncacocb_N    
     variable ncacocb_CA   
     variable ncacocb_C    
     variable ncacocb_O    
     variable ncacocb_CB   
     variable ncacocb_grp
-    variable w
 
     if [catch {
-	secondary_rmsd $ncacocb_N $ncacocb_CA \
-	    $ncacocb_C $ncacocb_O $ncacocb_CB 
+	secondary_rmsd "($ncacocb_com) and ($ncacocb_N)" \
+	    "($ncacocb_com) and ($ncacocb_CA)" \
+	    "($ncacocb_com) and ($ncacocb_C)" \
+	    "($ncacocb_com) and ($ncacocb_O)" \
+	    "($ncacocb_com) and ($ncacocb_CB)"
     } e ] {
 	puts "Error: $e"
 	tk_messageBox -title "Error" -parent .plumed_ncacocb -message "$e" -icon error
@@ -921,7 +934,7 @@ proc ::Plumed::ncacocb_insert {} {
     set nl [expr {[llength $e]/5.}]
     set s "$ncacocb_grp-> $e $ncacocb_grp<-"
     $w.txt.text insert insert "\n$s\n" 
-    $w.txt.text insert insert "# The above list contains backbone definition for $nl residues: [list  $ncacocb_N $ncacocb_CA $ncacocb_C $ncacocb_O $ncacocb_CB]\n" 
+    $w.txt.text insert insert "# The above list contains backbone definition for $nl residues: $ncacocb_com and, resp., [list  $ncacocb_N $ncacocb_CA $ncacocb_C $ncacocb_O $ncacocb_CB]\n" 
 }
 
 
