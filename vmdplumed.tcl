@@ -9,12 +9,12 @@
 #     This program is available under either the 3-clause BSD license,
 #     (e.g. see http://www.ks.uiuc.edu/Research/vmd/plugins/pluginlicense.html)
 #
-# $Id: vmdplumed.tcl 1030M 2012-07-20 09:24:02Z (local) $ 
+
 
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.3
+package provide plumed 2.4
 package require tile
 package require http
 
