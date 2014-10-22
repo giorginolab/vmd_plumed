@@ -182,7 +182,7 @@ proc ::Plumed::plumed {} {
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
     $w.menubar.structure.menu add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
 	-command Plumed::rama_gui
-    $w.menubar.structure.menu add command -label "Insert N/CA/C/O/CB group for secondary structure..." \
+    $w.menubar.structure.menu add command -label "Insert group for secondary structure RMSD..." \
 	-command Plumed::ncacocb_gui
     $w.menubar.structure config -width 8
 
@@ -871,25 +871,28 @@ proc ::Plumed::ncacocb_gui {} {
     variable ncacocb_grp  "bb"
 
     toplevel $n -bd 4
-    wm title $n "Insert secondary structure group"
+    wm title $n "Insert group for secondary structure RMSD"
 
-    pack [ ttk::label $n.head1 -text "Build groups containing atoms N, CA, C, O, CB for use with the ALPHARMSD,\nANTIBETARMSD, PARABETARMSD CVs. Plumed 1 only."  -justify center \
-	       -anchor center -pad 3 ] -side top -fill x 
-
-    pack [ ttk::frame $n.grp ] -side top -fill x
-    pack [ ttk::label $n.grp.l -text "Group name" -pad 3 ] -side left 
-    pack [ ttk::entry $n.grp.e -justify center -textvariable "Plumed::ncacocb_grp" ] -side right -fill x -expand 1
+    pack [ ttk::label $n.head1 -text "Build a group containing atoms N, CA, C, O, CB in a selection for\nuse with the ALPHARMSD, ANTIBETARMSD, PARABETARMSD CVs.\n(Plumed 1 only.)"  -justify center -anchor center -pad 3 ] -side top -fill x 
 
     # http://wiki.tcl.tk/1433
     pack [ ttk::frame $n.tab ] -side top -fill x -expand 1
-    
+
+    # Group name
+    set a grp
+    set l [ttk::label $n.tab.l$a -text "Group name "]
+    set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_grp" ]
+    grid $l $e; grid $l -sticky e; grid $e -sticky ew
+
+    # Selection
     set a com
     set l [ttk::label $n.tab.l$a -text "Selection "]
     set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_com" ]
-    grid $l $e 
-    grid $l -sticky e
-    grid $e -sticky ew
+    grid $l $e; grid $l -sticky e; grid $e -sticky ew
+
+    # and
     grid x [ttk::label $n.tab.and -text "and"] 
+
     foreach a {N CA C O CB} {
 	set l [ttk::label $n.tab.l$a -text "selection for $a "]
 	set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_$a" ]
@@ -899,8 +902,10 @@ proc ::Plumed::ncacocb_gui {} {
     }
     grid columnconfigure .plumed_ncacocb.tab 1 -weight 1
 
+    # Spacer
     pack [ ttk::label $n.spacer ] -side top -fill x
 
+    # Insert / Close
     pack [ ttk::frame $n.act ] -side top -fill x
     pack [ ttk::button $n.act.insert -text "Insert"  -command \
 	       { Plumed::ncacocb_insert } ] -side left -fill x -expand 1
