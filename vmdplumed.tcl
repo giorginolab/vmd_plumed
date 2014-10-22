@@ -344,7 +344,7 @@ proc ::Plumed::file_save { } {
 
     set rc [ catch { set fd [open $textfile "w"] } ]
     if { $rc == 1} {
-	tk_messageBox -title "Error" -parent .plumed -message "Failed to open file $textfile"
+	tk_messageBox -title "Error" -parent .plumed -message "Failed to open file $textfile" -icon error
 	return
     } else {
 	puts $fd  [$w.txt.text get 1.0 {end -1c}] 
@@ -767,7 +767,7 @@ proc ::Plumed::rama_insert {} {
     $sel delete
 
     if {[llength $rlist] == 0} {
-	tk_messageBox -title "Error" -parent .plumedrama -message "Selection is empty."
+	tk_messageBox -icon error -title "Error" -parent .plumedrama -message "Selection is empty."
 	return	
     }
 
@@ -839,7 +839,7 @@ proc ::Plumed::secondary_rmsd {N CA C O CB} {
     set lens [list [$Nsel num] [$CAsel num] [$Csel num] [$Osel num] [$CBsel num]]
     set lens [lsort -integer -uniq $lens]
     if {[llength $lens] != 1} {
-	error "ERROR. Atom selection lengths are different: [$Nsel num] C, [$CAsel num] CA, [$Csel num] C, [$Osel num] O, [$CBsel num] CB"
+	error "Atom selection lengths are different: [$Nsel num] C, [$CAsel num] CA, [$Csel num] C, [$Osel num] O, [$CBsel num] CB"
     } else {
 	set ret [list [$Nsel get serial] [$CAsel get serial] [$Csel get serial] [$Osel get serial] [$CBsel get serial]]
 	set ret [transpose $ret]; # transpose
@@ -914,7 +914,7 @@ proc ::Plumed::ncacocb_insert {} {
 	    $ncacocb_C $ncacocb_O $ncacocb_CB 
     } e ] {
 	puts "Error: $e"
-	tk_messageBox -title "Error" -parent .plumed_ncacocb -message "$e"
+	tk_messageBox -title "Error" -parent .plumed_ncacocb -message "$e" -icon error
 	return
     } 
 
@@ -1009,7 +1009,7 @@ proc ::Plumed::reference_write {} {
 	    puts "Multi-frame $reffile written with full trajectory. See $reffile.log."
 	}
     } exc ] {
-	tk_messageBox -title "Error" -parent .plumedref -message $exc
+	tk_messageBox -title "Error" -parent .plumedref -message $exc -icon error
     }
 }
 
@@ -1281,7 +1281,7 @@ proc ::Plumed::nc_compute { } {
     set sel1 [ atomselect top $nc_selA ] 
     set sel2 [ atomselect $nc_destmol $nc_selA ]
     if { [$sel1 num] != [$sel2 num] } {
-	tk_messageBox -title "Error" -parent .plumednc -message "Selection ($nc_selA) has different number of atoms in molecule top ([$sel1 num]) versus $nc_destmol ([$sel2 num])."
+	tk_messageBox -title "Error" -parent .plumednc -message "Selection ($nc_selA) has different number of atoms in molecule top ([$sel1 num]) versus $nc_destmol ([$sel2 num])." -icon error
 	return
     }
 
@@ -1289,7 +1289,7 @@ proc ::Plumed::nc_compute { } {
 	set sel1B [ atomselect top $nc_selB ] 
 	set sel2B [ atomselect $nc_destmol $nc_selB ]
 	if { [$sel1B num] != [$sel2B num] } {
-	    tk_messageBox -title "Error" -parent .plumednc -message "Selection ($nc_selB) has different number of atoms in molecule top ([$sel1B num]) versus $nc_destmol ([$sel2B num])."
+	    tk_messageBox -title "Error" -parent .plumednc -message "Selection ($nc_selB) has different number of atoms in molecule top ([$sel1B num]) versus $nc_destmol ([$sel2B num])." -icon error
 	    return
 	}
     } else {
@@ -1369,7 +1369,7 @@ proc ::Plumed::nc_insert { } {
     set nc [ Plumed::nc_compute ]
     .plumednc.preview configure -text "There are [llength $nc] native contacts."
     if { [llength $nc ] == 0 } {
-	tk_messageBox -title "Error" -parent .plumednc -message "There are no contacts in the currently selected frame."
+	tk_messageBox -title "Error" -parent .plumednc -message "There are no contacts in the currently selected frame." -icon error
 	return
     }
     set ncl [ transpose $nc  ]
@@ -1738,13 +1738,13 @@ proc ::Plumed::do_compute {{outfile ""}} {
     variable driver_path
 
     if {[molinfo top]==-1 || [molinfo top get numframes] < 2} {
-	tk_messageBox -title "Error" -parent .plumed -message \
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
 	    "A top molecule and at least two frames are required to plot."
 	return 
     }
 
     if {![file executable $driver_path]} { 
-	tk_messageBox -title "Error" -parent .plumed -message \
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
 	    "The plumed executable is required. See manual for installation instructions."
 	return }
 
@@ -1796,7 +1796,7 @@ proc ::Plumed::do_compute {{outfile ""}} {
     # Parse if v2
     if { $dontplot } {
 	puts "Something went wrong. Check above messages."
-	tk_messageBox -title "Error" -parent .plumed -message \
+	tk_messageBox -icon error -title "Error" -parent .plumed -message \
 	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
 	if {$plumed_version==2 && \
 		[regexp -line {^PLUMED: ERROR .+ with label (.+?) : (.+)} \
