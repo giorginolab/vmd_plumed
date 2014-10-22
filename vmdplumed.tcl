@@ -182,6 +182,8 @@ proc ::Plumed::plumed {} {
     $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
     $w.menubar.structure.menu add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
 	-command Plumed::rama_gui
+    $w.menubar.structure.menu add command -label "Insert N/CA/C/O/CB group for secondary structure..." \
+	-command Plumed::ncacocb_gui
     $w.menubar.structure config -width 8
 
     ## help menu
@@ -823,6 +825,104 @@ proc ::Plumed::rama_insert_cv_maybe {A B C D angle rid} {
 }
 
 
+# SECONDARY RMSD aka N-CA-C-O-CB REFERENCE ==================================================                                                 
+
+# Alpha, parabeta, antibeta ordered lists ==================================================  
+proc ::Plumed::secondary_rmsd {N CA C O CB} {
+    set Nsel [atomselect top $N]
+    set CAsel [atomselect top $CA]
+    set Csel [atomselect top $C]
+    set Osel [atomselect top $O]
+    set CBsel [atomselect top $CB]
+
+    set ret {}
+    set lens [list [$Nsel num] [$CAsel num] [$Csel num] [$Osel num] [$CBsel num]]
+    set lens [lsort -integer -uniq $lens]
+    if {[llength $lens] != 1} {
+	error "ERROR. Atom selection lengths are different: [$Nsel num] C, [$CAsel num] CA, [$Csel num] C, [$Osel num] O, [$CBsel num] CB"
+    } else {
+	set ret [list [$Nsel get serial] [$CAsel get serial] [$Csel get serial] [$Osel get serial] [$CBsel get serial]]
+	set ret [transpose $ret]; # transpose
+	set ret [concat {*}$ret]; # flatten
+    }
+
+    $Nsel delete
+    $CAsel delete
+    $Csel delete
+    $Osel delete
+    $CBsel delete
+    return $ret
+}
+
+
+proc ::Plumed::ncacocb_gui {} {
+    set n .plumed_ncacocb
+    if { [winfo exists $n] } {
+	wm deiconify $n
+	return
+    }
+
+    variable ncacocb_N    "name N"
+    variable ncacocb_CA   "name CA"
+    variable ncacocb_C    "name C"
+    variable ncacocb_O    "name O"
+    variable ncacocb_CB   "name CB or (resname GLY and name H)"
+    variable ncacocb_grp  "bb"
+
+    toplevel $n -bd 4
+    wm title $n "Insert secondary structure group"
+
+    pack [ ttk::label $n.head1 -text "Build groups containing atoms N, CA, C, O, CB for use with the ALPHARMSD,\nANTIBETARMSD, PARABETARMSD CVs. Plumed 1 only."  -justify center \
+	       -anchor center -pad 3 ] -side top -fill x 
+
+    pack [ ttk::frame $n.grp ] -side top -fill x
+    pack [ ttk::label $n.grp.l -text "Group name" -pad 3 ] -side left 
+    pack [ ttk::entry $n.grp.e -justify center -textvariable "Plumed::ncacocb_grp" ] -side right -fill x -expand 1
+
+    # http://wiki.tcl.tk/1433
+    pack [ ttk::frame $n.tab ] -side top -fill x -expand 1
+    foreach a {N CA C O CB} {
+	set l [ttk::label $n.tab.l$a -text "Selection for $a "]
+	set e [ttk::entry $n.tab.e$a -justify center -textvariable "Plumed::ncacocb_$a" ]
+	grid $l $e 
+	grid $l -sticky e
+	grid $e -sticky ew
+    }
+    grid columnconfigure .plumed_ncacocb.tab 1 -weight 1
+
+    pack [ ttk::label $n.spacer ] -side top -fill x
+
+    pack [ ttk::frame $n.act ] -side top -fill x
+    pack [ ttk::button $n.act.insert -text "Insert"  -command \
+	       { Plumed::ncacocb_insert } ] -side left -fill x -expand 1
+    pack [ ttk::button $n.act.close -text "Close"  \
+	       -command "destroy $n"   ] -side left -fill x -expand 1
+
+}
+
+proc ::Plumed::ncacocb_insert {} {
+    variable ncacocb_N    
+    variable ncacocb_CA   
+    variable ncacocb_C    
+    variable ncacocb_O    
+    variable ncacocb_CB   
+    variable ncacocb_grp
+    variable w
+
+    if [catch {
+	secondary_rmsd $ncacocb_N $ncacocb_CA \
+	    $ncacocb_C $ncacocb_O $ncacocb_CB 
+    } e ] {
+	puts "Error: $e"
+	tk_messageBox -title "Error" -parent .plumed_ncacocb -message "$e"
+	return
+    } 
+
+    set nl [expr {[llength $e]/5.}]
+    set s "$ncacocb_grp-> $e $ncacocb_grp<-"
+    $w.txt.text insert insert "\n$s\n" 
+    $w.txt.text insert insert "# The above list contains backbone definition for $nl residues: [list  $ncacocb_N $ncacocb_CA $ncacocb_C $ncacocb_O $ncacocb_CB]\n" 
+}
 
 
 
@@ -1095,33 +1195,6 @@ proc ::Plumed::reference_write_subset { fileout subset } {
 
 
 
-# Alpha, parabeta, antibeta ordered lists ==================================================  
-proc ::Plumed::secondary_rmsd {N CA C O CB} {
-    set Nsel [atomselect top $N]
-    set CAsel [atomselect top $CA]
-    set Csel [atomselect top $C]
-    set Osel [atomselect top $O]
-    set CBsel [atomselect top $CB]
-
-    set ret {}
-    set lens [list [$Nsel num] [$CAsel num] [$Csel num] [$Osel num] [$CBsel num]]
-    set lens [lsort -integer -uniq $lens]
-    if {[llength $lens] != 1} {
-	puts "ERROR. Atom selection lengths are different: [$Nsel num] C, [$CAsel num] CA, [$Csel num] C, [$Osel num] O, [$CBsel num] CB"
-    } else {
-	set ret [list [$Nsel get serial] [$CAsel get serial] [$Csel get serial] [$Osel get serial] [$CBsel get serial]]
-	set ret [transpose $ret]; # transpose
-	set ret [concat {*}$ret]; # flatten
-    }
-
-    $Nsel delete
-    $CAsel delete
-    $Csel delete
-    $Osel delete
-    $CBsel delete
-    return $ret
-}
-
 
 
 # NATIVE CONTACTS ==================================================
@@ -1382,6 +1455,17 @@ proc ::Plumed::highlight_error_label {label etext} {
 # Handle version changes ==================================================
 
 
+proc ::Plumed::ncacocb_update {} {
+    variable w
+    variable plumed_version
+    switch $plumed_version {
+	1 { set st normal }
+	2 { set st disabled }
+    }
+    .plumed.menubar.structure.menu entryconfigure 4 -state $st
+    catch { .plumed_ncacocb.act.insert configure -state $st }
+
+}
 
 proc ::Plumed::instructions_update {} {
     variable w
@@ -1447,6 +1531,7 @@ proc ::Plumed::plumed_version_changed {} {
     } 
 
     instructions_update
+    ncacocb_update
     templates_populate_menu
 }
 
