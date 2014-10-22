@@ -9,18 +9,19 @@ To upgrade, please follow the directions in this file.
 
 There are two ways to install, depending on whether you have write
 privileges in VMD's program directory (i.e. you are the administrator,
-or installed VMD as a user).
+or installed VMD as a user). The "without privileges" procedure is
+recommended and should work in both scenarios.
 
 
-Without write privileges
+Without write privileges (VMD 1.9.1 or lower)
 ----------------------------------------
 
-You may install the plugin in any directory, follows:
+You may install the plugin in any directory, as follows:
 
 1. Download and extract the latest Plumed-GUI release from GitHub.
 
 2. Add the following lines to your `.vmdrc` startup file (name and
-   location [differs under
+   location [are different under
    Windows](http://www.ks.uiuc.edu/Research/vmd/vmd-1.7/ug/node197.html))
 
         lappend auto_path /PATH/TO/EXTRACTED/VMD_PLUMED
@@ -29,6 +30,21 @@ You may install the plugin in any directory, follows:
    or, alternatively, set the following environment variable (e.g. via modules)
 
         export TCLLIBPATH="/PATH/TO/EXTRACTED/VMD_PLUMED $TCLLIBPATH"
+
+
+Without write privileges (VMD 1.9.2 or higher)
+----------------------------------------
+
+Follow the same instructions as VMD 1.9.1. The TCLLIBPATH environment
+variable should work. However, to insert the `auto_path` instructions
+in the startup file, you may need to use the graphical preferences
+editor. Refer to the following figure, adjusting the plugin name
+(replace *diffusion coefficient* with *vmdplumed*).
+
+![VMD 1.9.2 Preferences Editor](install_vmd_1.9.2.png)
+
+
+
 
 
 
