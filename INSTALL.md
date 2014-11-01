@@ -39,7 +39,7 @@ Follow the same instructions as VMD 1.9.1. The TCLLIBPATH environment
 variable should work. However, to insert the `auto_path` instructions
 in the startup file, you may need to use the graphical preferences
 editor. Refer to the following figure, adjusting the plugin name
-(replace *diffusion coefficient* with *vmdplumed*).
+(*my new plugin* becomes e.g. *vmdplugin*) and location.
 
 ![VMD 1.9.2 Preferences Editor](install_vmd_1.9.2.png)
 
