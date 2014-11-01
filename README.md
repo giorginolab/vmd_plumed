@@ -36,7 +36,8 @@ You will find
 Installation
 ------------
 
-Please see the [INSTALL](INSTALL.md) file.
+VMD includes a (possibly obsolete) version of this software.  Please
+find upgrade instructions in the [INSTALL](INSTALL.md) file.
 
 
 
@@ -52,23 +53,12 @@ The usage of the plugin is straightforward.
 
 Square brackets can be used to conveniently define atom groups (Ctrl-G). During evaluation, atom selection keywords in square brackets are replaced with a list of the corresponding serial numbers for the top molecule.
 
-When Plot is clicked, the currently loaded trajectory is exported to a temporary directory (shown in the console), and the driver utility is invoked. If there are no errors, a plot will show the CVs evaluated on the frames of the current trajectory.
+When *Plot* is clicked, the currently loaded trajectory is exported to a temporary directory (shown in the console), and the driver utility is invoked. If there are no errors, a plot will show the CVs evaluated on the frames of the current trajectory.
 
 Troubleshooting: In case of errors, the console will provide diagnostics and the location of the temporary directory where computations are run. 
 
-See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below:
+See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below.
 
-
-
-Known bugs
-----------
-
-There are two bugs when running under OSX.  Donating a Macbook Air
-will definitely speed-up the fixes.
-
-* "Can't rename ..." error. Just click to dismiss.
-
-* Right mouse button (contexual menu) does not work.
 
 
 
@@ -83,3 +73,14 @@ You are kindly requested to cite the following paper in any publication resultin
 
 
 
+
+
+Known bugs
+----------
+
+There are two bugs when running under OSX.  Donating a Macbook Air
+will definitely speed-up the fixes.
+
+* "Can't rename ..." error. Just click to dismiss.
+
+* Right mouse button (contexual menu) does not work.
