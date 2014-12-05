@@ -168,14 +168,17 @@ proc ::Plumed::plumed {} {
     $w.menubar add cascade -label File  -underline 0 -menu $w.menubar.file
     menu $w.menubar.file -tearoff no
     $w.menubar.file add command -label "New" -command  Plumed::file_new
-    $w.menubar.file add command -label "Open..." -command Plumed::file_open
+    $w.menubar.file add command -label "Open..." -command Plumed::file_open -acce $mod+O
     $w.menubar.file add command -label "Save" -command  Plumed::file_save -acce $mod+S
-    $w.menubar.file add command -label "Save as..." -command  Plumed::file_saveas
-    $w.menubar.file add command -label "Export..." -command  Plumed::file_export
+    $w.menubar.file add command -label "Save as..." -command  Plumed::file_saveas -acce $mod+Shift+S
+    $w.menubar.file add command -label "Export..." -command  Plumed::file_export -acce $mod+E
     $w.menubar.file add separator
     # batch was here
     $w.menubar.file add command -label "Quit" -command  Plumed::file_quit
+    bind $w <$modifier-o> Plumed::file_open
     bind $w <$modifier-s> Plumed::file_save
+    bind $w <$modifier-S> Plumed::file_saveas
+    bind $w <$modifier-e> Plumed::file_export
 
     ## edit
     $w.menubar add cascade  -label Edit -underline 0 -menu $w.menubar.edit
@@ -317,7 +320,7 @@ proc ::Plumed::empty_meta_inp {} {
 proc ::Plumed::file_new { } {
     variable w
     variable textfile
-    set textfile "untitled.plumed"
+    set textfile "unnamed.plumed"
 
     $w.txt.text delete 1.0 {end - 1c}
     label $w.txt.text.instructions -text "(...)" -justify left \
@@ -352,7 +355,7 @@ proc ::Plumed::file_save { } {
     variable w
     variable textfile
 
-    if { $textfile == "untitled.plumed" } {
+    if { $textfile == "unnamed.plumed" } {
 	Plumed::file_saveas
 	return
     }
@@ -374,15 +377,14 @@ proc ::Plumed::file_saveas { } {
 
     set ind [file dirname $textfile]
     set inf [file tail $textfile]
-    set textfile [tk_getSaveFile -filetypes $file_types \
+    set newfile [tk_getSaveFile -filetypes $file_types \
 		      -initialdir $ind -initialfile $inf ]
-    set rc [ catch { set fd [open $textfile "w"] } ]
-    if { $rc == 1} {
-	puts "failed to open file $textfile"
+    if { $newfile == ""} {
 	return
+    } else {
+	set textfile $newfile
+	file_save
     }
-    puts $fd [$w.txt.text get 1.0 {end -1c}]
-    close $fd
 }
 
 proc ::Plumed::file_export { } {
@@ -393,8 +395,7 @@ proc ::Plumed::file_export { } {
     }
     set textfile [tk_getSaveFile -filetypes $file_types \
 		       -initialfile "META_INP"       ]
-    set rc [ catch { set fd [open $textfile "w"] } ]
-    if { $rc == 1} {
+    if { $textfile == "" || [ catch { set fd [open $textfile "w"] } ] == 1} {
 	puts "failed to open file $textfile"
 	return
     }
