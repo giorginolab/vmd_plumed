@@ -85,7 +85,7 @@ binaries failed. Check user permissions, network, antivirus."
 
     # Used in file requestors
     variable file_types {
-	{"Plumed Files" { .plumed .metainp .meta_inp } }
+	{"Plumed-GUI Files" { .plumed .metainp .meta_inp } }
 	{"Text Files" { .txt .TXT} }
 	{"All Files" * }
     }
@@ -335,16 +335,17 @@ proc ::Plumed::file_open { } {
     variable textfile
     variable file_types
 
-    set textfile [tk_getOpenFile -filetypes $file_types \
-		      -initialfile "$Plumed::textfile"    ]
+    set fn [tk_getOpenFile -filetypes $file_types ]
+    if { $fn == "" } { return }
 
-    if { $textfile == "" } { return }
-    set rc [ catch { set fd [open $textfile "r"] } ]
-    if { $rc == 1} { return }
-    close $fd
+    if [ catch { set txt [read_file $fn] } ] {
+	tk_messageBox -title "Error" -parent .plumed -message "Failed to open file $fn" -icon error
+	return
+    }
 
     $w.txt.text delete 1.0 {end - 1c}
-    $w.txt.text insert end [read_file $textfile ]
+    $w.txt.text insert end $txt
+    set textfile $fn
 }
 
 proc ::Plumed::file_save { } {
