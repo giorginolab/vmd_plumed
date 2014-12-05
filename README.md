@@ -27,17 +27,8 @@ You will find
 - A longer explanation of the options, online at http://www.multiscalelab.org/utilities/PlumedGUI 
 - An extensive description in (please read and cite) 
   * Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, Volume 185, Issue 3, March 2014, Pages 1109-1114, [doi:10.1016/j.cpc.2013.11.019](http://dx.doi.org/10.1016/j.cpc.2013.11.019), or [arXiv:1312.3190](http://arxiv.org/abs/1312.3190)  
-- Installation instructions in the [INSTALL](INSTALL.md) file 
+- Installation instructions in the [INSTALL](doc/INSTALL.md) file 
 - Information on the PLUMED engine at http://www.plumed-code.org 
-
-
-
-
-Installation
-------------
-
-VMD includes a (possibly obsolete) version of this software.  Please
-find upgrade instructions in the [INSTALL](INSTALL.md) file.
 
 
 

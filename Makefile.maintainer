@@ -15,6 +15,7 @@ clean:
 	-rm templates_list_v2_autogen.tcl pkgIndex.tcl
 
 
+
 # Cross-compiling plumed2
 # ./configure --host=i686-w64-mingw32   --disable-shared LDFLAGS=-static
 
