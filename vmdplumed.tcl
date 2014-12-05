@@ -26,7 +26,7 @@ namespace eval ::Plumed:: {
     variable plugin_version [package versions plumed]
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
-    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.0/user-doc/html"
+    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.1/user-doc/html"
     variable plumed2_online_docbase_fallback "http://plumed2.berlios.de/master/user-doc/html/"
 
     variable debug 0;		       # extra log info
@@ -162,83 +162,73 @@ proc ::Plumed::plumed {} {
 
 
     ## MENU ============================================================
-    frame $w.menubar -relief raised ;# frame for menubar
-    pack $w.menubar -padx 1 -fill x
+    menu $w.menubar
 
     ## file menu
-    menubutton $w.menubar.file -text File -underline 0 -menu $w.menubar.file.menu
-    menu $w.menubar.file.menu -tearoff no
-    $w.menubar.file.menu add command -label "New" -command  Plumed::file_new
-    $w.menubar.file.menu add command -label "Open..." -command Plumed::file_open
-    $w.menubar.file.menu add command -label "Save" -command  Plumed::file_save -acce $mod+S
-    $w.menubar.file.menu add command -label "Save as..." -command  Plumed::file_saveas
-    $w.menubar.file.menu add command -label "Export..." -command  Plumed::file_export
-    $w.menubar.file.menu add separator
+    $w.menubar add cascade -label File  -underline 0 -menu $w.menubar.file
+    menu $w.menubar.file -tearoff no
+    $w.menubar.file add command -label "New" -command  Plumed::file_new
+    $w.menubar.file add command -label "Open..." -command Plumed::file_open
+    $w.menubar.file add command -label "Save" -command  Plumed::file_save -acce $mod+S
+    $w.menubar.file add command -label "Save as..." -command  Plumed::file_saveas
+    $w.menubar.file add command -label "Export..." -command  Plumed::file_export
+    $w.menubar.file add separator
     # batch was here
-    $w.menubar.file.menu add command -label "Quit" -command  Plumed::file_quit
-    $w.menubar.file config -width 5
+    $w.menubar.file add command -label "Quit" -command  Plumed::file_quit
     bind $w <$modifier-s> Plumed::file_save
 
     ## edit
-    menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
-    menu $w.menubar.edit.menu -tearoff no
-    $w.menubar.edit.menu add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce $mod+Z
-    $w.menubar.edit.menu add command -label "Redo" -command  "$::Plumed::w.txt.text edit redo"
-    $w.menubar.edit.menu add separator
-    $w.menubar.edit.menu add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce $mod+X
-    $w.menubar.edit.menu add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce $mod+C
-    $w.menubar.edit.menu add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce $mod+V
-    $w.menubar.edit.menu add separator
-    $w.menubar.edit.menu add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce $mod+A
-    $w.menubar.edit config -width 5
+    $w.menubar add cascade  -label Edit -underline 0 -menu $w.menubar.edit
+    menu $w.menubar.edit -tearoff no
+    $w.menubar.edit add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce $mod+Z
+    $w.menubar.edit add command -label "Redo" -command  "$::Plumed::w.txt.text edit redo"
+    $w.menubar.edit add separator
+    $w.menubar.edit add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce $mod+X
+    $w.menubar.edit add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce $mod+C
+    $w.menubar.edit add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce $mod+V
+    $w.menubar.edit add separator
+    $w.menubar.edit add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce $mod+A
     bind $w <$modifier-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
 
     ## Templates
-    menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
-    menu $w.menubar.insert.menu -tearoff yes
-    $w.menubar.insert config -width 10
+    $w.menubar add cascade -label "Templates" -underline 0 -menu $w.menubar.insert
+    menu $w.menubar.insert -tearoff yes
 
     ## Structural
-    menubutton $w.menubar.structure -text Structure -underline 0 -menu $w.menubar.structure.menu
-    menu $w.menubar.structure.menu -tearoff no
-    $w.menubar.structure.menu add command -label "Build reference structure..." -command Plumed::reference_gui
-    $w.menubar.structure.menu add command -label "Insert native contacts CV..." -command Plumed::nc_gui
-    $w.menubar.structure.menu add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
+    $w.menubar add cascade -label Structure -underline 0 -menu $w.menubar.structure
+    menu $w.menubar.structure -tearoff no
+    $w.menubar.structure add command -label "Build reference structure..." -command Plumed::reference_gui
+    $w.menubar.structure add command -label "Insert native contacts CV..." -command Plumed::nc_gui
+    $w.menubar.structure add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
 	-command Plumed::rama_gui
-    $w.menubar.structure.menu add command -label "Insert group for secondary structure RMSD..." \
+    $w.menubar.structure add command -label "Insert group for secondary structure RMSD..." \
 	-command Plumed::ncacocb_gui
-    $w.menubar.structure config -width 8
 
     ## help menu
-    menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
-    menu $w.menubar.help.menu -tearoff no
-    $w.menubar.help.menu add command -label "Getting started with Plumed-GUI" \
+    $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
+    menu $w.menubar.help -tearoff no
+    $w.menubar.help add command -label "Getting started with Plumed-GUI" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
-    $w.menubar.help.menu add command -label "What to cite" \
+    $w.menubar.help add command -label "What to cite" \
         -command "vmd_open_url http://dx.doi.org/10.1016/j.cpc.2013.11.019"
-    $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "What is PLUMED?" \
+    $w.menubar.help add separator
+    $w.menubar.help add command -label "What is PLUMED?" \
         -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help.menu add command -label "PLUMED 2.1 user's guide and CV syntax" \
+    $w.menubar.help add command -label "PLUMED 2.1 user's guide and CV syntax" \
 	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
-    $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
+    $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "How to install the 'driver' binaries" \
+    $w.menubar.help add separator
+    $w.menubar.help add command -label "How to install the 'driver' binaries" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
-    $w.menubar.help.menu add command -label "Attempt download of prebuilt Windows driver binaries" \
+    $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
-    $w.menubar.help.menu add separator
-    $w.menubar.help.menu add command -label "About the $plugin_name" \
+    $w.menubar.help add separator
+    $w.menubar.help add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
-    # XXX - set menubutton width to avoid truncation in OS X
-    $w.menubar.help config -width 5
 
-    pack $w.menubar.file -side left
-    pack $w.menubar.edit -side left
-    pack $w.menubar.insert -side left
-    pack $w.menubar.structure -side left
-    pack $w.menubar.help -side right
+    $w configure -menu $w.menubar
+
 
     # Built bottom-up for... historical reasons. Also, looks like the
     # last packed widget becomes "elastic"
@@ -467,7 +457,7 @@ Toni Giorgino <toni.giorgino${at}isib.cnr.it>
 Institute of Neurosciences (IN-ISIB),
 National Research Council of Italy (CNR)
 
-Previous versions: 
+Versions before 2012: 
 Computational Biophysics Group (GRIB-IMIM-UPF),
 Universitat Pompeu Fabra
 
@@ -1506,7 +1496,7 @@ proc ::Plumed::ncacocb_update {} {
 	1 { set st normal }
 	2 { set st disabled }
     }
-    .plumed.menubar.structure.menu entryconfigure 4 -state $st
+    .plumed.menubar.structure entryconfigure 4 -state $st
     catch { .plumed_ncacocb.act.insert configure -state $st }
 
 }
@@ -1595,28 +1585,28 @@ proc ::Plumed::templates_populate_menu {} {
 	2  {set templates $templates_list_v2}
     } 
 
-    $w.menubar.insert.menu delete 0 last
+    $w.menubar.insert delete 0 last
     foreach { disp insr } $templates {
 	if {$disp == "-" } {
-	    $w.menubar.insert.menu add separator
+	    $w.menubar.insert add separator
 	} else {
-	    $w.menubar.insert.menu add command -label $disp \
+	    $w.menubar.insert add command -label $disp \
 		-command [list [namespace current]::templates_insert_line $insr]
 	}
     }
-    $w.menubar.insert.menu add separator
-    $w.menubar.insert.menu add command -label "...see manual for the full list" -state disabled
+    $w.menubar.insert add separator
+    $w.menubar.insert add command -label "...see manual for the full list" -state disabled
 
     switch $plumed_version {
 	1 {
-	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
-	    $w.menubar.insert.menu entryconfigure 1 -accelerator $mod+G
+	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert invoke 1" 
+	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
 	}
 	2 {
-	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
-	    $w.menubar.insert.menu entryconfigure 1 -accelerator $mod+G
-	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert.menu invoke 2" 
-	    $w.menubar.insert.menu entryconfigure 2 -accelerator $mod+M
+	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert invoke 1" 
+	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
+	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert invoke 2" 
+	    $w.menubar.insert entryconfigure 2 -accelerator $mod+M
 	}
     }
 }
