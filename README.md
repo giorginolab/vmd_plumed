@@ -38,7 +38,7 @@ Quickstart
 
 The usage of the plugin is straightforward.
 
-- First, install PLUMED following [these instructions](doc/INSTALL_PLUMED_FIRST.md).
+- First, [install PLUMED](doc/INSTALL-PLUMED-FIRST.md), version 1.3 and/or 2.x.
 - From VMD's main window, select "Extensions > Analysis > Collective variable analysis (PLUMED)"
 - Edit the CV definition file, defining one or more CVs
 - Enter the number of CVs defined in the corresponding box (this will be fixed in a future PLUMED release)
