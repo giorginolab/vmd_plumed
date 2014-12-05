@@ -372,8 +372,10 @@ proc ::Plumed::file_saveas { } {
     variable file_types
     variable textfile
 
+    set ind [file dirname $textfile]
+    set inf [file tail $textfile]
     set textfile [tk_getSaveFile -filetypes $file_types \
-		       -initialfile $Plumed::textfile ]
+		      -initialdir $ind -initialfile $inf ]
     set rc [ catch { set fd [open $textfile "w"] } ]
     if { $rc == 1} {
 	puts "failed to open file $textfile"
