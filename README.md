@@ -64,14 +64,3 @@ You are kindly requested to cite the following paper in any publication resultin
 
 
 
-
-
-Known bugs
-----------
-
-There are two bugs when running under OSX.  Donating a Macbook Air
-will definitely speed-up the fixes.
-
-* "Can't rename ..." error. Just click to dismiss.
-
-* Right mouse button (contexual menu) does not work.
