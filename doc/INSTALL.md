@@ -16,7 +16,7 @@ running version from _Help > About_.
 
 
 
-## Method 1: edit VMD's startup file (VMD 1.9.1 and earlier)
+## Method 1: edit VMD's startup file
 
 You may download and extract the plugin in any directory. Then add the
 following lines to your `.vmdrc` startup file. Note that name and location
@@ -26,20 +26,16 @@ following lines to your `.vmdrc` startup file. Note that name and location
         menu main on
 
 
-## Method 2: use VMD's preference manager (VMD 1.9.2 and on)
-
-If you are using VMD 1.9.2's new preference manager, `.vmdrc` should
-not be edited by hand, so method 1 above is not applicable. In this
-case, refer to the following figure, adjusting the plugin name (*my
-new plugin* becomes e.g. *vmdplugin*), location and script.
-
-        set auto_path [linsert $auto_path 0 /PATH/TO/EXTRACTED/VMD_PLUMED]
-
-![VMD 1.9.2 Preferences Editor](install_vmd_1.9.2.png)
+**Note.** If you are using VMD 1.9.2's new preference manager,
+`.vmdrc` can't be edited by hand, so this method is not
+applicable. Although it may be possible to set `auto_path` in the
+*custom* section of the Preferences editor, such commands are executed
+*after* the old version of the package is loaded. This is being
+investigated.
 
 
 
-## Method 3: set the TCLLIBPATH environment variable
+## Method 2: set the TCLLIBPATH environment variable
 
 This is suitable e.g. if you use *modulefiles*. Note that, unlike
 other Unix paths, multiple path components should be space-separated.
@@ -47,7 +43,8 @@ other Unix paths, multiple path components should be space-separated.
         export TCLLIBPATH="/PATH/TO/EXTRACTED/VMD_PLUMED $TCLLIBPATH"
 
 
-## Method 4: replace the plugin directory
+
+## Method 3: replace the plugin directory
 
 This method is viable if you have write access to the directory where
 VMD is installed. Just replace the _plugins/noarch/tcl/plumedX.Y_
