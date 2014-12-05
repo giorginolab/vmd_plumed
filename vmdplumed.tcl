@@ -69,7 +69,7 @@ d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
 
     # Not found text
     variable plumed_not_found_message \
-"Neither PLUMED binaries 'plumed' (2.0) nor 'driver' (1.3) were found
+"Neither PLUMED binaries 'plumed' (2.x) nor 'driver' (1.3) were found
 in the systems' executable path.\n
 You will be able to edit analysis scripts but not to evaluate them.\n
 Please see the Help menu for installation instructions or to attempt
@@ -210,17 +210,17 @@ proc ::Plumed::plumed {} {
     $w.menubar.structure config -width 8
 
     ## help menu
-     menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
+    menubutton $w.menubar.help -text Help -underline 0 -menu $w.menubar.help.menu
     menu $w.menubar.help.menu -tearoff no
     $w.menubar.help.menu add command -label "Getting started with Plumed-GUI" \
 	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
-    $w.menubar.help.menu add command -label "How to cite" \
+    $w.menubar.help.menu add command -label "What to cite" \
         -command "vmd_open_url http://dx.doi.org/10.1016/j.cpc.2013.11.019"
     $w.menubar.help.menu add separator
     $w.menubar.help.menu add command -label "What is PLUMED?" \
         -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help.menu add command -label "PLUMED 2.0 user's guide and CV syntax" \
-	-command "vmd_open_url http://plumed2.berlios.de/master/user-doc/html/index.html"
+    $w.menubar.help.menu add command -label "PLUMED 2.1 user's guide and CV syntax" \
+	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
     $w.menubar.help.menu add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
     $w.menubar.help.menu add separator
@@ -274,7 +274,7 @@ proc ::Plumed::plumed {} {
     pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3  "        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
-    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2.0"         \
+    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2.x"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
@@ -460,25 +460,19 @@ proc ::Plumed::help_about { {parent .plumed} } {
     tk_messageBox -title "About" -parent $parent -message \
 "
 $plugin_name
-
 Version $plugin_version
 
 Toni Giorgino <toni.giorgino${at}isib.cnr.it>
 
-Institute of Biomedical Engineering (ISIB),
+Institute of Neurosciences (IN-ISIB),
 National Research Council of Italy (CNR)
 
 Previous versions: 
-
-Computational Biophysics Group,
-Research Programme on 
-   Biomedical Informatics (GRIB-IMIM),
-Universitat Pompeu Fabra (UPF)
+Computational Biophysics Group (GRIB-IMIM-UPF),
+Universitat Pompeu Fabra
 
 Citation:
-Giorgino T. PLUMED-GUI: An environment for the interactive development of molecular dynamics analysis and biasing scripts. 
-Comp. Phys. Comm. 2014 Mar;185(3):1109-14. 
-doi:10.1016/j.cpc.2013.11.019
+Giorgino T.  PLUMED-GUI: An environment for the interactive development of molecular dynamics analysis and biasing scripts. Comp. Phys. Comm. 2014 Mar;185(3):1109-14. 
 
 
 "
