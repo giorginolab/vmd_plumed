@@ -1,6 +1,9 @@
 Cross-compiling PLUMED under WIN32
 ==================================
 
+These instructions are only necessary if you are unable to download
+the pre-built Windows binaries.
+
 First, download the MINGW build system for windows or your linux
 distribution. Under Fedora, for example, packages are called
 _mingw32-gcc-*_.
