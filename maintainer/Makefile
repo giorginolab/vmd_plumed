@@ -1,18 +1,18 @@
 # This -*- Makefile -*- requires plumed 2.0
 
-default: templates_list_v2_autogen.tcl pkgIndex.tcl
+default: templates_list_v2.tcl pkgIndex.tcl
 
-templates_list_v2_autogen.tcl: gentemplate/generate_templates_list_v2.tcl
+templates_list_v2.tcl: maintainer/templates_list_v2_generator.tcl
 	tclsh $< > $@
 
 
 #  $(VMFILES) sans pkgIndex itself
-pkgIndex.tcl: templates_list_v1.tcl templates_list_v2_autogen.tcl vmdplumed.tcl
+pkgIndex.tcl: templates_list_v1.tcl templates_list_v2.tcl vmdplumed.tcl
 	tclsh <<< "pkg_mkIndex -verbose ."
 
 .PHONY:
 clean:
-	-rm templates_list_v2_autogen.tcl pkgIndex.tcl
+	-rm templates_list_v2.tcl pkgIndex.tcl
 
 
 

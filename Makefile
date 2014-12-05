@@ -1,7 +1,7 @@
 .SILENT:
 
 VMFILES = vmdplumed.tcl pkgIndex.tcl \
-	  templates_list_v1.tcl templates_list_v2_autogen.tcl
+	  templates_list_v1.tcl templates_list_v2.tcl
 VMVERSION = 2.4
 DIR = $(PLUGINDIR)/noarch/tcl/plumed$(VMVERSION)
 
@@ -36,6 +36,6 @@ distrib: autogen
 # export
 .PHONY:
 autogen: 
-	make -f Makefile.maintainer 
+	make -f maintainer/Makefile
 
 
