@@ -1129,7 +1129,7 @@ proc ::Plumed::reference_compute_subset {} {
 }
 
 
-# Set the status message
+# Set the status message. FIXME encoding fail in win32
 proc ::Plumed::reference_update_status {nf admsd lambda} {
     variable ref_status_text;
     set ref_status_text [format "Frames written: %d
