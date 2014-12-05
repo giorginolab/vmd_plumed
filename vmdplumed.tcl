@@ -117,7 +117,8 @@ proc ::Plumed::plumed {} {
     wm title $w "$plugin_name"
 #    wm resizable $w 0 0
 
-    # Special handling for Windows
+
+    # OS-specific UI tweaks. $mod is the menu accelerator
     set win32_install_state disabled
     global tcl_platform
     switch $tcl_platform(platform) {
@@ -128,6 +129,16 @@ proc ::Plumed::plumed {} {
 	}
     }
 
+    lassign [getModifiers] mod modifier
+    if {[tk windowingsystem] eq "aqua"} {
+	event add <<B3>> \
+	    <Control-ButtonPress-1> \
+	    <ButtonPress-2> \
+	    <ButtonPress-3>
+    } else {
+	event add <<B3>> <ButtonPress-3>
+    }
+
     # Attempt to workaround https://github.com/tonigi/vmd_plumed/issues/1
     # https://github.com/yyamasak/TkSQLite-AES128/blob/master/tksqlite.tcl#L1174
     switch -exact -- $::ttk::currentTheme {
@@ -136,6 +147,8 @@ proc ::Plumed::plumed {} {
 #    	    interp alias {} ::ttk::scrollbar {} ::scrollbar
     	}
     }
+
+
 
     # If PBC exist, use them
     catch { molinfo top get {a b c} } vmdcell
@@ -157,28 +170,28 @@ proc ::Plumed::plumed {} {
     menu $w.menubar.file.menu -tearoff no
     $w.menubar.file.menu add command -label "New" -command  Plumed::file_new
     $w.menubar.file.menu add command -label "Open..." -command Plumed::file_open
-    $w.menubar.file.menu add command -label "Save" -command  Plumed::file_save -acce Ctrl-S
+    $w.menubar.file.menu add command -label "Save" -command  Plumed::file_save -acce $mod+S
     $w.menubar.file.menu add command -label "Save as..." -command  Plumed::file_saveas
     $w.menubar.file.menu add command -label "Export..." -command  Plumed::file_export
     $w.menubar.file.menu add separator
     # batch was here
     $w.menubar.file.menu add command -label "Quit" -command  Plumed::file_quit
     $w.menubar.file config -width 5
-    bind $w <Control-s> Plumed::file_save
+    bind $w <$modifier-s> Plumed::file_save
 
     ## edit
     menubutton $w.menubar.edit -text Edit -underline 0 -menu $w.menubar.edit.menu
     menu $w.menubar.edit.menu -tearoff no
-    $w.menubar.edit.menu add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce Ctrl-Z
+    $w.menubar.edit.menu add command -label "Undo" -command  "$::Plumed::w.txt.text edit undo" -acce $mod+Z
     $w.menubar.edit.menu add command -label "Redo" -command  "$::Plumed::w.txt.text edit redo"
     $w.menubar.edit.menu add separator
-    $w.menubar.edit.menu add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce Ctrl-X
-    $w.menubar.edit.menu add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce Ctrl-C
-    $w.menubar.edit.menu add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce Ctrl-V
+    $w.menubar.edit.menu add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce $mod+X
+    $w.menubar.edit.menu add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce $mod+C
+    $w.menubar.edit.menu add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce $mod+V
     $w.menubar.edit.menu add separator
-    $w.menubar.edit.menu add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce Ctrl-A
+    $w.menubar.edit.menu add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce $mod+A
     $w.menubar.edit config -width 5
-    bind $w <Control-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
+    bind $w <$modifier-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
 
     ## Templates
     menubutton $w.menubar.insert -text "Templates" -underline 0 -menu $w.menubar.insert.menu
@@ -287,9 +300,7 @@ proc ::Plumed::plumed {} {
 
     ## POPUP ============================================================
     menu $w.txt.text.popup -tearoff 0
-    bind $w.txt.text <Button-3> { ::Plumed::popup_menu %x %y %X %Y }
-    bind $w.txt.text <Command-Button-1> { ::Plumed::popup_menu %x %y %X %Y }
-
+    bind $w.txt.text <<B3>> { ::Plumed::popup_menu %x %y %X %Y }
 
     ## FINALIZE ============================================================
     plumed_path_lookup;		# sets plumed_version
@@ -320,7 +331,7 @@ proc ::Plumed::file_new { } {
 
     $w.txt.text delete 1.0 {end - 1c}
     label $w.txt.text.instructions -text "(...)" -justify left \
-	-relief solid -padx 2m -pady 2m -background [ttk::style lookup . -background]
+	-relief solid -padx 2m -pady 2m -background #eee
     # bind $w.txt.text.instructions <1> { destroy %W }  ;# Click to close
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
 	-padx 100 -pady 10
@@ -648,12 +659,20 @@ proc ::Plumed::replace_serials { intxt }  {
 
 # ==================================================
 
-# TONI context menus http://www.megasolutions.net/tcl/right-click-menu-49868.aspx
+# TONI context menus and other UI stuff
 
+# Preferred modifier key: short and long name
+proc ::Plumed::getModifiers {} {
+    if {[tk windowingsystem] eq "aqua"} {
+	return {Command Command}
+    } else {
+	return {Ctrl Control}
+    }
+}
 
+# http://www.megasolutions.net/tcl/right-click-menu-49868.aspx
 # http://wiki.tcl.tk/16317
 # possibly replace by tklib version
-
 proc ::Plumed::setBalloonHelp {w msg args} {
   array set opt [concat {
       -tag ""
@@ -1575,6 +1594,8 @@ proc ::Plumed::templates_populate_menu {} {
     variable templates_list_v1
     variable templates_list_v2
 
+    lassign [getModifiers] mod modifier
+
     switch $plumed_version {
 	1  {set templates $templates_list_v1}
 	2  {set templates $templates_list_v2}
@@ -1594,14 +1615,14 @@ proc ::Plumed::templates_populate_menu {} {
 
     switch $plumed_version {
 	1 {
-	    bind $w <Control-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
-	    $w.menubar.insert.menu entryconfigure 1 -accelerator Ctrl-G
+	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
+	    $w.menubar.insert.menu entryconfigure 1 -accelerator $mod+G
 	}
 	2 {
-	    bind $w <Control-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
-	    $w.menubar.insert.menu entryconfigure 1 -accelerator Ctrl-G
-	    bind $w <Control-m> "$::Plumed::w.menubar.insert.menu invoke 2" 
-	    $w.menubar.insert.menu entryconfigure 2 -accelerator Ctrl-M
+	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert.menu invoke 1" 
+	    $w.menubar.insert.menu entryconfigure 1 -accelerator $mod+G
+	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert.menu invoke 2" 
+	    $w.menubar.insert.menu entryconfigure 2 -accelerator $mod+M
 	}
     }
 }
@@ -1758,18 +1779,6 @@ proc ::Plumed::popup_local_or_remote_help {kw} {
     vmd_open_url $htmlpage
 }
 
-
-# return modifier key depended on each platform (osx or anothers)
-# https://github.com/yyamasak/TkSQLite-AES128/blob/master/tksqlite.tcl#L1174
-proc ::Plumed::getModifierKey {{isShort ""}} {
-    if {[tk windowingsystem] eq "aqua"} {
-	return Command
-    }
-    if {$isShort eq "short"} {
-	return Ctrl
-    }
-    return Control
-}
 
 
 # ==================================================
