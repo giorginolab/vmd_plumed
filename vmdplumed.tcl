@@ -15,7 +15,8 @@
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
 package provide plumed 2.4
-package require tile
+
+package require Tk 8.5
 package require http
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
@@ -127,6 +128,15 @@ proc ::Plumed::plumed {} {
 	}
     }
 
+    # Attempt to workaround https://github.com/tonigi/vmd_plumed/issues/1
+    # https://github.com/yyamasak/TkSQLite-AES128/blob/master/tksqlite.tcl#L1174
+    switch -exact -- $::ttk::currentTheme {
+    	aqua {
+    	    rename ttk::_scrollbar ttk::__scrollbar
+#    	    interp alias {} ::ttk::scrollbar {} ::scrollbar
+    	}
+    }
+
     # If PBC exist, use them
     catch { molinfo top get {a b c} } vmdcell
     if { [llength $vmdcell] == 3 } {
@@ -217,6 +227,8 @@ proc ::Plumed::plumed {} {
     pack $w.menubar.structure -side left
     pack $w.menubar.help -side right
 
+    # Built bottom-up for... historical reasons. Also, looks like the
+    # last packed widget becomes "elastic"
 
     ## PLOT ============================================================
     pack [  ttk::frame $w.plot ] -side bottom -fill x 
@@ -265,8 +277,8 @@ proc ::Plumed::plumed {} {
     ttk::frame $w.txt
     ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
-	-yscrollcommand "$::Plumed::w.txt.vscr set" -font {Courier 12}
-    ttk::scrollbar $w.txt.vscr -command "$::Plumed::w.txt.text yview"
+	-yscrollcommand [list $::Plumed::w.txt.vscr set] -font {Courier 12}
+    ttk::scrollbar $w.txt.vscr -command [list $::Plumed::w.txt.text yview]
     pack $w.txt.label -side top   -fill x 
     pack $w.txt.vscr  -side right -fill y    
     pack $w.txt.text  -side left  -fill both -expand yes
@@ -275,7 +287,8 @@ proc ::Plumed::plumed {} {
 
     ## POPUP ============================================================
     menu $w.txt.text.popup -tearoff 0
-    bind $w.txt.text <3> { ::Plumed::popup_menu %x %y %X %Y }
+    bind $w.txt.text <Button-3> { ::Plumed::popup_menu %x %y %X %Y }
+    bind $w.txt.text <Command-Button-1> { ::Plumed::popup_menu %x %y %X %Y }
 
 
     ## FINALIZE ============================================================
@@ -307,7 +320,7 @@ proc ::Plumed::file_new { } {
 
     $w.txt.text delete 1.0 {end - 1c}
     label $w.txt.text.instructions -text "(...)" -justify left \
-	-relief solid -padx 2m -pady 2m
+	-relief solid -padx 2m -pady 2m -background [ttk::style lookup . -background]
     # bind $w.txt.text.instructions <1> { destroy %W }  ;# Click to close
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
 	-padx 100 -pady 10
@@ -1745,6 +1758,18 @@ proc ::Plumed::popup_local_or_remote_help {kw} {
     vmd_open_url $htmlpage
 }
 
+
+# return modifier key depended on each platform (osx or anothers)
+# https://github.com/yyamasak/TkSQLite-AES128/blob/master/tksqlite.tcl#L1174
+proc ::Plumed::getModifierKey {{isShort ""}} {
+    if {[tk windowingsystem] eq "aqua"} {
+	return Command
+    }
+    if {$isShort eq "short"} {
+	return Ctrl
+    }
+    return Control
+}
 
 
 # ==================================================
