@@ -23,7 +23,6 @@ package require http
 
 namespace eval ::Plumed:: {
     namespace export plumed
-    variable plugin_version [package versions plumed]
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
     variable plumed2_online_docbase "http://plumed.github.io/doc-v2.1/user-doc/html"
@@ -448,20 +447,19 @@ proc ::Plumed::help_win32_install {} {
 # About dialog
 proc ::Plumed::help_about { {parent .plumed} } {
     variable plugin_name
-    variable plugin_version
     set at @
 
     tk_messageBox -title "About" -parent $parent -message \
 "
 $plugin_name
-Version $plugin_version
+Version loaded: [package present plumed] (available: [package versions plumed])
 
 Toni Giorgino <toni.giorgino${at}isib.cnr.it>
 
 Institute of Neurosciences (IN-ISIB),
 National Research Council of Italy (CNR)
 
-Versions before 2012: 
+Before 2012: 
 Computational Biophysics Group (GRIB-IMIM-UPF),
 Universitat Pompeu Fabra
 
