@@ -3,7 +3,8 @@ Plumed-GUI
 
 Toni Giorgino  
 Consiglio Nazionale delle Ricerche (ISIB-CNR)
- 
+
+
 
 A Plumed collective variable analysis tool for VMD
 ------------
@@ -15,7 +16,10 @@ The PLUMED-GUI collective variable analysis tool is a plugin for the Visual Mole
 - export the CV definition file for use in MD simulations
 - prepare reference files for RMSD, path-variable, native contacts, etc.
  
+The code is hosted at <https://github.com/tonigi/vmd_plumed>.
+
 For a primer on the use of PLUMED engine, see www.plumed-code.org . 
+
 
 
 Documentation

@@ -2,7 +2,7 @@
 ========================================
 
 The official distribution of VMD may contain an outdated version of
-Plumed-GUI, and upgrading to one of the releases in
+Plumed-GUI, so upgrading to one of the releases in
 https://github.com/tonigi/vmd_plumed is highly recommended.
 To upgrade, please follow the directions in this file.
 
@@ -12,7 +12,7 @@ or installed VMD as a user).
 
 The plugin should appear in the _Extensions > Analysis > Collective
 Variable Analysis (PLUMED)_ menu upon VMD's next start. Verify the
-running version from _Help > About_.
+version you are running from _Help > About_.
 
 
 
@@ -46,12 +46,12 @@ other Unix paths, multiple path components should be space-separated.
 
 ## Method 3: replace the plugin directory
 
-This method is viable if you have write access to the directory where
+This method is sure-fire if you have write access to the directory where
 VMD is installed. Just replace the _plugins/noarch/tcl/plumedX.Y_
 directory in VMD's installation with the archive downloaded from
 GitHub.
 
-To identify your VMD installation directory, the easiest is to type the
+To identify your VMD installation directory, the easiest is to issue the
 following command in VMD's TkConsole:
 
           puts $env(VMDDIR)
