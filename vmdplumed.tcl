@@ -27,13 +27,14 @@ namespace eval ::Plumed:: {
 
     variable plumed2_online_docbase "http://plumed.github.io/doc-v2.1/user-doc/html"
     variable plumed2_online_docbase_fallback "http://plumed2.berlios.de/master/user-doc/html/"
+    variable github_repository "https://github.com/tonigi/vmd_plumed/blob/master"
 
-    variable debug 0;		       # extra log info
+    variable debug 0;		       	# extra log info
     variable highlight_error_ms 12000; # error message held this long
     variable plumed_default_version 2; # default PLUMED to use if none found
 
-    variable plot_points 0;	       # points readout
-    variable w;			       # handle to main window
+    variable plot_points 0;	       	# show data markers
+    variable w;			# handle to main window
 
     variable textfile unnamed.plumed; # new file name
 
@@ -68,11 +69,9 @@ d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
 
     # Not found text
     variable plumed_not_found_message \
-"Neither PLUMED binaries 'plumed' (2.x) nor 'driver' (1.3) were found
-in the systems' executable path.\n
-You will be able to edit analysis scripts but not to evaluate them.\n
-Please see the Help menu for installation instructions or to attempt
-to download and install prebuilt Windows executables."
+"Neither PLUMED binaries 'plumed' (2.x) nor 'driver' (1.3) were found in the system's executable path.\n
+You will be able to edit analysis scripts, but not to evaluate them.\n
+Please see the Help menu for installation instructions or to attempt to download and install prebuilt Windows executables."
 
     # Attempt download message
     variable help_win32_install_query \
@@ -221,8 +220,8 @@ proc ::Plumed::plumed {} {
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
     $w.menubar.help add separator
-    $w.menubar.help add command -label "How to install the 'driver' binaries" \
-	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI#installation"
+    $w.menubar.help add command -label "How to install PLUMED's binaries" \
+	-command "vmd_open_url $Plumed::github_repository/doc/INSTALL-PLUMED-FIRST.md"
     $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
     $w.menubar.help add separator
@@ -247,9 +246,9 @@ proc ::Plumed::plumed {} {
 	-side bottom -fill x
 
     pack [  ttk::frame $w.options.pbc   ]  -side top -fill x
-    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC" \
+    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC  " \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [  ttk::radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory" \
+    pack [  ttk::radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory  " \
 	       -variable [namespace current]::pbc_type ] -side left
     pack [  ttk::radiobutton $w.options.pbc.pbcbox -value 3 -text "Box:" \
 	       -variable [namespace current]::pbc_type ] -side left
