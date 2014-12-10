@@ -1,5 +1,12 @@
 # This -*- Makefile -*- requires plumed 2.0
 
+
+# When changing VMVERSION version number, also fix it in
+# vmdplumed.tcl, templates_list_v1.tcl, and in
+# gentemplate/generate_templates_list_v2.tcl (until I find a better
+# way)
+
+
 default: templates_list_v2.tcl pkgIndex.tcl
 
 templates_list_v2.tcl: maintainer/templates_list_v2_generator.tcl
