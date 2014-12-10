@@ -160,7 +160,7 @@ Otherwise, contacts internal in **selection 1** are considered. The
 native state. If only one selection is given, contacts can be filtered
 with the **Δ resid** option (see description in [RMSD trajectory tool
 enhanced with native
-contacts](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/RMSDTTNC#)).
+contacts](http://www.multiscalelab.org/utilities/RMSDTTNC)).
 **Group name** specifies the label for two atom lists (that will be
 placed at the top of the plumed file). *Note: After generating the CV
 lines, remember to set the top molecule to the one you want to analyze.*
