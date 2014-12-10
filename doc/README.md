@@ -1,5 +1,5 @@
-A Plumed collective variable analysis tool for VMD (Plumed-GUI, v 2.3)
-======================================================================
+A Plumed collective variable analysis tool for VMD
+==================================================
 
 The *PLUMED-GUI collective variable analysis tool* is a plugin for the
 [Visual Molecular Dynamics (VMD)](http://www.ks.uiuc.edu/Research/vmd/)
@@ -103,9 +103,7 @@ The Templates menu
 Elements in the
 **[Templates](http://img204.imageshack.us/i/29948613.png/)** menu
 provides shortcuts for most CVs supported by PLUMED. Please refer to
-PLUMED's [user's
-guide](http://merlino.mi.infn.it/~plumed/PLUMED/Manual_and_Changelog_files/manual_1-2.pdf)
-for the full syntax.
+PLUMED's manual for the full syntax.
 
 The list of keywords for PLUMED 2 are generated when the package is
 built, matching the version current at that time; therefore, the
@@ -116,7 +114,7 @@ The *Electrostatic energy* and *Dipole* CVs require charges to be
 defined in the currently loaded molecule, so AMBER or CHARMM topology
 file have to be loaded beforehand.
 
-Structure files (used for RMSD, Z\_PATH, S\_PATH, etc.) must be
+Structure files (used for `RMSD`, `Z_PATH`, `S_PATH`, etc.) must be
 referenced by **absolute** pathname.
 
 The template menu does not hold the full list of the CVs implemented in
@@ -197,5 +195,7 @@ By downloading the software you agree to comply with the terms of the
 Acknowledgments
 ---------------
 
-Former support from the Agència de Gestió d'Ajuts Universitaris i de
-Recerca - Generalitat de Catalunya is gratefully acknowledged.
+The plugin was started while at De Fabritiis' Computational Biophysics
+laboratory (GRIB-IMIM, Universitat Pompeu Fabra). Former support from
+Agència de Gestió d'Ajuts Universitaris i de Recerca - Generalitat de
+Catalunya is gratefully acknowledged.
