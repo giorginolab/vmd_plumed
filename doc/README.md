@@ -195,7 +195,8 @@ By downloading the software you agree to comply with the terms of the
 Acknowledgments
 ---------------
 
-The plugin was started while at De Fabritiis' Computational Biophysics
-laboratory (GRIB-IMIM, Universitat Pompeu Fabra). Former support from
-Agència de Gestió d'Ajuts Universitaris i de Recerca - Generalitat de
-Catalunya is gratefully acknowledged.
+Work on this plugin started while at the Computational Biophysics
+laboratory (Prof. De Fabritiis, GRIB-IMIM, Universitat Pompeu
+Fabra). Former support by grant 2009BP-B00109, Agència de Gestió
+d'Ajuts Universitaris i de Recerca - Generalitat de Catalunya is
+gratefully acknowledged.
