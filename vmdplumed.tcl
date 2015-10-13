@@ -368,7 +368,7 @@ proc ::Plumed::file_save { } {
 	tk_messageBox -title "Error" -parent .plumed -message "Failed to open file $textfile" -icon error
 	return
     } else {
-	puts $fd  [$w.txt.text get 1.0 {end -1c}] 
+	puts $fd  [getText] 
 	close $fd
     }
 }
@@ -402,7 +402,7 @@ proc ::Plumed::file_export { } {
 	puts "failed to open file $textfile"
 	return
     }
-    puts $fd  [ Plumed::replace_serials [$w.txt.text get 1.0 {end -1c}] ]
+    puts $fd  [ Plumed::replace_serials [getText] ]
     if {$plumed_version==1} { puts $fd  "ENDMETA" }
     close $fd
 }
@@ -651,6 +651,12 @@ proc ::Plumed::replace_serials { intxt }  {
 # ==================================================
 
 # TONI context menus and other UI stuff
+
+# Get the content of the editor
+proc ::Plumed::getText {} {
+	variable w
+	return [$w.txt.text get 1.0 {end -1c}]
+}
 
 # Preferred modifier key: short and long name
 proc ::Plumed::getModifiers {} {
@@ -1795,8 +1801,10 @@ proc ::Plumed::do_compute {{outfile ""}} {
 	return 
     }
 
+    # Internal VMD is handled differently enough.
     if {$plumed_version == vmdcv} {
-	
+	do_compute_vmdcv
+	return
     }
 
     if {![file executable $driver_path]} { 
@@ -1828,7 +1836,7 @@ proc ::Plumed::do_compute {{outfile ""}} {
 	    write_meta_inp_v2 $meta $colvar
 	    set pbc [get_pbc_v2]
 	    set cmd [list $driver_path --standalone-executable driver {*}$pbc --mf_dcd $dcd --pdb $pdb --plumed $meta  ]
-	} 
+	}
     }
 
     # Run. V1 requires pushd
@@ -1960,8 +1968,7 @@ proc ::Plumed::cd_push {{dir {}}} {
 # V1-specific stuff
 
 proc ::Plumed::write_meta_inp_v1 { meta } { 
-    variable w
-    set text [$w.txt.text get 1.0 {end -1c}]
+    set text [getText]
     set fd [open $meta w]
     puts $fd [ Plumed::replace_serials $text ]
     puts $fd "PRINT W_STRIDE 1  ! line added by vmdplumed for visualization"
@@ -1987,8 +1994,7 @@ proc ::Plumed::get_pbc_v1 { } {
 # V2-specific stuff
 
 proc ::Plumed::write_meta_inp_v2 { meta colvar } { 
-    variable w
-    set text [$w.txt.text get 1.0 {end -1c}]
+    set text [getText]
     set fd [open $meta w]
     puts $fd [ Plumed::replace_serials $text ]
     puts $fd "# line added by vmdplumed for visualization"
@@ -2012,6 +2018,17 @@ proc ::Plumed::get_pbc_v2 { } {
 	       [expr $pbc_boxz/10.0] } } ]
     return $pbc
 }
+
+
+# ==================================================                                                 
+# VMDCV-specific stuff
+
+proc ::Plumed::do_compute_vmdcv {} {
+	
+
+}
+
+
 
 
 
