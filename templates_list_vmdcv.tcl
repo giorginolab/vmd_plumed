@@ -1,4 +1,4 @@
-package provide plumed 2.4
+package provide plumed 2.5
 namespace eval ::Plumed {
 
     proc vmdcv_gencv1 {name content} {
@@ -11,11 +11,12 @@ namespace eval ::Plumed {
 		append o "      $bl { ... }\n"
 	}
 	append o "  }"
-	return [vmdcv_gencv1 "my_${type}_cv_name" $o]
+	return [vmdcv_gencv1 "my_${type}_cvname" $o]
     }
 
     variable templates_list_vmdcv [list \
 	"Empty colvar"			"colvar {\n  name myname\n  ...\n}" \
+	"Atom selection"		"        atomNumbers \[ protein and name CA \]" \
 	- - \
 	"Distance"			[vmdcv_gencv2 distance {group1 group2}] \
 	"Distance projected on axis"	[vmdcv_gencv2 distanceZ {main ref ref2 axis}] \

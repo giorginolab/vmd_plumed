@@ -14,7 +14,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.4
+package provide plumed 2.5
 
 package require Tk 8.5
 package require http
@@ -2023,7 +2023,7 @@ proc ::Plumed::get_pbc_v2 { } {
 # VMDCV-specific stuff
 
 proc ::Plumed::do_compute_vmdcv {} {
-	cv delete
+	catch {cv delete} e
 	cv molid top
 	set script [replace_serials [getText] ]
 	set o [ catch {  cv config $script } e ]
