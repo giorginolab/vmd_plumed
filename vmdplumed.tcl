@@ -1903,7 +1903,7 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
 	set pt none
     }
 
-    set cvplot [multiplot -title "Collective variables" -xlabel "Time" \
+    set cvplot [multiplot -title "Collective variables" -xlabel "Time (frames)" \
 		    -nostats ]
 
     for { set i 0 } { $i < $cv_n } {incr i } {
