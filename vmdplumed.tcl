@@ -30,17 +30,17 @@ namespace eval ::Plumed:: {
     variable github_repository "https://github.com/tonigi/vmd_plumed/blob/master"
 
     variable debug 0;		       	# extra log info
-    variable highlight_error_ms 12000; # error message held this long
-    variable plumed_default_version 2; # default PLUMED to use if none found
+    variable highlight_error_ms 12000;  # error message held this long
+    variable plumed_default_version 2;  # default PLUMED to use if none found
 
     variable plot_points 0;	       	# show data markers
-    variable w;			# handle to main window
+    variable w;				# handle to main window
 
-    variable textfile unnamed.plumed; # new file name
+    variable textfile unnamed.plumed; 	# new file name
 
     # Header of short help...
     variable text_instructions_header \
-"Enter collective variable definitions below, in PLUMED syntax.  
+"Enter collective variable definitions below, in your engine's syntax.  
 Click 'Plot' to evaluate them on the 'top' trajectory.  
 VMD atom selections in square brackets expand automatically."
 
@@ -64,7 +64,13 @@ Right mouse button provides help on keywords."
     # ...short help VMDCV
     variable text_instructions_example_vmdcv \
 "For example:\n
-FIXME
+colvar {
+    name d
+    distance { 
+	group1 { atomNumbers 1 }
+	group2 { atomNumbers 200 }
+    }
+}
 "
 
     # Example scripts (file new)
@@ -73,7 +79,14 @@ FIXME
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps\n
 d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
     variable empty_meta_inp_vmdcv "
-FIXME                     # Just an example\n"
+# Just an example
+colvar {
+    name d
+    distance { 
+	group1 { atomNumbers 1 }
+	group2 { atomNumbers 200 }
+    }
+}\n"
 
     # Not found text
     variable plumed_not_found_message \
@@ -228,6 +241,9 @@ proc ::Plumed::plumed {} {
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
     $w.menubar.help add separator
+    $w.menubar.help add command -label "VMD Colvars homepage" \
+	-command "vmd_open_url http://colvars.github.io/" 
+    $w.menubar.help add separator
     $w.menubar.help add command -label "How to install PLUMED's binaries" \
 	-command "vmd_open_url $Plumed::github_repository/doc/INSTALL-PLUMED-FIRST.md"
     $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
@@ -269,14 +285,14 @@ proc ::Plumed::plumed {} {
 
     # ----------------------------------------
     pack [  ttk::frame $w.options.location ]  -fill x
-    pack [  ttk::label $w.options.location.version -text "Engine:" ] -side left -expand 0
+    pack [  ttk::label $w.options.location.version -text "Engine: " ] -side left -expand 0
     pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "Plumed 1.3  "        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
     pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "Plumed 2.x  "         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
-    pack [  ttk::radiobutton $w.options.location.vmdcv -value vmdcv -text "VMD's (alpha)"         \
+    pack [  ttk::radiobutton $w.options.location.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
@@ -2011,32 +2027,56 @@ proc ::Plumed::do_compute_vmdcv {} {
 	set script [replace_serials [getText] ]
 	set o [ catch {  cv config $script } e ]
 	if {$o} {
-		error "Please see VMD's text console for a description."
+		error "A problem occurred. Error messages\nare found in VMD's text console."
 	} 
-#	puts "o>> $o"
-#	puts "e>> $e"
-#	puts "errorInfo>> $errorInfo"
+	# puts "o>> $o"
+	# puts "e>> $e"
+	# puts "errorInfo>> $::errorInfo"
 
 	set fname [file join [tmpdir] "vmd_plumed.[pid].dat"]
 	set fd [open $fname w]
 	puts "Generating temporary data file $fname"
 
 	# Make a pseudo-plumed-v2 header
-	set cvnames [cv list]
+	set cvnames [vmdcv_expand_cvlist ]
 	puts $fd "#! FIELDS time $cvnames"
 	
 	# Print all the CV values
 	for {set f 0} {$f<[molinfo top get numframes]} { incr f } {
 		cv frame $f
 		cv update
-		puts -nonewline $fd [cv printframe]
+		puts -nonewline $fd [vmdcv_strip [cv printframe]]
 	}
 	close $fd
 
 	do_plot $fname
 }
 
+# Remove parenthesis and commas
+proc ::Plumed::vmdcv_strip v {
+	return [string map { ( {} , {} ) {} } $v ]
+}
 
+# Return [cv list] but with vectors expanded 
+proc ::Plumed::vmdcv_expand_cvlist {} {
+	set out {}
+	cv frame 0
+	cv update
+ 	foreach c [cv list] {
+		set v [cv colvar $c value]
+		set vv [vmdcv_strip $v]; 
+		set nc [llength $vv]
+		if {$nc==1} {
+			lappend out $c
+		} else {
+			for {set i 1} {$i<=$nc} {incr i} {
+				lappend out "${c}_$i"
+			}
+		}
+	}				
+	return $out
+}
+		
 
 
 
