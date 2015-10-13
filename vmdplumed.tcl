@@ -261,11 +261,14 @@ proc ::Plumed::plumed {} {
 
     # ----------------------------------------
     pack [  ttk::frame $w.options.location ]  -fill x
-    pack [  ttk::label $w.options.location.version -text "Plumed version:" ] -side left -expand 0
-    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "1.3  "        \
+    pack [  ttk::label $w.options.location.version -text "Engine:" ] -side left -expand 0
+    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "Plumed 1.3  "        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
-    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "2.x"         \
+    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "Plumed 2.x  "         \
+	       -variable [namespace current]::plumed_version              \
+     	       -command [namespace current]::plumed_version_changed       ] -side left 
+    pack [  ttk::radiobutton $w.options.location.vmdcv -value vmdcv -text "VMD's (alpha)"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
@@ -308,9 +311,11 @@ proc ::Plumed::empty_meta_inp {} {
     variable plumed_version
     variable empty_meta_inp_v1
     variable empty_meta_inp_v2
+    variable empty_meta_inp_vmdcv
     switch $plumed_version {
 	1  {return $empty_meta_inp_v1}
 	2  {return $empty_meta_inp_v2}
+	vmdcv {return $empty_meta_inp_vmdcv}
     } 
 }
 
@@ -606,7 +611,8 @@ proc ::Plumed::writePlumed { sel filename } {
 }
 
 
-# TONI consider braces
+# Plumed v1, vmdcv: space-separated
+# Plumed v2: comma-separated
 proc ::Plumed::replace_serials { intxt }  {
     variable plumed_version
     set re {\[(.+?)\]}
@@ -1508,9 +1514,11 @@ proc ::Plumed::instructions_update {} {
     variable text_instructions_header
     variable text_instructions_example_v1
     variable text_instructions_example_v2
+    variable text_instructions_example_vmdcv
     switch $plumed_version {
 	1 { set txt "$text_instructions_header $text_instructions_example_v1" }
 	2 { set txt "$text_instructions_header $text_instructions_example_v2" }
+	vmdcv { set txt "$text_instructions_header $text_instructions_example_vmdcv" }
     }
     catch { $w.txt.text.instructions configure -text $txt } err
 }
@@ -1578,12 +1586,14 @@ proc ::Plumed::templates_populate_menu {} {
     variable plumed_version
     variable templates_list_v1
     variable templates_list_v2
+    variable templates_list_vmdcv
 
     lassign [getModifiers] mod modifier
 
     switch $plumed_version {
 	1  {set templates $templates_list_v1}
 	2  {set templates $templates_list_v2}
+	vmdcv  {set templates $templates_list_vmdcv}
     } 
 
     $w.menubar.insert delete 0 last
@@ -1608,6 +1618,11 @@ proc ::Plumed::templates_populate_menu {} {
 	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
 	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert invoke 2" 
 	    $w.menubar.insert entryconfigure 2 -accelerator $mod+M
+	}
+	vmdcv {
+	    # FIXME
+	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert invoke 1" 
+	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
 	}
     }
 }
@@ -1780,11 +1795,14 @@ proc ::Plumed::do_compute {{outfile ""}} {
 	return 
     }
 
+    if {$plumed_version == vmdcv} {
+	
+    }
+
     if {![file executable $driver_path]} { 
 	tk_messageBox -title "Error" -icon error -parent .plumed -message \
 	    "The plumed executable is required. See manual for installation instructions."
 	return }
-
 
     # Prepare temp. dir and files
     set tmpd [file join [tmpdir] vmdplumed.[pid]]
