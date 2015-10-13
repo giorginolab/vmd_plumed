@@ -241,13 +241,13 @@ proc ::Plumed::plumed {} {
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed-code.org/documentation"
     $w.menubar.help add separator
-    $w.menubar.help add command -label "VMD Colvars homepage" \
-	-command "vmd_open_url http://colvars.github.io/" 
-    $w.menubar.help add separator
     $w.menubar.help add command -label "How to install PLUMED's binaries" \
 	-command "vmd_open_url $Plumed::github_repository/doc/INSTALL-PLUMED-FIRST.md"
     $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
+    $w.menubar.help add separator
+    $w.menubar.help add command -label "VMD Colvars homepage" \
+	-command "vmd_open_url http://colvars.github.io/" 
     $w.menubar.help add separator
     $w.menubar.help add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -270,7 +270,8 @@ proc ::Plumed::plumed {} {
 	-side bottom -fill x
 
     pack [  ttk::frame $w.options.pbc   ]  -side top -fill x
-    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "No PBC  " \
+    pack [  ttk::label $w.options.pbc.text -text "PBC: " ] -side left -expand 0
+    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "None  " \
 	       -variable [namespace current]::pbc_type ] -side left
     pack [  ttk::radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory  " \
 	       -variable [namespace current]::pbc_type ] -side left
