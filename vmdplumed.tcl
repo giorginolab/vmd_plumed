@@ -199,6 +199,7 @@ proc ::Plumed::plumed {} {
     bind $w <$modifier-s> Plumed::file_save
     bind $w <$modifier-S> Plumed::file_saveas
     bind $w <$modifier-e> Plumed::file_export
+#    bind $w <$modifier-v> "::Plumed::tk_textPaste_modern $::Plumed::w.txt.text;break"
 
     ## edit
     $w.menubar add cascade  -label Edit -underline 0 -menu $w.menubar.edit
@@ -249,6 +250,8 @@ proc ::Plumed::plumed {} {
     $w.menubar.help add separator
     $w.menubar.help add command -label "VMD Colvars homepage" \
 	-command "vmd_open_url http://colvars.github.io/" 
+    $w.menubar.help add command -label "VMD Colvars manual" \
+	-command "vmd_open_url http://colvars.github.io/colvars-refman-vmd/colvars-refman-vmd.html" 
     $w.menubar.help add separator
     $w.menubar.help add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -1525,16 +1528,39 @@ proc ::Plumed::highlight_error_label {label etext} {
 # Handle version changes ==================================================
 
 
-proc ::Plumed::ncacocb_update {} {
-    variable w
+proc ::Plumed::structuremenu_update {} {
     variable plumed_version
-    set st disabled
     switch $plumed_version {
-	1 { set st normal }
+	1 {
+	    .plumed.menubar entryconfigure 4 -state normal
+	    .plumed.menubar.structure entryconfigure 0 -state normal
+	    .plumed.menubar.structure entryconfigure 1 -state normal
+	    .plumed.menubar.structure entryconfigure 2 -state normal
+	    .plumed.menubar.structure entryconfigure 3 -state normal
+	}
+	2 {
+	    .plumed.menubar entryconfigure 4 -state normal
+	    .plumed.menubar.structure entryconfigure 0 -state normal
+	    .plumed.menubar.structure entryconfigure 1 -state normal
+	    .plumed.menubar.structure entryconfigure 2 -state normal
+	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    destroy .plumed_ncacocb
+	}
+	vmdcv {
+	    .plumed.menubar entryconfigure 4 -state disabled
+	    .plumed.menubar.structure entryconfigure 0 -state disabled
+	    .plumed.menubar.structure entryconfigure 1 -state disabled
+	    .plumed.menubar.structure entryconfigure 2 -state disabled
+	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    destroy .plumedref
+	    destroy .plumednc
+	    destroy .plumedrama
+	    destroy .plumed_ncacocb
+	}
     }
-    .plumed.menubar.structure entryconfigure 4 -state $st
-    catch { .plumed_ncacocb.act.insert configure -state $st }
 }
+
+
 
 proc ::Plumed::instructions_update {} {
     variable w
@@ -1599,10 +1625,11 @@ proc ::Plumed::plumed_version_changed {} {
     switch $plumed_version {
 	1  {set driver_path $driver_path_v1}
 	2  {set driver_path $driver_path_v2}
+     vmdcv {set driver_path "(Not needed)"}
     } 
 
     instructions_update
-    ncacocb_update
+    structuremenu_update
     templates_populate_menu
 }
 
