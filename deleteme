@@ -1,0 +1,76 @@
+
+colvar {
+    name d
+    distance { 
+	group1 { atomNumbers 1 }
+	group2 { atomNumbers 200 }
+    }
+}
+colvar {
+    name d2
+    distance { 
+	group1 { atomNumbers 1 }
+	group2 { atomNumbers 10 }
+    }
+}
+
+
+cv molid top
+cv reset
+
+cv config { 
+	colvar {
+	  name d
+	  distance { 
+	  group1 { atomNumbers 1 }
+	  group2 { atomNumbers 200 }
+	 }
+	}
+	colvar {
+	  name d2
+	  distance { 
+	  group1 { atomNumbers 1 }
+	  group2 { atomNumbers 10 }
+	 }
+	}
+}
+
+cv list
+
+set out {}; for {set f 0} {$f<[molinfo top get numframes]} { incr f } {cv frame $f; lappend out [cv colvar d update] }
+
+set out {}; for {set f 0} {$f<[molinfo top get numframes]} { incr f } {cv frame $f; lappend out [cv colvar d2 update] }
+
+
+qplot 
+
+
+usage: colvars <subcommand> [args...]
+
+Managing the colvars module:
+  configfile <file name>      -- read configuration from a file
+  config <string>             -- read configuration from the given string
+  reset                       -- delete all internal configuration
+  delete                      -- delete this colvars module instance
+  
+Input and output:
+  list                        -- return a list of all variables
+  list biases                 -- return a list of all biases
+  load <file name>            -- load a state file (requires configuration)
+  update                      -- recalculate colvars and biases based
+  printframe                  -- return a summary of the current frame
+  printframelabels            -- return labels to annotate printframe's output
+  frame                       -- return current frame number
+  frame <new_frame>           -- set frame number
+
+Accessing collective variables:
+  colvar <name> value         -- return the current value of the colvar <name>
+  colvar <name> update        -- recalculate the colvar <name>
+  colvar <name> delete        -- delete the colvar <name>
+  colvar <name> addforce <F>  -- apply given force on <name>
+
+Accessing biases:
+  bias <name> energy          -- return the current energy of the bias <name>
+  bias <name> update          -- recalculate the bias <name>
+  bias <name> delete          -- delete the bias <name>
+
