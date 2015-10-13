@@ -11,7 +11,7 @@ namespace eval ::Plumed {
 		append o "      $bl { ... }\n"
 	}
 	append o "  }"
-	return [vmdcv_gencv1 "my_${type}_cvname" $o]
+	return [vmdcv_gencv1 "my_$type" $o]
     }
 
     variable templates_list_vmdcv [list \

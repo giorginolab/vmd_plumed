@@ -63,15 +63,16 @@ Right mouse button provides help on keywords."
 
     # ...short help VMDCV
     variable text_instructions_example_vmdcv \
-"For example:\n
+{For example:
+
 colvar {
-    name d
-    distance { 
-	group1 { atomNumbers 1 }
-	group2 { atomNumbers 200 }
+  name this_proteins_gyration_radius
+  gyration {
+    atoms {
+      atomNumbers [ protein and name CA ]
     }
-}
-"
+  }
+}}
 
     # Example scripts (file new)
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
@@ -207,7 +208,7 @@ proc ::Plumed::plumed {} {
     $w.menubar.edit add separator
     $w.menubar.edit add command -label "Cut" -command  "tk_textCut $::Plumed::w.txt.text" -acce $mod+X
     $w.menubar.edit add command -label "Copy" -command  "tk_textCopy $::Plumed::w.txt.text" -acce $mod+C
-    $w.menubar.edit add command -label "Paste" -command  "tk_textPaste $::Plumed::w.txt.text" -acce $mod+V
+    $w.menubar.edit add command -label "Paste" -command  "::Plumed::tk_textPaste_modern $::Plumed::w.txt.text" -acce $mod+V
     $w.menubar.edit add separator
     $w.menubar.edit add command -label "Select all" -command "$::Plumed::w.txt.text tag add sel 1.0 end" -acce $mod+A
     bind $w <$modifier-a> "$::Plumed::w.txt.text tag add sel 1.0 end"
@@ -310,6 +311,7 @@ proc ::Plumed::plumed {} {
     ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
     text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
 	-yscrollcommand [list $::Plumed::w.txt.vscr set] -font {Courier 12}
+	
     ttk::scrollbar $w.txt.vscr -command [list $::Plumed::w.txt.text yview]
     pack $w.txt.label -side top   -fill x 
     pack $w.txt.vscr  -side right -fill y    
@@ -483,7 +485,7 @@ proc ::Plumed::help_about { {parent .plumed} } {
 $plugin_name
 Version loaded: [package present plumed] (available: [package versions plumed])
 
-Toni Giorgino <toni.giorgino${at}isib.cnr.it>
+Toni Giorgino <toni.giorgino${at}cnr.it>
 
 Institute of Neurosciences (IN-ISIB),
 National Research Council of Italy (CNR)
@@ -666,6 +668,27 @@ proc ::Plumed::getModifiers {} {
 	return {Ctrl Control}
     }
 }
+
+# Paste with replacement. Copied from 8.5. I did not want to replace tk_textPaste for everyone.
+proc ::Plumed::tk_textPaste_modern w {
+    global tcl_platform
+    if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} {
+	set oldSeparator [$w cget -autoseparators]
+	if {$oldSeparator} {
+	    $w configure -autoseparators 0
+	    $w edit separator
+	}
+	if {[tk windowingsystem] ne "x11-OLDWAY"} {
+	    catch { $w delete sel.first sel.last }
+	}
+	$w insert insert $sel
+	if {$oldSeparator} {
+	    $w edit separator
+	    $w configure -autoseparators 1
+	}
+    }
+}
+
 
 # http://www.megasolutions.net/tcl/right-click-menu-49868.aspx
 # http://wiki.tcl.tk/16317
@@ -1596,8 +1619,8 @@ proc ::Plumed::templates_populate_menu {} {
     lassign [getModifiers] mod modifier
 
     switch $plumed_version {
-	1  {set templates $templates_list_v1}
-	2  {set templates $templates_list_v2}
+	1      {set templates $templates_list_v1}
+	2      {set templates $templates_list_v2}
 	vmdcv  {set templates $templates_list_vmdcv}
     } 
 
@@ -1607,7 +1630,7 @@ proc ::Plumed::templates_populate_menu {} {
 	    $w.menubar.insert add separator
 	} else {
 	    $w.menubar.insert add command -label $disp \
-		-command [list [namespace current]::templates_insert_line $insr]
+		-command [list Plumed::templates_insert_line $insr]
 	}
     }
     $w.menubar.insert add separator
@@ -1625,9 +1648,10 @@ proc ::Plumed::templates_populate_menu {} {
 	    $w.menubar.insert entryconfigure 2 -accelerator $mod+M
 	}
 	vmdcv {
-	    # FIXME
 	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert invoke 1" 
 	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
+	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert invoke 2" 
+	    $w.menubar.insert entryconfigure 2 -accelerator $mod+M
 	}
     }
 }
@@ -2046,7 +2070,7 @@ proc ::Plumed::do_compute_vmdcv {} {
 	for {set f 0} {$f<[molinfo top get numframes]} { incr f } {
 		cv frame $f
 		cv update
-		puts -nonewline $fd [vmdcv_strip [cv printframe]]
+		puts -nonewline $fd [vmdcv_vec2list [cv printframe]]
 	}
 	close $fd
 
@@ -2054,7 +2078,7 @@ proc ::Plumed::do_compute_vmdcv {} {
 }
 
 # Remove parenthesis and commas
-proc ::Plumed::vmdcv_strip v {
+proc ::Plumed::vmdcv_vec2list v {
 	return [string map { ( {} , {} ) {} } $v ]
 }
 
@@ -2065,7 +2089,7 @@ proc ::Plumed::vmdcv_expand_cvlist {} {
 	cv update
  	foreach c [cv list] {
 		set v [cv colvar $c value]
-		set vv [vmdcv_strip $v]; 
+		set vv [vmdcv_vec2list $v]; 
 		set nc [llength $vv]
 		if {$nc==1} {
 			lappend out $c
@@ -2078,6 +2102,4 @@ proc ::Plumed::vmdcv_expand_cvlist {} {
 	return $out
 }
 		
-
-
 
