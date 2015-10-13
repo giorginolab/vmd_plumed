@@ -61,11 +61,19 @@ VMD atom selections in square brackets expand automatically."
 Default UNITS are nm, ps and kJ/mol unless changed.
 Right mouse button provides help on keywords."
 
+    # ...short help VMDCV
+    variable text_instructions_example_vmdcv \
+"For example:\n
+FIXME
+"
+
     # Example scripts (file new)
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
     variable empty_meta_inp_v2 "
 UNITS  LENGTH=A  ENERGY=kcal/mol  TIME=ps\n
 d1:    DISTANCE ATOMS=1,200                     # Just an example\n"
+    variable empty_meta_inp_vmdcv "
+FIXME                     # Just an example\n"
 
     # Not found text
     variable plumed_not_found_message \
@@ -536,31 +544,6 @@ proc ::Plumed::dputs { text } {
 }
 
 
-# From current PBC; a glorified [pbc get -namd -all]. May be replaced
-# by the one in pbctools.
-proc ::Plumed::writexst {fn} {
-    set ts 0
-    set ch [open $fn w]
-    puts $ch "# NAMD extended system trajectory file"
-    puts $ch "#\$LABELS step a_x a_y a_z b_x b_y b_z c_x c_y c_z o_x o_y o_z"
-    foreach box [pbc get -namd -all] {
-	set box_f  [concat {*}$box];  # flatten
-	set box_str ""
-	set column 0
-	foreach v $box_f {
-	    set box_str "$box_str [format %8.4f $v]"
-	    incr column
-	    if {$column==3 || $column==6} {
-		set box_str "$box_str    "; # Separate vectors
-	    }
-	}
-	#  %f truncates ~epsilons
-	set ts_str [format %-8d $ts]
-	puts $ch "$ts_str $box_str    0.000 0.000 0.000"
-	incr ts
-    }
-    close $ch
-}
 
 # Attempt to access URL, return numeric code.
 proc ::Plumed::get_url_ncode {url} {
@@ -1505,13 +1488,12 @@ proc ::Plumed::highlight_error_label {label etext} {
 proc ::Plumed::ncacocb_update {} {
     variable w
     variable plumed_version
+    set st disabled
     switch $plumed_version {
 	1 { set st normal }
-	2 { set st disabled }
     }
     .plumed.menubar.structure entryconfigure 4 -state $st
     catch { .plumed_ncacocb.act.insert configure -state $st }
-
 }
 
 proc ::Plumed::instructions_update {} {
@@ -1802,7 +1784,7 @@ proc ::Plumed::do_compute {{outfile ""}} {
     }
 
     # Internal VMD is handled differently enough.
-    if {$plumed_version == vmdcv} {
+    if {$plumed_version == "vmdcv"} {
 	do_compute_vmdcv
 	return
     }
@@ -2024,8 +2006,34 @@ proc ::Plumed::get_pbc_v2 { } {
 # VMDCV-specific stuff
 
 proc ::Plumed::do_compute_vmdcv {} {
-	
+	cv delete
+	cv molid top
+	set script [replace_serials [getText] ]
+	set o [ catch {  cv config $script } e ]
+	if {$o} {
+		error "Please see VMD's text console for a description."
+	} 
+#	puts "o>> $o"
+#	puts "e>> $e"
+#	puts "errorInfo>> $errorInfo"
 
+	set fname [file join [tmpdir] "vmd_plumed.[pid].dat"]
+	set fd [open $fname w]
+	puts "Generating temporary data file $fname"
+
+	# Make a pseudo-plumed-v2 header
+	set cvnames [cv list]
+	puts $fd "#! FIELDS time $cvnames"
+	
+	# Print all the CV values
+	for {set f 0} {$f<[molinfo top get numframes]} { incr f } {
+		cv frame $f
+		cv update
+		puts -nonewline $fd [cv printframe]
+	}
+	close $fd
+
+	do_plot $fname
 }
 
 
