@@ -24,19 +24,6 @@ Communications.
 
 
 
-Installation
-------------
-
-First, you need PLUMED 1.3's *driver* and/or PLUMED 2's *plumed*
-executables: see [INSTALL-PLUMED-FIRST.md] (or the corresponding
-manuals).
-
-Second, you may want to update PLUMED-GUI to its latest version,
-rather than using the one distributed with VMD. See instructions
-in [INSTALL.md].
-
-
-
 
 Usage
 -----
@@ -48,7 +35,9 @@ The usage of the plugin is straightforward.
 
 2.  Edit the CV definition file, defining one or more CVs.
 
-    For a primer on the use of PLUMED, see e.g. [the official website](http://www.plumed.org/) and/or one of the [available tutorials](http://plumed.github.io/doc-v2.1/user-doc/html/tutorials.html).
+    For a primer on the use of PLUMED, see e.g.
+    [the official website](http://www.plumed.org/) and/or one
+	of the [available tutorials](http://plumed.github.io/doc-v2.1/user-doc/html/tutorials.html).
 
 3.  Click "Plot". This will open a plot window with the selected CVs.
 
