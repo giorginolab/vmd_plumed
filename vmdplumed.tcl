@@ -65,14 +65,15 @@ Right mouse button provides help on keywords."
     variable text_instructions_example_vmdcv \
 {For example:
 
-colvar {
-  name this_proteins_gyration_radius
-  gyration {
-    atoms {
-      atomNumbers [ protein and name CA ]
+    colvar {
+        name this_proteins_gyration_radius
+        gyration {
+            atoms {
+                atomNumbers [ protein and name CA ]
+            }
+        }
     }
-  }
-}}
+}
 
     # Example scripts (file new)
     variable empty_meta_inp_v1 "\nDISTANCE LIST 1 200      ! Just an example\n"
