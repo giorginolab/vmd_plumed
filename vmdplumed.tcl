@@ -69,7 +69,7 @@ Right mouse button provides help on keywords."
         name this_proteins_gyration_radius
         gyration {
             atoms {
-                atomNumbers [ protein and name CA ]
+                [ protein and name CA ]       # Keyword 'atomNumbers' is implied
             }
         }
     }
@@ -632,11 +632,22 @@ proc ::Plumed::replace_serials { intxt }  {
 	set new [ $as get serial ]
 	$as delete
 	lappend lcount [llength $new]
-	if {$plumed_version==2} {
-	    set new [string map { " " , } $new ]
+
+	# adjust syntax depending on engine
+	switch $plumed_version {
+	    1 {	      # no change
+	      }
+	    2 {
+		      set new [string map { " " , } $new ]
+	      }
+	    vmdcv {
+		      set new "atomNumbers $new"
+	          }
 	}
+
+	# modify intxt in-place
 	lappend lnew $new
-	regsub $re $intxt $new intxt; # modify intxt in-place
+	regsub $re $intxt $new intxt
     }
 
     # Build output
