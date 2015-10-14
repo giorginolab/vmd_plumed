@@ -120,10 +120,15 @@ referenced by **absolute** pathname.
 The template menu does not hold the full list of the CVs implemented in
 PLUMED, but all of them will work anyway when typed in.
 
+![Templates](plumedgui_templates.png)
+
+
+
 The Structure menu
 ------------------
 
 The **Structure** menu provides functions for entering complex CVs.
+
 
 ### Reference structures for RMSD and path variables
 
@@ -148,6 +153,9 @@ collective variables' section of the PLUMED manual.
 
 -   The RMSD keyword has been renamed to MSD in PLUMED 1.3.
 
+![Build reference structures](plumedgui_reference.png)
+
+
 ### Native contacts
 
 The **Structure\>Native contacts CV** inserts a native-contacts CV. The
@@ -165,6 +173,9 @@ contacts](http://www.multiscalelab.org/utilities/RMSDTTNC)).
 placed at the top of the plumed file). *Note: After generating the CV
 lines, remember to set the top molecule to the one you want to analyze.*
 
+![Native contacts interface](plumedgui_nc.png)
+
+
 ### Backbone torsion CVs
 
 A list of φ, ψ, and ω Ramachandran angles can be inserted for an atom
@@ -172,19 +183,21 @@ selection. Note that N-CA-C atom names are assumed for backbone atoms.
 Dihedrals involving atoms outside the selection are not added. The ω
 angle is intended between residue *i* and *i+1*.
 
-Screenshot
+![Ramachandran CVs](plumedgui_rama.png)
+
+
+
+Screenshots
 ----------
 
 User interface:
 
-![screenshotplumedcollect.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotplumedcollect.png)
+![Main screen](plumedgui_main.png)
 
-[![attachment:screenshotmultiplot.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotmultiplot.png)](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotmultiplot.png)
-[![attachment:cvs.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=cvs.png)](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/PlumedGUI?action=AttachFile&do=get&target=cvs.png)
-[![attachment:screenshotpreparerefere.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotpreparerefere.png)](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotpreparerefere.png)
+![Plot results](plumedgui_multiplot.png)
 
-[![attachment:screenshotnc.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotnc.png)](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotnc.png)
-[![attachment:screenshotrama.png](http://www.multiscalelab.org//utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotrama.png)](http://www.multiscalelab.org/utilities/PlumedGUI/utilities/PlumedGUI?action=AttachFile&do=get&target=screenshotrama.png)
+
+
 
 License
 -------
