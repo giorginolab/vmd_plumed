@@ -622,9 +622,10 @@ proc ::Plumed::writePlumed { sel filename } {
 proc ::Plumed::replace_serials { intxt }  {
     variable plumed_version
     set re {\[(.+?)\]}
-    set lorig {}
-    set lnew {}
-    set lcount {}
+    set lorig {};		# list of all substituted blocks
+    set lnew {};		# list of replacements
+    set lcount {};		# list of replacement lengths
+    # Iterate over all square-bracket blocks
     while { [ regexp $re $intxt junk orig ] } {
 	lappend lorig $orig
 	set as [ atomselect top $orig ]
@@ -635,15 +636,17 @@ proc ::Plumed::replace_serials { intxt }  {
 	    set new [string map { " " , } $new ]
 	}
 	lappend lnew $new
-	regsub $re $intxt $new intxt
+	regsub $re $intxt $new intxt; # modify intxt in-place
     }
+
+    # Build output
     set out $intxt
-    set out "$out
+    append out "
  
 # The above script includes the following replacements, based on 
 # a structure named [molinfo top get name] with [molinfo top get numatoms] atoms.\n#\n"
     foreach orig $lorig new $lnew cnt $lcount {
-	set out "${out}# \[$orig\] -> (list of $cnt atoms)\n"
+	append out "# \[$orig\] -> (list of $cnt atoms)\n"
     }
     return $out
 }
