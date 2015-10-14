@@ -274,38 +274,39 @@ proc ::Plumed::plumed {} {
     pack [  ttk::labelframe $w.options -relief ridge  -text "Options"  ] \
 	-side bottom -fill x
 
-    pack [  ttk::frame $w.options.pbc   ]  -side top -fill x
-    pack [  ttk::label $w.options.pbc.text -text "PBC: " ] -side left -expand 0
-    pack [  ttk::radiobutton $w.options.pbc.pbcno -value 1 -text "None  " \
+    pack [  ttk::frame $w.options.line1   ]  -side top -fill x
+    pack [  ttk::frame $w.options.line1.pbc   ]  -side left -fill x
+    pack [  ttk::label $w.options.line1.pbc.text -text "PBC: " ] -side left -expand 0
+    pack [  ttk::radiobutton $w.options.line1.pbc.pbcno -value 1 -text "None  " \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [  ttk::radiobutton $w.options.pbc.pbcdcd -value 2 -text "From trajectory  " \
+    pack [  ttk::radiobutton $w.options.line1.pbc.pbcdcd -value 2 -text "From trajectory  " \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [  ttk::radiobutton $w.options.pbc.pbcbox -value 3 -text "Box:" \
+    pack [  ttk::radiobutton $w.options.line1.pbc.pbcbox -value 3 -text "Box:" \
 	       -variable [namespace current]::pbc_type ] -side left
-    pack [  ttk::entry $w.options.pbc.boxx -width 6 -textvariable [namespace current]::pbc_boxx ] -side left
-    pack [  ttk::entry $w.options.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
-    pack [  ttk::entry $w.options.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
-    pack [  ttk::label $w.options.pbc.spacer2 -text " " ] -side left -expand true -fill x
-    pack [  ttk::checkbutton $w.options.pbc.inspector -text "Mark data points" \
-	       -variable  [namespace current]::plot_points ] -side left
+    pack [  ttk::entry $w.options.line1.pbc.boxx -width 6 -textvariable [namespace current]::pbc_boxx ] -side left
+    pack [  ttk::entry $w.options.line1.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
+    pack [  ttk::entry $w.options.line1.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
+    # pack [  ttk::label $w.options.line1.pbc.spacer2 -text " " ] -side left -expand true -fill x
+    pack [  ttk::checkbutton $w.options.line1.inspector -text "Mark data points" \
+	       -variable  [namespace current]::plot_points ] -side right
 
     # ----------------------------------------
-    pack [  ttk::frame $w.options.location ]  -fill x
-    pack [  ttk::label $w.options.location.version -text "Engine: " ] -side left -expand 0
-    pack [  ttk::radiobutton $w.options.location.v1 -value 1 -text "Plumed 1.3  "        \
+    pack [  ttk::frame $w.options.line2 ]  -fill x
+    pack [  ttk::label $w.options.line2.version -text "Engine: " ] -side left -expand 0
+    pack [  ttk::radiobutton $w.options.line2.v1 -value 1 -text "Plumed 1.3  "        \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed    	  ] -side left 
-    pack [  ttk::radiobutton $w.options.location.v2 -value 2 -text "Plumed 2.x  "         \
+    pack [  ttk::radiobutton $w.options.line2.v2 -value 2 -text "Plumed 2.x  "         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
-    pack [  ttk::radiobutton $w.options.location.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
+    pack [  ttk::radiobutton $w.options.line2.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
 	       -variable [namespace current]::plumed_version              \
      	       -command [namespace current]::plumed_version_changed       ] -side left 
 
-    pack [  ttk::label $w.options.location.text -text "       Path to executable: " ] -side left -expand 0
-    pack [  ttk::entry $w.options.location.path -width 5 -textvariable \
+    pack [  ttk::label $w.options.line2.text -text "       Path to executable: " ] -side left -expand 0
+    pack [  ttk::entry $w.options.line2.path -width 5 -textvariable \
 	       [namespace current]::driver_path ] -side left -expand 1 -fill x
-    pack [  ttk::button $w.options.location.browse -text "Browse..." \
+    pack [  ttk::button $w.options.line2.browse -text "Browse..." \
 	   -command [namespace current]::location_browse   ] -side left -expand 0
 
 
@@ -671,6 +672,15 @@ proc ::Plumed::replace_serials { intxt }  {
 # ==================================================
 
 # TONI context menus and other UI stuff
+
+# Enable/disable recursively, http://stackoverflow.com/questions/2219947/how-to-make-all-widgets-state-to-disabled-in-tk
+proc ::Plumed::set_state_recursive {state path} {
+    catch {$path configure -state $state}
+    foreach child [winfo children $path] {
+        set_state_recursive $state $child
+    }
+}
+
 
 # Get the content of the editor
 proc ::Plumed::getText {} {
@@ -1545,6 +1555,7 @@ proc ::Plumed::highlight_error_label {label etext} {
 
 proc ::Plumed::structuremenu_update {} {
     variable plumed_version
+    variable w
     switch $plumed_version {
 	1 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1552,6 +1563,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state normal
+	    set_state_recursive normal $w.options.line1.pbc
 	}
 	2 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1560,6 +1572,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
 	    destroy .plumed_ncacocb
+	    set_state_recursive normal $w.options.line1.pbc
 	}
 	vmdcv {
 	    .plumed.menubar entryconfigure 4 -state disabled
@@ -1571,6 +1584,7 @@ proc ::Plumed::structuremenu_update {} {
 	    destroy .plumednc
 	    destroy .plumedrama
 	    destroy .plumed_ncacocb
+	    set_state_recursive disabled $w.options.line1.pbc
 	}
     }
 }
