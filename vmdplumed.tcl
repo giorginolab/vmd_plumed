@@ -25,13 +25,12 @@ namespace eval ::Plumed:: {
     namespace export plumed
     variable plugin_name "Plumed-GUI collective variable analysis tool"
 
-    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.1/user-doc/html"
-    variable plumed2_online_docbase_fallback "http://plumed2.berlios.de/master/user-doc/html/"
-    variable github_repository "https://github.com/tonigi/vmd_plumed/blob/master"
-
     variable debug 0;		       	# extra log info
     variable highlight_error_ms 12000;  # error message held this long
     variable plumed_default_version 2;  # default PLUMED to use if none found
+    
+    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.2/user-doc/html"
+    variable github_repository "https://github.com/tonigi/vmd_plumed/"
 
     variable plot_points 0;	       	# show data markers
     variable w;				# handle to main window
@@ -233,26 +232,28 @@ proc ::Plumed::plumed {} {
     $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
     menu $w.menubar.help -tearoff no
     $w.menubar.help add command -label "Getting started with Plumed-GUI" \
-	-command "vmd_open_url http://www.multiscalelab.org/utilities/PlumedGUI"
+	-command "vmd_open_url $Plumed::github_repository/blob/master/doc/README.md"
     $w.menubar.help add command -label "What to cite" \
         -command "vmd_open_url http://dx.doi.org/10.1016/j.cpc.2013.11.019"
     $w.menubar.help add separator
-    $w.menubar.help add command -label "What is PLUMED?" \
-        -command "vmd_open_url http://www.plumed-code.org"
-    $w.menubar.help add command -label "PLUMED 2.1 user's guide and CV syntax" \
-	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
-    $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
-	-command "vmd_open_url http://www.plumed-code.org/documentation"
-    $w.menubar.help add separator
     $w.menubar.help add command -label "How to install PLUMED's binaries" \
-	-command "vmd_open_url $Plumed::github_repository/doc/INSTALL-PLUMED-FIRST.md"
+	-command "vmd_open_url $Plumed::github_repository/blob/master/doc/INSTALL-PLUMED-FIRST.md"
     $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
 	-command ::Plumed::help_win32_install -state $win32_install_state
     $w.menubar.help add separator
-    $w.menubar.help add command -label "VMD Colvars homepage" \
-	-command "vmd_open_url http://colvars.github.io/" 
-    $w.menubar.help add command -label "VMD Colvars manual" \
-	-command "vmd_open_url http://colvars.github.io/colvars-refman-vmd/colvars-refman-vmd.html" 
+    $w.menubar.help add command -label "What is PLUMED?" \
+        -command "vmd_open_url http://www.plumed.org"
+    $w.menubar.help add command -label "PLUMED 2.2 user's guide and CV syntax" \
+	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
+    $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
+	-command "vmd_open_url http://www.plumed.org/documentation"
+    if [ info exists ::env(PLUMED_GUI_EXPERIMENTAL) ] {
+	$w.menubar.help add separator
+	$w.menubar.help add command -label "VMD Colvars homepage" \
+	    -command "vmd_open_url http://colvars.github.io/" 
+	$w.menubar.help add command -label "VMD Colvars manual" \
+	    -command "vmd_open_url http://colvars.github.io/colvars-refman-vmd/colvars-refman-vmd.html"
+    }
     $w.menubar.help add separator
     $w.menubar.help add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -1825,7 +1826,6 @@ proc ::Plumed::popup_help_url {} {
     variable popup_help_url_cached; # static
     variable driver_path
     variable plumed2_online_docbase
-    variable plumed2_online_docbase_fallback
 
     if {![info exists popup_help_url_cached]} {
 	# 1. try local
@@ -1841,7 +1841,7 @@ proc ::Plumed::popup_help_url {} {
 		set popup_help_url_cached $plumed2_online_docbase
 	    } else {
 		puts "Warning: local and remote help pages not available, using fallback"
-		set popup_help_url_cached $plumed2_online_docbase_fallback
+		set popup_help_url_cached "http://www.plumed.org"
 	    }
 	}
     }
