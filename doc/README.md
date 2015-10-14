@@ -18,6 +18,7 @@ allows you to:
 -   prepare reference files for RMSD, path-variable, native contacts,
     etc.
 
+
 Installation
 ------------
 
@@ -33,19 +34,6 @@ For a primer on the use of PLUMED, see e.g. [the official
 website](http://www.plumed-code.org/) and/or one of the [excellent
 tutorials](https://sites.google.com/site/plumedtutorial2010/) available.
 
-Citation
---------
-
-You are kindly requested to cite the following paper in any publication
-resulting from the use of Plumed-GUI (in addition to other possibly
-relevant Plumed citations):
-
--   Toni Giorgino, *Plumed-GUI: an environment for the interactive
-    development of molecular dynamics analysis and biasing scripts*,
-    Computer Physics Communications, Volume 185, Issue 3, March 2014,
-    Pages 1109-1114
-    [10.1016/j.cpc.2013.11.019](http://dx.doi.org/10.1016/j.cpc.2013.11.019)
-    or [arxiv:1312.3190](http://arxiv.org/abs/1312.3190).
 
 Usage
 -----
@@ -67,10 +55,17 @@ During evaluation, atom selection keywords in square brackets are
 replaced with a list of the corresponding *serial* numbers for the top
 molecule.
 
+![Main screen](plumedgui_main.png)
+
+
 When **Plot** is clicked, the currently loaded trajectory is exported to
 a temporary directory (shown in the console), and the *driver* utility
 is invoked. If there are no errors, a plot will show the CVs evaluated
 on the frames of the current trajectory.
+
+
+![Plot results](plumedgui_multiplot.png)
+
 
 **Troubleshooting**: In case of errors, the console will provide
 diagnostics and the location of the temporary directory where
@@ -81,6 +76,8 @@ computations are run. Common sources of error are:
 -   Improperly set periodic boundary conditions, especially when dealing
     with non-wrapped solvent or with MD engines which "break" molecules
     by wrapping them.
+
+
 
 The File menu
 -------------
@@ -187,14 +184,20 @@ angle is intended between residue *i* and *i+1*.
 
 
 
-Screenshots
-----------
 
-User interface:
+Citation
+--------
 
-![Main screen](plumedgui_main.png)
+You are kindly requested to cite the following paper in any publication
+resulting from the use of Plumed-GUI (in addition to other possibly
+relevant Plumed citations):
 
-![Plot results](plumedgui_multiplot.png)
+-   Toni Giorgino, *Plumed-GUI: an environment for the interactive
+    development of molecular dynamics analysis and biasing scripts*,
+    Computer Physics Communications, Volume 185, Issue 3, March 2014,
+    Pages 1109-1114
+    [10.1016/j.cpc.2013.11.019](http://dx.doi.org/10.1016/j.cpc.2013.11.019)
+    or [arxiv:1312.3190](http://arxiv.org/abs/1312.3190).
 
 
 
