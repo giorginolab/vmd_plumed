@@ -16,7 +16,8 @@ The PLUMED-GUI collective variable analysis tool is a plugin for the Visual Mole
 - export the CV definition file for use in MD simulations
 - prepare reference files for RMSD, path-variable, native contacts, etc.
  
-The code is hosted at <https://github.com/tonigi/vmd_plumed>.
+The code is hosted on GitHub at
+[tonigi/vmd_plumed](https://github.com/tonigi/vmd_plumed).
 
 
 
@@ -25,8 +26,7 @@ Installation
 ------------
 
 First, you need PLUMED 1.3's *driver* and/or PLUMED 2's *plumed*
-executables: see [INSTALL-PLUMED-FIRST.md](doc/INSTALL-PLUMED-FIRST.md) (or the corresponding
-manuals).
+executables: see [INSTALL-PLUMED-FIRST.md](doc/INSTALL-PLUMED-FIRST.md).
 
 Second, you may want to update PLUMED-GUI to its latest version,
 rather than using the one distributed with VMD. See instructions
