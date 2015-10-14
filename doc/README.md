@@ -4,7 +4,7 @@ A Plumed collective variable analysis tool for VMD
 The *PLUMED-GUI collective variable analysis tool* is a plugin for the
 [Visual Molecular Dynamics (VMD)](http://www.ks.uiuc.edu/Research/vmd/)
 software that provides access to the extensive set of collective
-variables (CV) defined in the [PLUMED](http://www.plumed-code.org/). It
+variables (CV) defined in the [PLUMED](http://www.plumed.org/). It
 allows you to:
 
 -   analyze the currently loaded trajectory by evaluating and plotting
@@ -32,8 +32,8 @@ executables: see [INSTALL-PLUMED-FIRST.md] (or the corresponding
 manuals).
 
 Second, you may want to update PLUMED-GUI to its latest version,
-rather than using the one distributed with VMD. See instructions in
-[INSTALL.md].
+rather than using the one distributed with VMD. See instructions
+in [INSTALL.md].
 
 
 
@@ -48,9 +48,7 @@ The usage of the plugin is straightforward.
 
 2.  Edit the CV definition file, defining one or more CVs.
 
-    For a primer on the use of PLUMED, see e.g. [the official
-website](http://www.plumed-code.org/) and/or one of the [excellent
-tutorials](https://sites.google.com/site/plumedtutorial2010/) available.
+    For a primer on the use of PLUMED, see e.g. [the official website](http://www.plumed.org/) and/or one of the [available tutorials](http://plumed.github.io/doc-v2.1/user-doc/html/tutorials.html).
 
 3.  Click "Plot". This will open a plot window with the selected CVs.
 
@@ -70,7 +68,7 @@ on the frames of the current trajectory.
 ![Plot results](plumedgui_multiplot.png)
 
 
-**Troubleshooting**: In case of errors, the console will provide
+In case of errors, the console will provide
 diagnostics and the location of the temporary directory where
 computations are run. Common sources of error are:
 
@@ -189,6 +187,12 @@ added. The ω angle is intended between residue *i* and *i+1*.
 
 ![Ramachandran CVs](plumedgui_rama.png)
 
+
+
+VMD Colvars
+-----------
+
+*Experimental*  support for VMD's built-in *Colvars* module can be enabled setting the environment variable `PLUMED_GUI_EXPERIMENTAL` before running VMD.  This is very experimental and VMD session may crash suddenly. The *Colvars* syntax is described in http://colvars.github.io/ and in the corresponding [reference article](http://dx.doi.org/10.1080/00268976.2013.813594).
 
 
 

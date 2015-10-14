@@ -18,22 +18,18 @@ The PLUMED-GUI collective variable analysis tool is a plugin for the Visual Mole
  
 The code is hosted at <https://github.com/tonigi/vmd_plumed>.
 
-For a primer on the use of PLUMED engine, see www.plumed-code.org . 
 
 
 
 Documentation
 -------------
 
-You will find
+Please find
 
-- A brief introduction to the tool in this README file
-- A longer explanation of the options, in the [doc/README.md](doc/README.md) file
+- A short manual in the [doc/README.md](doc/README.md) file
 - An extensive description in (please read and cite) 
   * Toni Giorgino, _Plumed-GUI: an environment for the interactive development of molecular dynamics analysis and biasing scripts_ (2014) Computer Physics Communications, Volume 185, Issue 3, March 2014, Pages 1109-1114, [doi:10.1016/j.cpc.2013.11.019](http://dx.doi.org/10.1016/j.cpc.2013.11.019), or [arXiv:1312.3190](http://arxiv.org/abs/1312.3190)  
-- The most current version at https://github.com/tonigi/vmd_plumed
-- Installation instructions in the [INSTALL](doc/INSTALL.md) file 
-- Information on the PLUMED engine at http://www.plumed-code.org 
+- Information on the PLUMED engine at http://www.plumed.org 
 
 
 
@@ -56,11 +52,6 @@ Troubleshooting: In case of errors, the console will provide diagnostics and the
 
 See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below.
 
-
-VMD Colvars
------------
-
-*Experimental*  support for VMD's built-in *Colvars* module can be enabled setting the environment variable `PLUMED_GUI_EXPERIMENTAL` before running VMD.  This is very experimental and VMD session may crash suddenly. The *Colvars* syntax is described in http://colvars.github.io/ and in the corresponding [reference article](http://dx.doi.org/10.1080/00268976.2013.813594).
 
 
 

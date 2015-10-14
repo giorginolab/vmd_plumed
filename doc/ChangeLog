@@ -1,3 +1,8 @@
+2015-10-14  Toni  <toni@pcgiorgino.isib.cnr.it>
+
+	* 2.5 Support for experimental VMD COLVARS. Updated PLUMED2
+	templates. New docs.
+
 2014-12-05  Toni  <toni@pcgiorgino.isib.cnr.it>
 
 	* 2.4.1 Extensive OSX fixes.
