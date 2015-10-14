@@ -85,7 +85,7 @@ colvar {
     name d
     distance { 
 	group1 { atomNumbers 1 }
-	group2 { atomNumbers 200 }
+	group2 { \[ serial 200 \] }
     }
 }\n"
 
