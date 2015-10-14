@@ -16,7 +16,6 @@ namespace eval ::Plumed {
 
     variable templates_list_vmdcv [list \
 	"Empty colvar"			"colvar {\n  name myname\n  ...\n}" \
-	"Atom selection"		"{ \[ protein and name CA \] }" \
 	- - \
 	"Distance"			[vmdcv_gencv2 distance {group1 group2}] \
 	"Distance projected on axis"	[vmdcv_gencv2 distanceZ {main ref ref2 axis}] \

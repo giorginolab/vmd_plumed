@@ -1714,8 +1714,6 @@ proc ::Plumed::templates_populate_menu {} {
 	vmdcv {
 	    bind $w <$modifier-g> "$::Plumed::w.menubar.insert invoke 1" 
 	    $w.menubar.insert entryconfigure 1 -accelerator $mod+G
-	    bind $w <$modifier-m> "$::Plumed::w.menubar.insert invoke 2" 
-	    $w.menubar.insert entryconfigure 2 -accelerator $mod+M
 	}
     }
 }
