@@ -18,6 +18,11 @@ allows you to:
 -   prepare reference files for RMSD, path-variable, native contacts,
     etc.
 
+It is thoroughly described in the
+[companion paper](http://arxiv.org/abs/1312.3190) on Computer Physics
+Communications.
+
+
 
 Installation
 ------------
@@ -33,6 +38,8 @@ executables.
 For a primer on the use of PLUMED, see e.g. [the official
 website](http://www.plumed-code.org/) and/or one of the [excellent
 tutorials](https://sites.google.com/site/plumedtutorial2010/) available.
+
+
 
 
 Usage
@@ -88,11 +95,15 @@ and **Save as...** save the currently open file verbatim, while the
 below), thus creating a *META\_INP* file that can be used directly in
 simulations.
 
+
+
 The *Edit* menu
 -------------
 
 The **Edit** menu provides the usual cut-copy-paste text-editing
 options.
+
+
 
 The *Templates* menu
 ------------------
@@ -201,12 +212,13 @@ relevant Plumed citations):
 
 
 
-
 License
 -------
 
 By downloading the software you agree to comply with the terms of the
 3-clause BSD license.
+
+
 
 Acknowledgments
 ---------------
