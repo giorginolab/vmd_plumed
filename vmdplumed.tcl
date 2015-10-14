@@ -518,7 +518,7 @@ proc ::Plumed::tmpdir { } {
     global tcl_platform
     switch $tcl_platform(platform) {
 	unix {
-	    set tmpdir /tmp   ;# or even $::env(TMPDIR), at times.
+	    set tmpdir /var/tmp   ;# or even $::env(TMPDIR), at times.
 	} macintosh {
 	    set tmpdir $::env(TRASH_FOLDER)  ;# a better place?
 	} default {
