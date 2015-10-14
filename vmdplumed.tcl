@@ -1557,7 +1557,6 @@ proc ::Plumed::highlight_error_label {label etext} {
 
 proc ::Plumed::structuremenu_update {} {
     variable plumed_version
-    variable w
     switch $plumed_version {
 	1 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1565,7 +1564,6 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state normal
-	    set_state_recursive normal $w.options.line1.pbc
 	}
 	2 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1574,7 +1572,6 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
 	    destroy .plumed_ncacocb
-	    set_state_recursive normal $w.options.line1.pbc
 	}
 	vmdcv {
 	    .plumed.menubar entryconfigure 4 -state disabled
@@ -1586,7 +1583,6 @@ proc ::Plumed::structuremenu_update {} {
 	    destroy .plumednc
 	    destroy .plumedrama
 	    destroy .plumed_ncacocb
-	    set_state_recursive disabled $w.options.line1.pbc
 	}
     }
 }
@@ -1652,11 +1648,21 @@ proc ::Plumed::plumed_version_changed {} {
     variable driver_path_v1
     variable driver_path_v2
     variable driver_path
+    variable w
 
     switch $plumed_version {
-	1  {set driver_path $driver_path_v1}
-	2  {set driver_path $driver_path_v2}
-     vmdcv {set driver_path "(Not needed)"}
+	1  {
+	    set driver_path $driver_path_v1
+	    set_state_recursive normal $w.options.line1.pbc
+	}
+	2  {
+	    set driver_path $driver_path_v2
+    	    set_state_recursive normal $w.options.line1.pbc
+	}
+	vmdcv {
+	    set driver_path "(Not needed)"
+	    set_state_recursive disabled $w.options.line1.pbc
+	}
     } 
 
     instructions_update
