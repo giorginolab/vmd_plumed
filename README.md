@@ -2,7 +2,7 @@ Plumed-GUI
 ==========
 
 Toni Giorgino  
-Consiglio Nazionale delle Ricerche (ISIB-CNR)
+Consiglio Nazionale delle Ricerche (IN-CNR)
 
 
 
@@ -55,6 +55,12 @@ When *Plot* is clicked, the currently loaded trajectory is exported to a tempora
 Troubleshooting: In case of errors, the console will provide diagnostics and the location of the temporary directory where computations are run. 
 
 See the full instructions at http://www.multiscalelab.org/utilities/PlumedCVTool  and in the paper below.
+
+
+VMD Colvars
+-----------
+
+*Experimental*  support for VMD's built-in *Colvars* module can be enabled setting the environment variable `PLUMED_GUI_EXPERIMENTAL` before running VMD.  This is very experimental and VMD session may crash suddenly. The *Colvars* syntax is described in http://colvars.github.io/ and in the corresponding [reference article](http://dx.doi.org/10.1080/00268976.2013.813594).
 
 
 

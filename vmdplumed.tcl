@@ -286,7 +286,7 @@ proc ::Plumed::plumed {} {
     pack [  ttk::entry $w.options.line1.pbc.boxx -width 6 -textvariable [namespace current]::pbc_boxx ] -side left
     pack [  ttk::entry $w.options.line1.pbc.boxy -width 6 -textvariable [namespace current]::pbc_boxy ] -side left
     pack [  ttk::entry $w.options.line1.pbc.boxz -width 6 -textvariable [namespace current]::pbc_boxz ] -side left
-    # pack [  ttk::label $w.options.line1.pbc.spacer2 -text " " ] -side left -expand true -fill x
+
     pack [  ttk::checkbutton $w.options.line1.inspector -text "Mark data points" \
 	       -variable  [namespace current]::plot_points ] -side right
 
@@ -294,15 +294,16 @@ proc ::Plumed::plumed {} {
     pack [  ttk::frame $w.options.line2 ]  -fill x
     pack [  ttk::label $w.options.line2.version -text "Engine: " ] -side left -expand 0
     pack [  ttk::radiobutton $w.options.line2.v1 -value 1 -text "Plumed 1.3  "        \
-	       -variable [namespace current]::plumed_version              \
-     	       -command [namespace current]::plumed_version_changed    	  ] -side left 
+		-variable [namespace current]::plumed_version              \
+		-command [namespace current]::plumed_version_changed    	  ] -side left 
     pack [  ttk::radiobutton $w.options.line2.v2 -value 2 -text "Plumed 2.x  "         \
-	       -variable [namespace current]::plumed_version              \
-     	       -command [namespace current]::plumed_version_changed       ] -side left 
-    pack [  ttk::radiobutton $w.options.line2.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
-	       -variable [namespace current]::plumed_version              \
-     	       -command [namespace current]::plumed_version_changed       ] -side left 
-
+		-variable [namespace current]::plumed_version              \
+		-command [namespace current]::plumed_version_changed       ] -side left
+    if [ info exists ::env(PLUMED_GUI_EXPERIMENTAL) ] {
+	pack [  ttk::radiobutton $w.options.line2.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
+		    -variable [namespace current]::plumed_version              \
+		    -command [namespace current]::plumed_version_changed       ] -side left
+    }
     pack [  ttk::label $w.options.line2.text -text "       Path to executable: " ] -side left -expand 0
     pack [  ttk::entry $w.options.line2.path -width 5 -textvariable \
 	       [namespace current]::driver_path ] -side left -expand 1 -fill x
