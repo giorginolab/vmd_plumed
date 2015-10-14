@@ -25,12 +25,12 @@ Installation
 ------------
 
 First, you need PLUMED 1.3's *driver* and/or PLUMED 2's *plumed*
-executables: see [doc/INSTALL-PLUMED-FIRST.md] (or the corresponding
+executables: see [INSTALL-PLUMED-FIRST.md](doc/INSTALL-PLUMED-FIRST.md) (or the corresponding
 manuals).
 
 Second, you may want to update PLUMED-GUI to its latest version,
 rather than using the one distributed with VMD. See instructions
-in [doc/INSTALL.md].
+in [INSTALL.md](doc/INSTALL.md).
 
 
 
