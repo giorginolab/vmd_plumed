@@ -79,7 +79,7 @@ computations are run. Common sources of error are:
 
 
 
-The File menu
+The *File* menu
 -------------
 
 CV definition files can be opened, edited and saved as usual. **Save**
@@ -88,19 +88,17 @@ and **Save as...** save the currently open file verbatim, while the
 below), thus creating a *META\_INP* file that can be used directly in
 simulations.
 
-The Edit menu
+The *Edit* menu
 -------------
 
 The **Edit** menu provides the usual cut-copy-paste text-editing
 options.
 
-The Templates menu
+The *Templates* menu
 ------------------
 
-Elements in the
-**[Templates](http://img204.imageshack.us/i/29948613.png/)** menu
-provides shortcuts for most CVs supported by PLUMED. Please refer to
-PLUMED's manual for the full syntax.
+The **Templates** menu provides shortcuts for most CVs supported by
+PLUMED. Please refer to PLUMED's manual for the full syntax.
 
 The list of keywords for PLUMED 2 are generated when the package is
 built, matching the version current at that time; therefore, the
@@ -121,7 +119,7 @@ PLUMED, but all of them will work anyway when typed in.
 
 
 
-The Structure menu
+The *Structure* menu
 ------------------
 
 The **Structure** menu provides functions for entering complex CVs.
@@ -129,16 +127,17 @@ The **Structure** menu provides functions for entering complex CVs.
 
 ### Reference structures for RMSD and path variables
 
-The **Structure\>[Prepare reference
-structure...](http://img835.imageshack.us/i/screenshotpreparerefere.png/)**
-dialog can be used to prepare pseudo-PDB files that can be used as
-reference structures for RMSD, path-variables, etc. Two VMD atom
-selections are required to define the set of atoms that will be used for
-alignment (alignment set) and for the distance measurement (displacement
-set), respectively. The *currently selected frame of the top molecule*
-is used to create a reference file; numbering can be altered to conform
-to another molecule. The file format is specified in the 'Path
-collective variables' section of the PLUMED manual.
+The **Structure>Prepare reference structure...** dialog can be used to
+prepare pseudo-PDB files that can be used as reference structures for
+RMSD, path-variables, etc.
+
+Two VMD atom selections are required to define the set of atoms that
+will be used for alignment (alignment set) and for the distance
+measurement (displacement set), respectively. The *currently selected
+frame of the top molecule* is used to create a reference file;
+numbering can be altered to conform to another molecule. The file
+format is specified in the 'Path collective variables' section of the
+PLUMED manual.
 
 **Notes:**
 
@@ -155,7 +154,7 @@ collective variables' section of the PLUMED manual.
 
 ### Native contacts
 
-The **Structure\>Native contacts CV** inserts a native-contacts CV. The
+The **Structure>Native contacts CV** inserts a native-contacts CV. The
 *currently selected frame of the top molecule* is taken as the native
 state. Atom numbers are adapted to fit the structure indicated in the
 **target molecule** field. If **selection 2** is given, only
@@ -175,10 +174,11 @@ lines, remember to set the top molecule to the one you want to analyze.*
 
 ### Backbone torsion CVs
 
-A list of φ, ψ, and ω Ramachandran angles can be inserted for an atom
-selection. Note that N-CA-C atom names are assumed for backbone atoms.
-Dihedrals involving atoms outside the selection are not added. The ω
-angle is intended between residue *i* and *i+1*.
+The **Structure>Insert backbone torsions...** inserts a list of CVs
+corresponding to the φ, ψ, and ω Ramachandran angles defined in an
+atom selection. Note that N-CA-C atom names are assumed for backbone
+atoms.  Dihedrals involving atoms outside the selection are not
+added. The ω angle is intended between residue *i* and *i+1*.
 
 ![Ramachandran CVs](plumedgui_rama.png)
 
