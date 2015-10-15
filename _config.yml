@@ -1,5 +1,5 @@
-name: Your Blog's Name
-description: A description for your blog
+name: Plumed-GUI
+description: A Plumed collective variable analysis tool for VMD
 repository_url: "https://github.com/tonigi/vmd_plumed"
 markdown: kramdown
 
