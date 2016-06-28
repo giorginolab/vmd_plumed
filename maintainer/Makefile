@@ -14,7 +14,8 @@ templates_list_v2.tcl: maintainer/templates_list_v2_generator.tcl
 
 
 #  $(VMFILES) sans pkgIndex itself
-pkgIndex.tcl: templates_list_v1.tcl templates_list_v2.tcl vmdplumed.tcl
+pkgIndex.tcl: templates_list_v1.tcl templates_list_v2.tcl \
+	templates_list_vmdcv.tcl vmdplumed.tcl
 	tclsh <<< "pkg_mkIndex -verbose ."
 
 .PHONY:

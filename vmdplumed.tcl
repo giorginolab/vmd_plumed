@@ -472,10 +472,10 @@ proc ::Plumed::help_win32_install {} {
     puts "Installation may fail for permissions, network, antivirus."
     file mkdir $destdir
 
-    set url_driver {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe}
+    set url_driver {http://tonigi.github.io/vmd_plumed/binaries/driver.exe}
     vmd_mol_urlload $url_driver [file join $destdir driver.exe]
 
-    set url_plumed {http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe}
+    set url_plumed {http://tonigi.github.io/vmd_plumed/binaries/plumed.exe}
     vmd_mol_urlload $url_plumed [file join $destdir plumed.exe]
 
     plumed_path_lookup
