@@ -181,7 +181,7 @@ added. The ω angle is intended between residue *i* and *i+1*.
 VMD Colvars
 -----------
 
-*Experimental*  support for VMD's built-in *Colvars* module can be enabled setting the environment variable `PLUMED_GUI_EXPERIMENTAL` before running VMD.  This is very experimental and VMD session may crash suddenly. The *Colvars* syntax is described in http://colvars.github.io/ and in the corresponding [reference article](http://dx.doi.org/10.1080/00268976.2013.813594).
+The *Colvars* syntax is described in http://colvars.github.io/ and in the corresponding [reference article](http://dx.doi.org/10.1080/00268976.2013.813594).
 
 
 
