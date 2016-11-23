@@ -2,9 +2,10 @@
 
 
 # When changing VMVERSION version number, also fix it in
-# vmdplumed.tcl, templates_list_v1.tcl, and in
-# gentemplate/generate_templates_list_v2.tcl (until I find a better
-# way)
+#  vmdplumed.tcl
+#  templates_list_v1.tcl
+#  templates_list_vmdcv.tcl
+#  maintainer/generate_templates_list_v2.tcl
 
 
 default: templates_list_v2.tcl pkgIndex.tcl

@@ -1,10 +1,16 @@
 # VMD Plumed tool  - a GUI to compute collective variables
 # over a trajectory
 #
-#     Copyright (C) 2014  National Research Council of Italy and
-#                         Universitat Pompeu Fabra 
+#     Author              Toni Giorgino  (toni.giorgino@cnr.it)
 #
-#     Author              Toni Giorgino  (toni.giorgino@isib.cnr.it)
+#     (c) 2012-           National Research Council of Italy
+#     (c) 2009-2012       Universitat Pompeu Fabra 
+#
+#     See Toni Giorgino, "Plumed-GUI: an environment for the
+#     interactive development of molecular dynamics analysis and
+#     biasing scripts" (2014) Computer Physics Communications, Volume
+#     185, Issue 3, March 2014, Pages 1109-1114,
+#     doi:10.1016/j.cpc.2013.11.019, or arXiv:1312.3190
 #
 #     This program is available under either the 3-clause BSD license,
 #     (e.g. see http://www.ks.uiuc.edu/Research/vmd/plugins/pluginlicense.html)
@@ -14,7 +20,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.5
+package provide plumed 2.6
 
 package require Tk 8.5
 package require http
@@ -247,13 +253,11 @@ proc ::Plumed::plumed {} {
 	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed.org/documentation"
-    if [ info exists ::env(PLUMED_GUI_EXPERIMENTAL) ] {
-	$w.menubar.help add separator
-	$w.menubar.help add command -label "VMD Colvars homepage" \
+    $w.menubar.help add separator
+    $w.menubar.help add command -label "VMD Colvars homepage" \
 	    -command "vmd_open_url http://colvars.github.io/" 
-	$w.menubar.help add command -label "VMD Colvars manual" \
+    $w.menubar.help add command -label "VMD Colvars manual" \
 	    -command "vmd_open_url http://colvars.github.io/colvars-refman-vmd/colvars-refman-vmd.html"
-    }
     $w.menubar.help add separator
     $w.menubar.help add command -label "About the $plugin_name" \
 	-command [namespace current]::help_about
@@ -300,11 +304,10 @@ proc ::Plumed::plumed {} {
     pack [  ttk::radiobutton $w.options.line2.v2 -value 2 -text "Plumed 2.x  "         \
 		-variable [namespace current]::plumed_version              \
 		-command [namespace current]::plumed_version_changed       ] -side left
-    if [ info exists ::env(PLUMED_GUI_EXPERIMENTAL) ] {
-	pack [  ttk::radiobutton $w.options.line2.vmdcv -value vmdcv -text "VMD Colvars (alpha)"         \
-		    -variable [namespace current]::plumed_version              \
-		    -command [namespace current]::plumed_version_changed       ] -side left
-    }
+    pack [  ttk::radiobutton $w.options.line2.vmdcv -value vmdcv -text "VMD Colvars "         \
+		-variable [namespace current]::plumed_version              \
+		-command [namespace current]::plumed_version_changed       ] -side left
+
     pack [  ttk::label $w.options.line2.text -text "       Path to executable: " ] -side left -expand 0
     pack [  ttk::entry $w.options.line2.path -width 5 -textvariable \
 	       [namespace current]::driver_path ] -side left -expand 1 -fill x
@@ -493,8 +496,6 @@ $plugin_name
 Version loaded: [package present plumed] (available: [package versions plumed])
 
 Toni Giorgino <toni.giorgino${at}cnr.it>
-
-Institute of Neurosciences (IN-ISIB),
 National Research Council of Italy (CNR)
 
 Before 2012: 
@@ -502,7 +503,7 @@ Computational Biophysics Group (GRIB-IMIM-UPF),
 Universitat Pompeu Fabra
 
 Citation:
-Giorgino T.  PLUMED-GUI: An environment for the interactive development of molecular dynamics analysis and biasing scripts. Comp. Phys. Comm. 2014 Mar;185(3):1109-14. 
+Giorgino T.  PLUMED-GUI: An environment for the interactive development of molecular dynamics analysis and biasing scripts. Comp. Phys. Comm. 2014 Mar;185(3):1109-14. arXiv:1312.3190
 
 
 "
