@@ -2114,13 +2114,13 @@ proc ::Plumed::do_compute_vmdcv {} {
 	catch {cv delete} e
 	cv molid top
 	set script [replace_serials [getText] ]
-	set o [ catch {  cv config $script } e ]
-	if {$o} {
-		error "A problem occurred. Error messages\nare found in VMD's text console."
+        if [ catch { cv config $script } e ] {
+	    tk_messageBox -icon error -title "Error" -parent .plumed \
+		-message "Colvar module returned the following problem...\n\n$e." \
+		-detail "Further messages are found in VMD's text console."
+	    cv reset
+	    return
 	} 
-	# puts "o>> $o"
-	# puts "e>> $e"
-	# puts "errorInfo>> $::errorInfo"
 
 	set fname [file join [tmpdir] "vmd_plumed.[pid].dat"]
 	set fd [open $fname w]
