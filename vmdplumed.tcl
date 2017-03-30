@@ -35,7 +35,7 @@ namespace eval ::Plumed:: {
     variable highlight_error_ms 12000;  # error message held this long
     variable plumed_default_version 2;  # default PLUMED to use if none found
     
-    variable plumed2_online_docbase "http://plumed.github.io/doc-v2.2/user-doc/html"
+    variable plumed2_online_docbase "http://plumed.github.io/doc-vVERSION/user-doc/html"
     variable github_repository "https://github.com/tonigi/vmd_plumed/"
 
     variable plot_points 0;	       	# show data markers
@@ -1840,10 +1840,12 @@ proc ::Plumed::popup_help_url {} {
 	    puts "Info: using local help pages."
 	} else {
 	    # 2. try version-specific remote
-	    set url "$plumed2_online_docbase/index.html"
-	    if {[get_url_ncode $url]==200} {
+	    set url $plumed2_online_docbase
+	    set url [string map [list "VERSION" [exec $driver_path --standalone-executable info --version]] $url]
+	    puts "URL IS $url"
+	    if {[lsearch -exact {200 301} [get_url_ncode "$url/index.html"]] >= 0} {
 		puts "Info: local help pages not available, using remote pages at $url"
-		set popup_help_url_cached $plumed2_online_docbase
+		set popup_help_url_cached $url
 	    } else {
 		puts "Warning: local and remote help pages not available, using fallback"
 		set popup_help_url_cached "http://www.plumed.org"
