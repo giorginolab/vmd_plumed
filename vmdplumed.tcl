@@ -233,6 +233,9 @@ proc ::Plumed::plumed {} {
 	-command Plumed::rama_gui
     $w.menubar.structure add command -label "Insert group for secondary structure RMSD..." \
 	-command Plumed::ncacocb_gui
+    $w.menubar.structure add checkbutton -label "Display forces" \
+	-command Plumed::show_forces_toggle \
+	-variable ::Plumed::show_forces_enabled
 
     ## help menu
     $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
@@ -2107,8 +2110,12 @@ proc ::Plumed::get_pbc_v2 { } {
 }
 
 
+
+# ========================================
+# Force-display stuff
+
 # Run driver with --dump-forces. Extensive refactoring needed.
-proc ::Plumed::do_compute_forces_v2 { } {
+proc ::Plumed::show_forces_compute { } {
     variable driver_path
 
     if {[molinfo top]==-1 || [molinfo top get numframes] < 1} {
@@ -2168,8 +2175,6 @@ proc ::Plumed::do_compute_forces_v2 { } {
 }
 
 
-# ========================================
-# Force-display stuff
 
 # Parse a forces file like
 # NATOMS
@@ -2195,23 +2200,33 @@ proc ::Plumed::parse_forces {fname} {
     return $force_list
 }
 
+proc ::Plumed::show_forces_toggle {} {
+    variable show_forces_enabled
+    if $show_forces_enabled {
+	show_forces_compute
+	show_forces_start
+    } else {
+	show_forces_stop
+    }
+}
 
-proc ::Plumed::start_show_forces {fname {scale 0.1}} {
+
+proc ::Plumed::show_forces_start {fname {scale 0.1}} {
     variable forces_data
     variable forces_scale $scale
     set forces_data [parse_forces $fname]
     # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
     global vmd_frame
-    trace variable vmd_frame([molinfo top]) w ::Plumed::draw_forces
+    trace variable vmd_frame([molinfo top]) w ::Plumed::show_forces_draw_frame
 }
 
-proc ::Plumed::stop_show_forces {} {
+proc ::Plumed::show_forces_stop {} {
     global vmd_frame
     graphics top delete all
-    trace vdelete vmd_frame([molinfo top]) w ::Plumed::draw_forces
+    trace vdelete vmd_frame([molinfo top]) w ::Plumed::show_forces_draw_frame
 }
 
-proc ::Plumed::draw_forces {args} {
+proc ::Plumed::show_forces_draw_frame {args} {
     variable forces_data
     variable forces_scale
     
