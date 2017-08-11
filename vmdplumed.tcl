@@ -2196,8 +2196,9 @@ proc ::Plumed::parse_forces {fname} {
 }
 
 
-proc ::Plumed::start_show_forces {fname} {
+proc ::Plumed::start_show_forces {fname {scale 1}} {
     variable forces_data
+    variable forces_scale $scale
     set forces_data [parse_forces $fname]
     # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
     global vmd_frame
@@ -2206,27 +2207,42 @@ proc ::Plumed::start_show_forces {fname} {
 
 proc ::Plumed::stop_show_forces {} {
     global vmd_frame
+    graphics top delete all
     trace vdelete vmd_frame([molinfo top]) w ::Plumed::draw_forces
 }
 
 proc ::Plumed::draw_forces {} {
+    variable forces_data
+    variable forces_scale
     
+    # global vmd_frame
+    set fno [molinfo top get frame]
+
+    set as [atomselect top all]
+    $as frame $no
+
+    #  Iterate over atoms
+    graphics top delete all
+    set fd [lindex $forces_data $fno]
+    foreach d $fd {
+	set x [$as get {x y z}]
+	set ds [vecscale $forces_scale $d]
+	draw_arrow $x $ds
+    }
+    $as delete
     
+}
+
+# Draw an arrow at x in direction d
+proc ::Plumed::draw_arrow {x d {r 1} {tip 1}} {
+    set xf [vecadd $x $d]
+    set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
+    graphics top cylinder $x $xf radius $r filled yes
+    graphics top cone $xf $xtip radius $r
 }
 
 
 				  
-
-proc ::Plumed::show_forces {frc {scale 1.0}} {
-    # Assume that the number of frames is equal to the length of forces
-    # if { [molinfo top get numframes] != [llength $frc] } { error "Wrong number of frames" }
-
-    for { set f 0 } { $f < [llength $frc] } {incr f} {
-	
-    }
-
-}
-
 
 
 
