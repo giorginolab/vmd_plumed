@@ -233,9 +233,8 @@ proc ::Plumed::plumed {} {
 	-command Plumed::rama_gui
     $w.menubar.structure add command -label "Insert group for secondary structure RMSD..." \
 	-command Plumed::ncacocb_gui
-    $w.menubar.structure add checkbutton -label "Display forces" \
-	-command Plumed::show_forces_toggle \
-	-variable ::Plumed::show_forces_enabled
+    $w.menubar.structure add command -label "Display gradients and forces..." \
+	-command Plumed::show_forces_gui
 
     ## help menu
     $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
@@ -2200,19 +2199,54 @@ proc ::Plumed::parse_forces {fname} {
 }
 
 
-
-proc ::Plumed::show_forces_toggle {} {
-    variable show_forces_enabled
-    variable forces_data
-    variable forces_scale 1
-    if $show_forces_enabled {
-	set forces_data [show_forces_compute]
-	show_forces_start
-    } else {
-	show_forces_stop
+proc ::Plumed::show_forces_gui {} {
+    set tl .plumed_show_forces
+    if { [winfo exists $tl] } {
+	wm deiconify $tl
+	return
     }
+
+    variable show_forces_scale 1.00
+    variable show_forces_data
+
+    toplevel $tl
+    wm title $tl "Display gradients and forces"
+
+    set n $tl
+    pack [ ttk::label $n.head1 -text "Display the force vector that would be applied to each atom." \
+	       -justify center -anchor center -pad 3 ] -side top -fill x 
+
+    pack [ ttk::label $n.explain -text "To visualize the effect of a bias on a CV you may want to add a constant unitary force, e.g.\nRESTRAINT ARG=mycv AT=0 SLOPE=-1" \
+	       -justify center -anchor center -pad 3 ] -side top -fill x 
+
+    # http://wiki.tcl.tk/1433
+    pack [ ttk::frame $n.scale ] -side top -fill x -expand 1
+
+    pack [ ttk::label $n.scale.lab -text "Arrow scale: "] -side left
+    pack [ ttk::scale  $n.scale.scale -from -20 -to 20 -value 0 \
+	       -orient h -command ::Plumed::show_forces_scale_changed]  -side left -fill x -expand 1
+    pack [ ttk::label $n.scale.value -text 1.0 -width 8 -anchor e] -side left
+    pack [ ttk::label $n.scale.unit -text "Å per energy unit" ] -side left
+
+    set show_forces_data [show_forces_compute]
+    show_forces_start
+    show_forces_draw_frame
+    
+    wm protocol $tl WM_DELETE_WINDOW {
+	::Plumed::show_forces_stop
+	destroy .plumed_show_forces
+    }
+
 }
 
+proc ::Plumed::show_forces_scale_changed {vraw} {
+    variable show_forces_scale
+    set v [expr 10**($vraw/10)]
+    set show_forces_scale $v
+    set vr [format "%.2f" $v]
+    .plumed_show_forces.scale.value configure -text $vr
+    show_forces_draw_frame
+}
 
 proc ::Plumed::show_forces_start {} {
     # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
@@ -2227,13 +2261,13 @@ proc ::Plumed::show_forces_stop {} {
 }
 
 proc ::Plumed::show_forces_draw_frame {args} {
-    variable forces_data
-    variable forces_scale 
+    variable show_forces_data
+    variable show_forces_scale 
     
     # global vmd_frame
     set fno [molinfo top get frame]
 
-    set fd [lindex $forces_data $fno]
+    set fd [lindex $show_forces_data $fno]
 
     set as [atomselect top all]
     $as frame $fno
@@ -2243,7 +2277,7 @@ proc ::Plumed::show_forces_draw_frame {args} {
     #  Iterate over atoms
     graphics top delete all
     foreach d $fd x $xyz_all {
-	set ds [vecscale $forces_scale $d]
+	set ds [vecscale $show_forces_scale $d]
 	draw_arrow $x $ds
     }
     
