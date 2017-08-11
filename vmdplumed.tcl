@@ -1932,9 +1932,9 @@ proc ::Plumed::do_compute {{outfile ""}} {
     if {$plumed_version==1} { cd_push $tmpd }
     if { [ catch { exec {*}$cmd } driver_stdout ] ||
 	 ! [file readable $colvar]  } {
-	set dontplot 1
+	set failure 1
     } else {
-	set dontplot 0
+	set failure 0
     }
     if {$plumed_version==1} { cd_push - }
 
@@ -1944,7 +1944,7 @@ proc ::Plumed::do_compute {{outfile ""}} {
     puts "Temporary files are in directory $tmpd"
 
     # Parse if v2
-    if { $dontplot } {
+    if { $failure } {
 	puts "Something went wrong. Check above messages."
 	tk_messageBox -icon error -title "Error" -parent .plumed -message \
 	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
@@ -2105,6 +2105,94 @@ proc ::Plumed::get_pbc_v2 { } {
 	       [expr $pbc_boxz/10.0] } } ]
     return $pbc
 }
+
+
+# Run driver with --dump-forces. Extensive refactoring needed.
+proc ::Plumed::do_compute_forces_v2 { } {
+    variable driver_path
+
+    if {[molinfo top]==-1 || [molinfo top get numframes] < 1} {
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
+	    "A top molecule and at least one frame is required to plot."
+	return 
+    }
+
+    if {![file executable $driver_path]} { 
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
+	    "The plumed executable is required. See manual for installation instructions."
+	return }
+
+    # Prepare temp. dir and files
+    set tmpd [file join [tmpdir] vmdplumed.[pid]]
+    file mkdir $tmpd
+
+    set meta [file join $tmpd META_INP]
+    set pdb [file join $tmpd temp.pdb] 
+    set dcd [file join $tmpd temp.dcd]
+    set colvar [file join $tmpd COLVAR]
+    set forces [file join $tmpd FORCES]
+
+    writePlumed [atomselect top all] $pdb
+    animate write dcd $dcd waitfor all
+    file delete $colvar
+
+    write_meta_inp_v2 $meta $colvar
+    set pbc [get_pbc_v2]
+    set cmd [list $driver_path --standalone-executable driver {*}$pbc --mf_dcd $dcd --pdb $pdb --plumed $meta --dump-forces $forces  ]
+
+    puts "Executing: $cmd"
+
+    if { [ catch { exec {*}$cmd } driver_stdout ] ||
+	 ! [file readable $colvar]  } {
+	set failure 1
+    } else {
+	set failure 0
+    }
+
+
+    # Results
+    puts $driver_stdout
+    puts "-----------"
+    puts "Temporary files are in directory $tmpd"
+
+    # Parse if v2
+    if { $failure } {
+	puts "Something went wrong. Check above messages."
+	tk_messageBox -icon error -title "Error" -parent .plumed -message \
+	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
+	return
+    }
+
+    set force_list [parse_forces $forces]
+    return $force_list
+}
+
+# Parse a forces file like
+# NATOMS
+# FBX FBY FBZ
+# X F1X F1Y F1Z
+# X ...
+# repeated for a number of frames. Return a list of lists 
+proc ::Plumed::parse_forces {forces} {
+    set ff [open $forces r]
+    set force_list {}
+    while {[gets $ff nat]>=0} {
+	gets $ff boxforces
+	set this_frame_forces {}
+	for {set a 0} {$a < $nat} {incr a} {
+	    # Delete atom name
+	    gets $ff line
+	    set fxyz [lreplace $line 0 0]
+	    lappend this_frame_forces $fxyz
+	}
+	lappend force_list $this_frame_forces
+    }
+    close $ff
+    return $force_list
+}
+
+
+
 
 
 # ==================================================                                                 
