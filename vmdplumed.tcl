@@ -2166,7 +2166,7 @@ proc ::Plumed::show_forces_compute { } {
 	puts "Something went wrong. Check above messages."
 	tk_messageBox -icon error -title "Error" -parent .plumed -message \
 	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
-	return
+	return {}
     }
 
     set force_list [parse_forces $forces]
@@ -2212,31 +2212,38 @@ proc ::Plumed::show_forces_gui {} {
     toplevel $tl
     wm title $tl "Display gradients and forces"
 
-    set n $tl
+    pack [ ttk::frame $tl.pad -padding 8 ] -side top -fill x
+    
+    set n $tl.pad
     pack [ ttk::label $n.head1 -text "Display the force vector that would be applied to each atom." \
 	       -justify center -anchor center -pad 3 ] -side top -fill x 
 
-    pack [ ttk::label $n.explain -text "To visualize the effect of a bias on a CV you may want to add a constant unitary force, e.g.\nRESTRAINT ARG=mycv AT=0 SLOPE=-1" \
-	       -justify center -anchor center -pad 3 ] -side top -fill x 
+    pack [ ttk::label $n.explain -text "To visualize the effect of a bias on a CV\nyou may want to apply a constant unitary force to it, e.g.:\n\nRESTRAINT ARG=mycv AT=0 SLOPE=-1" \
+	       -justify center -width -anchor center -pad 3 ] -side top -fill x 
 
     # http://wiki.tcl.tk/1433
     pack [ ttk::frame $n.scale ] -side top -fill x -expand 1
 
     pack [ ttk::label $n.scale.lab -text "Arrow scale: "] -side left
-    pack [ ttk::scale  $n.scale.scale -from -20 -to 20 -value 0 \
+    pack [ ttk::scale  $n.scale.scale -from -20 -to 20 -value 0 -length 200 \
 	       -orient h -command ::Plumed::show_forces_scale_changed]  -side left -fill x -expand 1
     pack [ ttk::label $n.scale.value -text 1.0 -width 8 -anchor e] -side left
     pack [ ttk::label $n.scale.unit -text "Å per energy unit" ] -side left
 
-    set show_forces_data [show_forces_compute]
-    show_forces_start
-    show_forces_draw_frame
-    
     wm protocol $tl WM_DELETE_WINDOW {
 	::Plumed::show_forces_stop
 	destroy .plumed_show_forces
     }
 
+    set show_forces_data [show_forces_compute]
+
+    if {$show_forces_data ne ""} {
+	show_forces_start
+	show_forces_draw_frame
+    } else {
+	show_forces_stop
+    }
+    
 }
 
 proc ::Plumed::show_forces_scale_changed {vraw} {
@@ -2244,7 +2251,7 @@ proc ::Plumed::show_forces_scale_changed {vraw} {
     set v [expr 10**($vraw/10)]
     set show_forces_scale $v
     set vr [format "%.2f" $v]
-    .plumed_show_forces.scale.value configure -text $vr
+    .plumed_show_forces.pad.scale.value configure -text $vr
     show_forces_draw_frame
 }
 
