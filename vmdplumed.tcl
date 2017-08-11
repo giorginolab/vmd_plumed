@@ -2167,14 +2167,18 @@ proc ::Plumed::do_compute_forces_v2 { } {
     return $force_list
 }
 
+
+# ========================================
+# Force-display stuff
+
 # Parse a forces file like
 # NATOMS
 # FBX FBY FBZ
 # X F1X F1Y F1Z
 # X ...
 # repeated for a number of frames. Return a list of lists 
-proc ::Plumed::parse_forces {forces} {
-    set ff [open $forces r]
+proc ::Plumed::parse_forces {fname} {
+    set ff [open $fname r]
     set force_list {}
     while {[gets $ff nat]>=0} {
 	gets $ff boxforces
@@ -2189,6 +2193,38 @@ proc ::Plumed::parse_forces {forces} {
     }
     close $ff
     return $force_list
+}
+
+
+proc ::Plumed::start_show_forces {fname} {
+    variable forces_data
+    set forces_data [parse_forces $fname]
+    # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
+    global vmd_frame
+    trace variable vmd_frame([molinfo top]) w ::Plumed::draw_forces
+}
+
+proc ::Plumed::stop_show_forces {} {
+    global vmd_frame
+    trace vdelete vmd_frame([molinfo top]) w ::Plumed::draw_forces
+}
+
+proc ::Plumed::draw_forces {} {
+    
+    
+}
+
+
+				  
+
+proc ::Plumed::show_forces {frc {scale 1.0}} {
+    # Assume that the number of frames is equal to the length of forces
+    # if { [molinfo top get numframes] != [llength $frc] } { error "Wrong number of frames" }
+
+    for { set f 0 } { $f < [llength $frc] } {incr f} {
+	
+    }
+
 }
 
 
