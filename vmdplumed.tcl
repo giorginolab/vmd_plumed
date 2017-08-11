@@ -2175,7 +2175,6 @@ proc ::Plumed::show_forces_compute { } {
 }
 
 
-
 # Parse a forces file like
 # NATOMS
 # FBX FBY FBZ
@@ -2200,10 +2199,13 @@ proc ::Plumed::parse_forces {fname} {
     return $force_list
 }
 
+
+
 proc ::Plumed::show_forces_toggle {} {
     variable show_forces_enabled
+    variable forces_data
     if $show_forces_enabled {
-	show_forces_compute
+	set forces_data [show_forces_compute]
 	show_forces_start
     } else {
 	show_forces_stop
@@ -2211,10 +2213,7 @@ proc ::Plumed::show_forces_toggle {} {
 }
 
 
-proc ::Plumed::show_forces_start {fname {scale 0.1}} {
-    variable forces_data
-    variable forces_scale $scale
-    set forces_data [parse_forces $fname]
+proc ::Plumed::show_forces_start {} {
     # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
     global vmd_frame
     trace variable vmd_frame([molinfo top]) w ::Plumed::show_forces_draw_frame
@@ -2228,7 +2227,7 @@ proc ::Plumed::show_forces_stop {} {
 
 proc ::Plumed::show_forces_draw_frame {args} {
     variable forces_data
-    variable forces_scale
+    variable forces_scale 0.1
     
     # global vmd_frame
     set fno [molinfo top get frame]
@@ -2252,9 +2251,11 @@ proc ::Plumed::show_forces_draw_frame {args} {
 # Draw an arrow at x in direction d
 proc ::Plumed::draw_arrow {x d {r .1} {tip .2}} {
     set xf [vecadd $x $d]
-    set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
-    graphics top cylinder $x $xf radius $r filled yes
-    graphics top cone $xf $xtip radius $r
+    if {[veclength $d] > 0.1} {
+	set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
+	graphics top cylinder $x $xf radius $r filled yes
+	graphics top cone $xf $xtip radius $r
+    }
 }
 
 
