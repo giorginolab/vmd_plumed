@@ -2196,7 +2196,7 @@ proc ::Plumed::parse_forces {fname} {
 }
 
 
-proc ::Plumed::start_show_forces {fname {scale 1}} {
+proc ::Plumed::start_show_forces {fname {scale 0.1}} {
     variable forces_data
     variable forces_scale $scale
     set forces_data [parse_forces $fname]
@@ -2211,30 +2211,31 @@ proc ::Plumed::stop_show_forces {} {
     trace vdelete vmd_frame([molinfo top]) w ::Plumed::draw_forces
 }
 
-proc ::Plumed::draw_forces {} {
+proc ::Plumed::draw_forces {args} {
     variable forces_data
     variable forces_scale
     
     # global vmd_frame
     set fno [molinfo top get frame]
 
+    set fd [lindex $forces_data $fno]
+
     set as [atomselect top all]
-    $as frame $no
+    $as frame $fno
+    set xyz_all [$as get {x y z}]
+    $as delete
 
     #  Iterate over atoms
     graphics top delete all
-    set fd [lindex $forces_data $fno]
-    foreach d $fd {
-	set x [$as get {x y z}]
+    foreach d $fd x $xyz_all {
 	set ds [vecscale $forces_scale $d]
 	draw_arrow $x $ds
     }
-    $as delete
     
 }
 
 # Draw an arrow at x in direction d
-proc ::Plumed::draw_arrow {x d {r 1} {tip 1}} {
+proc ::Plumed::draw_arrow {x d {r .1} {tip .2}} {
     set xf [vecadd $x $d]
     set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
     graphics top cylinder $x $xf radius $r filled yes
