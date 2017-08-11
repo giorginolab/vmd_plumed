@@ -2204,6 +2204,7 @@ proc ::Plumed::parse_forces {fname} {
 proc ::Plumed::show_forces_toggle {} {
     variable show_forces_enabled
     variable forces_data
+    variable forces_scale 1
     if $show_forces_enabled {
 	set forces_data [show_forces_compute]
 	show_forces_start
@@ -2227,7 +2228,7 @@ proc ::Plumed::show_forces_stop {} {
 
 proc ::Plumed::show_forces_draw_frame {args} {
     variable forces_data
-    variable forces_scale 0.1
+    variable forces_scale 
     
     # global vmd_frame
     set fno [molinfo top get frame]
