@@ -1567,6 +1567,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state normal
+	    .plumed.menubar.structure entryconfigure 4 -state disabled
 	}
 	2 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1574,6 +1575,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    .plumed.menubar.structure entryconfigure 4 -state normal
 	    destroy .plumed_ncacocb
 	}
 	vmdcv {
@@ -1582,6 +1584,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state disabled
 	    .plumed.menubar.structure entryconfigure 2 -state disabled
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    .plumed.menubar.structure entryconfigure 4 -state disabled
 	    destroy .plumedref
 	    destroy .plumednc
 	    destroy .plumedrama
@@ -2219,7 +2222,7 @@ proc ::Plumed::show_forces_gui {} {
 	       -justify center -anchor center -pad 3 ] -side top -fill x 
 
     pack [ ttk::label $n.explain -text "To visualize the effect of a bias on a CV\nyou may want to apply a constant unitary force to it, e.g.:\n\nRESTRAINT ARG=mycv AT=0 SLOPE=-1" \
-	       -justify center -width -anchor center -pad 3 ] -side top -fill x 
+	       -justify center -anchor center -pad 3 ] -side top -fill x 
 
     # http://wiki.tcl.tk/1433
     pack [ ttk::frame $n.scale ] -side top -fill x -expand 1
@@ -2228,7 +2231,7 @@ proc ::Plumed::show_forces_gui {} {
     pack [ ttk::scale  $n.scale.scale -from -20 -to 20 -value 0 -length 200 \
 	       -orient h -command ::Plumed::show_forces_scale_changed]  -side left -fill x -expand 1
     pack [ ttk::label $n.scale.value -text 1.0 -width 8 -anchor e] -side left
-    pack [ ttk::label $n.scale.unit -text "Å per energy unit" ] -side left
+    pack [ ttk::label $n.scale.unit -text "Å per kJ/mol/nm" ] -side left
 
     wm protocol $tl WM_DELETE_WINDOW {
 	::Plumed::show_forces_stop
@@ -2292,11 +2295,12 @@ proc ::Plumed::show_forces_draw_frame {args} {
 
 # Draw an arrow at x in direction d
 proc ::Plumed::draw_arrow {x d {r .1} {tip .2}} {
+    set min_len 0.1
     set xf [vecadd $x $d]
-    if {[veclength $d] > 0.1} {
+    if {[veclength $d] > $min_len} {
 	set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
 	graphics top cylinder $x $xf radius $r filled yes
-	graphics top cone $xf $xtip radius $r
+	graphics top cone $xf $xtip radius [expr 2*$r]
     }
 }
 
