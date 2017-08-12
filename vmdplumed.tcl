@@ -233,6 +233,8 @@ proc ::Plumed::plumed {} {
 	-command Plumed::rama_gui
     $w.menubar.structure add command -label "Insert group for secondary structure RMSD..." \
 	-command Plumed::ncacocb_gui
+    $w.menubar.structure add command -label "Display gradients and forces..." \
+	-command Plumed::show_forces_gui
 
     ## help menu
     $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
@@ -1565,6 +1567,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state normal
+	    .plumed.menubar.structure entryconfigure 4 -state disabled
 	}
 	2 {
 	    .plumed.menubar entryconfigure 4 -state normal
@@ -1572,6 +1575,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state normal
 	    .plumed.menubar.structure entryconfigure 2 -state normal
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    .plumed.menubar.structure entryconfigure 4 -state normal
 	    destroy .plumed_ncacocb
 	}
 	vmdcv {
@@ -1580,6 +1584,7 @@ proc ::Plumed::structuremenu_update {} {
 	    .plumed.menubar.structure entryconfigure 1 -state disabled
 	    .plumed.menubar.structure entryconfigure 2 -state disabled
 	    .plumed.menubar.structure entryconfigure 3 -state disabled
+	    .plumed.menubar.structure entryconfigure 4 -state disabled
 	    destroy .plumedref
 	    destroy .plumednc
 	    destroy .plumedrama
@@ -1932,9 +1937,9 @@ proc ::Plumed::do_compute {{outfile ""}} {
     if {$plumed_version==1} { cd_push $tmpd }
     if { [ catch { exec {*}$cmd } driver_stdout ] ||
 	 ! [file readable $colvar]  } {
-	set dontplot 1
+	set failure 1
     } else {
-	set dontplot 0
+	set failure 0
     }
     if {$plumed_version==1} { cd_push - }
 
@@ -1944,7 +1949,7 @@ proc ::Plumed::do_compute {{outfile ""}} {
     puts "Temporary files are in directory $tmpd"
 
     # Parse if v2
-    if { $dontplot } {
+    if { $failure } {
 	puts "Something went wrong. Check above messages."
 	tk_messageBox -icon error -title "Error" -parent .plumed -message \
 	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
@@ -2105,6 +2110,204 @@ proc ::Plumed::get_pbc_v2 { } {
 	       [expr $pbc_boxz/10.0] } } ]
     return $pbc
 }
+
+
+
+# ========================================
+# Force-display stuff
+
+# Run driver with --dump-forces. Extensive refactoring needed.
+proc ::Plumed::show_forces_compute { } {
+    variable driver_path
+
+    if {[molinfo top]==-1 || [molinfo top get numframes] < 1} {
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
+	    "A top molecule and at least one frame is required to plot."
+	return 
+    }
+
+    if {![file executable $driver_path]} { 
+	tk_messageBox -title "Error" -icon error -parent .plumed -message \
+	    "The plumed executable is required. See manual for installation instructions."
+	return }
+
+    # Prepare temp. dir and files
+    set tmpd [file join [tmpdir] vmdplumed.[pid]]
+    file mkdir $tmpd
+
+    set meta [file join $tmpd META_INP]
+    set pdb [file join $tmpd temp.pdb] 
+    set dcd [file join $tmpd temp.dcd]
+    set colvar [file join $tmpd COLVAR]
+    set forces [file join $tmpd FORCES]
+
+    writePlumed [atomselect top all] $pdb
+    animate write dcd $dcd waitfor all
+    file delete $colvar
+
+    write_meta_inp_v2 $meta $colvar
+    set pbc [get_pbc_v2]
+    set cmd [list $driver_path --standalone-executable driver {*}$pbc --mf_dcd $dcd --pdb $pdb --plumed $meta --dump-forces $forces  ]
+
+    puts "Executing: $cmd"
+
+    if { [ catch { exec {*}$cmd } driver_stdout ] ||
+	 ! [file readable $colvar]  } {
+	set failure 1
+    } else {
+	set failure 0
+    }
+
+
+    # Results
+    puts $driver_stdout
+    puts "-----------"
+    puts "Temporary files are in directory $tmpd"
+
+    # Parse if v2
+    if { $failure } {
+	puts "Something went wrong. Check above messages."
+	tk_messageBox -icon error -title "Error" -parent .plumed -message \
+	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
+	return {}
+    }
+
+    set force_list [parse_forces $forces]
+    return $force_list
+}
+
+
+# Parse a forces file like
+# NATOMS
+# FBX FBY FBZ
+# X F1X F1Y F1Z
+# X ...
+# repeated for a number of frames. Return a list of lists 
+proc ::Plumed::parse_forces {fname} {
+    set ff [open $fname r]
+    set force_list {}
+    while {[gets $ff nat]>=0} {
+	gets $ff boxforces
+	set this_frame_forces {}
+	for {set a 0} {$a < $nat} {incr a} {
+	    # Delete atom name
+	    gets $ff line
+	    set fxyz [lreplace $line 0 0]
+	    lappend this_frame_forces $fxyz
+	}
+	lappend force_list $this_frame_forces
+    }
+    close $ff
+    return $force_list
+}
+
+
+proc ::Plumed::show_forces_gui {} {
+    set tl .plumed_show_forces
+    if { [winfo exists $tl] } {
+	wm deiconify $tl
+	return
+    }
+
+    variable show_forces_scale 1.00
+    variable show_forces_data
+
+    toplevel $tl
+    wm title $tl "Display gradients and forces"
+
+    pack [ ttk::frame $tl.pad -padding 8 ] -side top -fill x
+    
+    set n $tl.pad
+    pack [ ttk::label $n.head1 -text "Display the force vector that would be applied to each atom." \
+	       -justify center -anchor center -pad 3 ] -side top -fill x 
+
+    pack [ ttk::label $n.explain -text "To visualize the effect of a bias on a CV\nyou may want to apply a constant unitary force to it, e.g.:\n\nRESTRAINT ARG=mycv AT=0 SLOPE=-1" \
+	       -justify center -anchor center -pad 3 ] -side top -fill x 
+
+    # http://wiki.tcl.tk/1433
+    pack [ ttk::frame $n.scale ] -side top -fill x -expand 1
+
+    pack [ ttk::label $n.scale.lab -text "Arrow scale: "] -side left
+    pack [ ttk::scale  $n.scale.scale -from -20 -to 20 -value 0 -length 200 \
+	       -orient h -command ::Plumed::show_forces_scale_changed]  -side left -fill x -expand 1
+    pack [ ttk::label $n.scale.value -text 1.0 -width 8 -anchor e] -side left
+    pack [ ttk::label $n.scale.unit -text "Å per kJ/mol/nm" ] -side left
+
+    wm protocol $tl WM_DELETE_WINDOW {
+	::Plumed::show_forces_stop
+	destroy .plumed_show_forces
+    }
+
+    set show_forces_data [show_forces_compute]
+
+    if {$show_forces_data ne ""} {
+	show_forces_start
+	show_forces_draw_frame
+    } else {
+	show_forces_stop
+    }
+    
+}
+
+proc ::Plumed::show_forces_scale_changed {vraw} {
+    variable show_forces_scale
+    set v [expr 10**($vraw/10)]
+    set show_forces_scale $v
+    set vr [format "%.2f" $v]
+    .plumed_show_forces.pad.scale.value configure -text $vr
+    show_forces_draw_frame
+}
+
+proc ::Plumed::show_forces_start {} {
+    # http://www.ks.uiuc.edu/Training/Tutorials/vmd-imgmv/imgmv/tutorial-html/node3.html#SECTION00032000000000000000
+    global vmd_frame
+    trace variable vmd_frame([molinfo top]) w ::Plumed::show_forces_draw_frame
+}
+
+proc ::Plumed::show_forces_stop {} {
+    global vmd_frame
+    graphics top delete all
+    trace vdelete vmd_frame([molinfo top]) w ::Plumed::show_forces_draw_frame
+}
+
+proc ::Plumed::show_forces_draw_frame {args} {
+    variable show_forces_data
+    variable show_forces_scale 
+    
+    # global vmd_frame
+    set fno [molinfo top get frame]
+
+    set fd [lindex $show_forces_data $fno]
+
+    set as [atomselect top all]
+    $as frame $fno
+    set xyz_all [$as get {x y z}]
+    $as delete
+
+    #  Iterate over atoms
+    graphics top delete all
+    foreach d $fd x $xyz_all {
+	set ds [vecscale $show_forces_scale $d]
+	draw_arrow $x $ds
+    }
+    
+}
+
+# Draw an arrow at x in direction d
+proc ::Plumed::draw_arrow {x d {r .1} {tip .2}} {
+    set min_len 0.1
+    set xf [vecadd $x $d]
+    if {[veclength $d] > $min_len} {
+	set xtip [vecadd $xf [vecscale $tip [vecnorm $d]]]
+	graphics top cylinder $x $xf radius $r filled yes
+	graphics top cone $xf $xtip radius [expr 2*$r]
+    }
+}
+
+
+				  
+
+
 
 
 # ==================================================                                                 
