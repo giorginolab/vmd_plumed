@@ -2286,19 +2286,28 @@ proc ::Plumed::show_forces_draw_frame {args} {
 
     #  Iterate over atoms
     set err 0
+    set sum 0
     graphics top delete all
     foreach d $fd x $xyz_all {
 	if {[catch {vecscale $show_forces_scale $d} ds]} {
 	    set err 1
 	} else {
 	    draw_arrow $x $ds
+	    set sum [expr {$sum+[veclength $d]}]
 	}
     }
 
     if {$err==1} {
 	tk_messageBox -icon warning \
-	    -message "Some gradient components are NAN.\nThey will not be shown." \
+	    -message "Some gradient components are NAN or infinite.\nThey will not be shown." \
 	    -title "Numerical problem" \
+	    -parent .plumed_show_forces
+    }
+
+    if {$sum == 0.0} {
+	tk_messageBox -icon info \
+	    -message "All acting forces are null. Consider adding a RESTRAINT or another biasing statement." \
+	    -title "Null forces" \
 	    -parent .plumed_show_forces
     }
     
