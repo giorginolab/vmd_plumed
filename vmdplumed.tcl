@@ -2240,13 +2240,31 @@ proc ::Plumed::show_forces_gui {} {
 
     set show_forces_data [show_forces_compute]
 
+    if [show_forces_is_null $show_forces_data] {
+	tk_messageBox -icon info \
+	    -message "All acting forces are null. Consider adding a RESTRAINT or another biasing statement." \
+	    -title "Null forces" \
+	    -parent .plumed_show_forces
+	set show_forces_data {}
+    }
+
     if {$show_forces_data ne ""} {
 	show_forces_start
 	show_forces_draw_frame
     } else {
 	show_forces_stop
     }
-    
+}
+
+proc ::Plumed::show_forces_is_null {data} {
+    foreach fd $data {
+	foreach fa $fd {
+	    if {[veclength $fa]>0} {
+		return 0
+	    }
+	}
+    }
+    return 1
 }
 
 proc ::Plumed::show_forces_scale_changed {vraw} {
@@ -2301,13 +2319,6 @@ proc ::Plumed::show_forces_draw_frame {args} {
 	tk_messageBox -icon warning \
 	    -message "Some gradient components are NAN or infinite.\nThey will not be shown." \
 	    -title "Numerical problem" \
-	    -parent .plumed_show_forces
-    }
-
-    if {$sum == 0.0} {
-	tk_messageBox -icon info \
-	    -message "All acting forces are null. Consider adding a RESTRAINT or another biasing statement." \
-	    -title "Null forces" \
 	    -parent .plumed_show_forces
     }
     
