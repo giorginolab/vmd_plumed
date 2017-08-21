@@ -2167,8 +2167,6 @@ proc ::Plumed::show_forces_compute { } {
     # Parse if v2
     if { $failure } {
 	puts "Something went wrong. Check above messages."
-	tk_messageBox -icon error -title "Error" -parent .plumed -message \
-	    "PLUMED returned an error while executing the script. Please find error messages in the console. "
 	return {}
     }
 
@@ -2240,19 +2238,23 @@ proc ::Plumed::show_forces_gui {} {
 
     set show_forces_data [show_forces_compute]
 
-    if [show_forces_is_null $show_forces_data] {
+    if {$show_forces_data eq ""} {
+	tk_messageBox -icon error \
+	    -title "Error" \
+	    -message "PLUMED returned an error while executing the script. Please find error messages in the console. " \
+	    -parent .plumed_show_forces 
+	show_forces_stop
+	destroy .plumed_show_forces
+    } elseif [show_forces_is_null $show_forces_data] {
 	tk_messageBox -icon info \
 	    -message "All acting forces are null. Consider adding a RESTRAINT or another biasing statement." \
 	    -title "Null forces" \
 	    -parent .plumed_show_forces
-	set show_forces_data {}
-    }
-
-    if {$show_forces_data ne ""} {
+	show_forces_stop
+	destroy .plumed_show_forces
+    } else {
 	show_forces_start
 	show_forces_draw_frame
-    } else {
-	show_forces_stop
     }
 }
 
