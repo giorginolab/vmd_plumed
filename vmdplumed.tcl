@@ -2285,10 +2285,21 @@ proc ::Plumed::show_forces_draw_frame {args} {
     $as delete
 
     #  Iterate over atoms
+    set err 0
     graphics top delete all
     foreach d $fd x $xyz_all {
-	set ds [vecscale $show_forces_scale $d]
-	draw_arrow $x $ds
+	if {[catch {vecscale $show_forces_scale $d} ds]} {
+	    set err 1
+	} else {
+	    draw_arrow $x $ds
+	}
+    }
+
+    if {$err==1} {
+	tk_messageBox -icon warning \
+	    -message "Some gradient components are NAN.\nThey will not be shown." \
+	    -title "Numerical problem" \
+	    -parent .plumed_show_forces
     }
     
 }
