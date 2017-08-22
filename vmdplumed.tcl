@@ -2261,7 +2261,10 @@ proc ::Plumed::show_forces_gui {} {
 proc ::Plumed::show_forces_is_null {data} {
     foreach fd $data {
 	foreach fa $fd {
-	    if {[veclength $fa]>0} {
+	    if [catch {veclength $fa} fal] {
+		set fal 1
+	    }
+	    if {$fal>0} {
 		return 0
 	    }
 	}
