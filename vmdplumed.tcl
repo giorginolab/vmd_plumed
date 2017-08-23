@@ -1998,7 +1998,7 @@ proc ::Plumed::do_plot { { out COLVAR } { txt ""  } } {
     close $fd
 
     if { [llength $header] == 0 } {
-	puts "No FIELDS header line found. Please use PLUMED version >= 1.3 ."
+	puts "No FIELDS columns found. It usually means that you have no COLVAR defined (or PLUMED < 1.3)."
 	return
     } elseif { $nlines == 0 } {
 	puts "No output in COLVAR. Please check above messages."
