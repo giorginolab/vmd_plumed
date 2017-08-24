@@ -136,6 +136,7 @@ proc ::Plumed::plumed {} {
     # If already initialized, just turn on
     if { [winfo exists .plumed] } {
 	wm deiconify .plumed
+	raise .plumed
 	return
     }
 
@@ -796,6 +797,7 @@ proc ::Plumed::showBalloonHelp {w msg} {
 proc ::Plumed::rama_gui { } {
     if { [winfo exists .plumedrama] } {
 	wm deiconify .plumedrama
+	raise .plumedrama
 	return
     }
 
@@ -944,6 +946,7 @@ proc ::Plumed::ncacocb_gui {} {
     set n .plumed_ncacocb
     if { [winfo exists $n] } {
 	wm deiconify $n
+	raise $n
 	return
     }
 
@@ -1034,6 +1037,7 @@ proc ::Plumed::ncacocb_insert {} {
 proc ::Plumed::reference_gui { } {
     if { [winfo exists .plumedref] } {
 	wm deiconify .plumedref
+	raise .plumedref
 	return
     }
 
@@ -1305,6 +1309,7 @@ proc ::Plumed::reference_write_subset { fileout subset } {
 proc ::Plumed::nc_gui { } { 
     if { [winfo exists .plumednc] } {
 	wm deiconify .plumednc
+	raise .plumednc
 	return
     }
 
@@ -2204,6 +2209,7 @@ proc ::Plumed::show_forces_gui {} {
     set tl .plumed_show_forces
     if { [winfo exists $tl] } {
 	wm deiconify $tl
+	raise $tl
 	return
     }
 
