@@ -5,7 +5,7 @@
 #  vmdplumed.tcl
 #  templates_list_v1.tcl
 #  templates_list_vmdcv.tcl
-#  maintainer/generate_templates_list_v2.tcl
+#  maintainer/templates_list_v2_generator.tcl
 
 
 default: templates_list_v2.tcl pkgIndex.tcl

@@ -20,7 +20,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.6
+package provide plumed 2.7
 
 package require Tk 8.5
 package require http
