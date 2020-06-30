@@ -2,14 +2,14 @@ Plumed-GUI
 ==========
 
 Toni Giorgino  
-Consiglio Nazionale delle Ricerche (IN-CNR)
 
 
 
 A Plumed collective variable analysis tool for VMD
 ------------
 
-The PLUMED-GUI collective variable analysis tool is a plugin for the Visual Molecular Dynamics (VMD) software that provides access to the extensive set of collective variables (CV) defined in the PLUMED. It allows you to:
+The PLUMED-GUI collective variable analysis tool is a plugin for the [Visual Molecular Dynamics (VMD)](https://www.ks.uiuc.edu/Research/vmd/)
+software that provides access to the extensive set of collective variables (CV) defined in the PLUMED. It allows you to:
 
 - analyze the currently loaded trajectory by evaluating and plotting arbitrary CVs
 - use VMD's atom selection keywords to define atom groups and ready-made templates for common CVs
