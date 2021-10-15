@@ -232,31 +232,31 @@ proc ::Plumed::plumed {} {
     $w.menubar.structure add command -label "Build reference structure..." -command Plumed::reference_gui
     $w.menubar.structure add command -label "Insert native contacts CV..." -command Plumed::nc_gui
     $w.menubar.structure add command -label "Insert backbone torsion \u03c6/\u03c8/\u03c9 CVs..." \
-	-command Plumed::rama_gui
+	    -command Plumed::rama_gui
     $w.menubar.structure add command -label "Insert group for secondary structure RMSD..." \
-	-command Plumed::ncacocb_gui
+    	-command Plumed::ncacocb_gui
     $w.menubar.structure add command -label "Display gradients and forces..." \
-	-command Plumed::show_forces_gui
+    	-command Plumed::show_forces_gui
 
     ## help menu
     $w.menubar add cascade -label Help -underline 0 -menu $w.menubar.help
     menu $w.menubar.help -tearoff no
     $w.menubar.help add command -label "Getting started with Plumed-GUI" \
-	-command "vmd_open_url $Plumed::github_repository/blob/master/doc/README.md"
+    	-command "vmd_open_url $Plumed::github_repository/blob/master/doc/README.md"
     $w.menubar.help add command -label "What to cite" \
         -command "vmd_open_url http://dx.doi.org/10.1016/j.cpc.2013.11.019"
     $w.menubar.help add separator
     $w.menubar.help add command -label "How to install PLUMED's binaries" \
-	-command "vmd_open_url $Plumed::github_repository/blob/master/doc/INSTALL-PLUMED-FIRST.md"
+	    -command "vmd_open_url $Plumed::github_repository/blob/master/doc/INSTALL-PLUMED-FIRST.md"
     $w.menubar.help add command -label "Attempt download of prebuilt Windows driver binaries" \
-	-command ::Plumed::help_win32_install -state $win32_install_state
+    	-command ::Plumed::help_win32_install -state $win32_install_state
     $w.menubar.help add separator
     $w.menubar.help add command -label "What is PLUMED?" \
         -command "vmd_open_url http://www.plumed.org"
     $w.menubar.help add command -label "PLUMED 2.7 user's guide and CV syntax" \
-	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
+    	-command {vmd_open_url [::Plumed::popup_help_url]/index.html}
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
-	-command "vmd_open_url http://www.plumed.org/documentation"
+	    -command "vmd_open_url https://www.plumed.org/pdf/manual_1-3-0.pdf"
     $w.menubar.help add separator
     $w.menubar.help add command -label "VMD Colvars homepage" \
 	    -command "vmd_open_url http://colvars.github.io/" 
@@ -264,7 +264,7 @@ proc ::Plumed::plumed {} {
 	    -command "vmd_open_url http://colvars.github.io/colvars-refman-vmd/colvars-refman-vmd.html"
     $w.menubar.help add separator
     $w.menubar.help add command -label "About the $plugin_name" \
-	-command [namespace current]::help_about
+	    -command [namespace current]::help_about
 
     $w configure -menu $w.menubar
 
@@ -275,8 +275,8 @@ proc ::Plumed::plumed {} {
     ## PLOT ============================================================
     pack [  ttk::frame $w.plot ] -side bottom -fill x 
     pack [  ttk::button $w.plot.plot -text "Plot"   \
-	   -command [namespace current]::do_compute ]  \
-	-side left -fill x -expand 1 
+        -command [namespace current]::do_compute ]  \
+	    -side left -fill x -expand 1 
 
 
     ## OPTIONS ============================================================
@@ -1855,11 +1855,11 @@ proc ::Plumed::popup_help_url {} {
 	    set url [string map [list "VERSION" [exec $driver_path --standalone-executable info --version]] $url]
 	    puts "URL IS $url"
 	    if {[lsearch -exact {200 301} [get_url_ncode "$url/index.html"]] >= 0} {
-		puts "Info: local help pages not available, using remote pages at $url"
-		set popup_help_url_cached $url
+            puts "Info: local help pages not available, using remote pages at $url"
+            set popup_help_url_cached $url
 	    } else {
-		puts "Warning: local and remote help pages not available, using fallback"
-		set popup_help_url_cached "http://www.plumed.org"
+            puts "Warning: local and remote help pages not available, using fallback"
+            set popup_help_url_cached "http://www.plumed.org"
 	    }
 	}
     }

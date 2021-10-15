@@ -1,5 +1,6 @@
 # This -*- Makefile -*- requires plumed 2.0
 
+# Usage: make -f maintainer/Makefile   (not -C)
 
 # When changing VMVERSION version number, also fix it in
 #  vmdplumed.tcl
