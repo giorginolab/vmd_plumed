@@ -1,3 +1,7 @@
+2021-10-15  Toni  <toni@MacBook-di-Toni.local>
+
+	* 2.8 Update to Plumed 2.7, fix for newer Macos
+
 2017-08-21  Toni  <toni@pcgiorgino.isib.cnr.it>
 
 	* 2.7.1 Show forces and gradients feature

@@ -20,7 +20,7 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.7
+package provide plumed 2.8
 
 package require Tk 8.5
 package require http
@@ -142,7 +142,7 @@ proc ::Plumed::plumed {} {
 
     set w [toplevel ".plumed" -bg [ttk::style lookup . -background]]
     wm title $w "$plugin_name"
-#    wm resizable $w 0 0
+    #    wm resizable $w 0 0
 
 
     # OS-specific UI tweaks. $mod is the menu accelerator
@@ -168,10 +168,11 @@ proc ::Plumed::plumed {} {
 
     # Attempt to workaround https://github.com/tonigi/vmd_plumed/issues/1
     # https://github.com/yyamasak/TkSQLite-AES128/blob/master/tksqlite.tcl#L1174
+    # No longer needed (nor working) in VMD 1.9.4 alpha
     switch -exact -- $::ttk::currentTheme {
     	aqua {
-    	    rename ttk::_scrollbar ttk::__scrollbar
-#    	    interp alias {} ::ttk::scrollbar {} ::scrollbar
+            # rename ttk::_scrollbar ttk::__scrollbar
+            # interp alias {} ::ttk::scrollbar {} ::scrollbar
     	}
     }
 
@@ -206,7 +207,7 @@ proc ::Plumed::plumed {} {
     bind $w <$modifier-s> Plumed::file_save
     bind $w <$modifier-S> Plumed::file_saveas
     bind $w <$modifier-e> Plumed::file_export
-#    bind $w <$modifier-v> "::Plumed::tk_textPaste_modern $::Plumed::w.txt.text;break"
+    #    bind $w <$modifier-v> "::Plumed::tk_textPaste_modern $::Plumed::w.txt.text;break"
 
     ## edit
     $w.menubar add cascade  -label Edit -underline 0 -menu $w.menubar.edit
@@ -252,7 +253,7 @@ proc ::Plumed::plumed {} {
     $w.menubar.help add separator
     $w.menubar.help add command -label "What is PLUMED?" \
         -command "vmd_open_url http://www.plumed.org"
-    $w.menubar.help add command -label "PLUMED 2.2 user's guide and CV syntax" \
+    $w.menubar.help add command -label "PLUMED 2.7 user's guide and CV syntax" \
 	-command "vmd_open_url $Plumed::plumed2_online_docbase/index.html"
     $w.menubar.help add command -label "PLUMED 1.3 user's guide and CV syntax" \
 	-command "vmd_open_url http://www.plumed.org/documentation"
