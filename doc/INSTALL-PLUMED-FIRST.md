@@ -3,12 +3,11 @@ Prerequisite: PLUMED engine
 
 Plumed-GUI **requires** a _driver_ executable for your architecture to
 be located somewhere in the executable path.  The executables are
-named _plumed_ (PLUMED 2.1, recommended) and _driver_ (PLUMED 1.3).
+named `plumed` (PLUMED ≥ 2, recommended) and `driver` (PLUMED 1.3).
 You can have either or both installed.
 
 If the executables are correctly installed, their location will appear
-in the "Path to executable" box; the path can be adjusted manually
-(not recommended).
+in the "Path to executable" box; the path can be adjusted manually.
 
 
 Linux/Unix and OSX
