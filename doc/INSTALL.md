@@ -18,9 +18,9 @@ or installed VMD as a user).
 ## Method 1: replace the plugin directory
 
 This method is sure-fire if you have write access to the directory where
-VMD is installed. Just replace the `plugins/noarch/tcl/plumed*.*`
-directory in VMD's installation with the archive downloaded from
-GitHub.
+VMD is installed. Just replace the content of the directory
+`plugins/noarch/tcl/plumed*.*` in VMD's installation with the 
+files downloaded from GitHub (5 files to replace). 
 
 To identify your VMD installation directory, the easiest is to issue the
 following command in VMD's TkConsole:
