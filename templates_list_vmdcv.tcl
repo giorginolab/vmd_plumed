@@ -1,4 +1,4 @@
-package provide plumed 2.8
+package provide plumed 2.9
 namespace eval ::Plumed {
 
     proc vmdcv_gencv1 {name content} {

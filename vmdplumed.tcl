@@ -20,10 +20,11 @@
 # To reload:
 #  destroy .plumed; source vmdplumed.tcl; plumed_tk
 
-package provide plumed 2.8
+package provide plumed 2.9
 
 package require Tk 8.5
 package require http
+package require tile
 
 # vmd_install_extension plumed plumed_tk "Analysis/Collective variable analysis (PLUMED)"
 
@@ -140,6 +141,7 @@ proc ::Plumed::plumed {} {
 	return
     }
 
+    # Create main window using theme background
     set w [toplevel ".plumed" -bg [ttk::style lookup . -background]]
     wm title $w "$plugin_name"
     #    wm resizable $w 0 0
@@ -323,8 +325,10 @@ proc ::Plumed::plumed {} {
     ## TEXT ============================================================
     ttk::frame $w.txt
     ttk::label $w.txt.label  -textvariable Plumed::textfile -anchor center
-    text $w.txt.text -wrap none -undo 1 -autoseparators 1 -bg #ffffff -bd 2 \
-	-yscrollcommand [list $::Plumed::w.txt.vscr set] -font {Courier 12}
+
+    text $w.txt.text -wrap none -undo 1 -autoseparators 1 \
+        -bd 2 -yscrollcommand [list $::Plumed::w.txt.vscr set] \
+        -font {Courier 12}
 	
     ttk::scrollbar $w.txt.vscr -command [list $::Plumed::w.txt.text yview]
     pack $w.txt.label -side top   -fill x 
@@ -341,6 +345,13 @@ proc ::Plumed::plumed {} {
     plumed_path_lookup;		# sets plumed_version
     file_new;			# inserts skeleton, depends on plumed_version
     instructions_update;	# because file_new inserts an empty text
+
+    # Update any dialog windows to use theme background
+    foreach dlg {.plumedrama .plumednc .plumedref .plumed_ncacocb .plumed_show_forces} {
+        if {[winfo exists $dlg]} {
+            $dlg configure -bg [ttk::style lookup . -background]
+        }
+    }
 }
 
 
@@ -368,10 +379,10 @@ proc ::Plumed::file_new { } {
 
     $w.txt.text delete 1.0 {end - 1c}
     label $w.txt.text.instructions -text "(...)" -justify left \
-	-relief solid -padx 2m -pady 2m -background #eee
+	    -relief solid -padx 2m -pady 2m -background #eee -foreground #000
     # bind $w.txt.text.instructions <1> { destroy %W }  ;# Click to close
     $w.txt.text window create 1.0 -window $w.txt.text.instructions \
-	-padx 100 -pady 10
+	    -padx 100 -pady 10
     $w.txt.text insert end [empty_meta_inp]
     instructions_update
 }
@@ -2411,5 +2422,5 @@ proc ::Plumed::vmdcv_expand_cvlist {} {
 	}				
 	return $out
 }
-		
+
 
