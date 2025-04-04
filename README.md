@@ -24,8 +24,9 @@ The code is hosted on GitHub at
 Installation
 ------------
 
-First, you need PLUMED 1.3's *driver* and/or PLUMED 2's *plumed*
-executables: see [INSTALL-PLUMED-FIRST.md](doc/INSTALL-PLUMED-FIRST.md).
+First, you likely want PLUMED 2's *plumed* executable in your path: 
+see [INSTALL-PLUMED-FIRST.md](doc/INSTALL-PLUMED-FIRST.md). The GUI
+also supports older PLUMED 1.3's *driver*.
 
 Second, you may want to update PLUMED-GUI to its latest version,
 rather than using the one distributed with VMD. See instructions

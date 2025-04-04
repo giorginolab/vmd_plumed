@@ -208,6 +208,17 @@ The *Colvars* syntax is described in http://colvars.github.io/ and in the corres
 
 
 
+Common problems
+---------------
+
+### Missing menus under MacOS
+
+There is a known intermittent behaviour under MacOS which causes the plugin's menu bar not to appear. Instead you get a generic empty menu called "vmd".
+The source of this bug and why it is intermittent is unclear. One workaround is apparently to run VMD from the command line rather than
+its application icon.
+
+
+
 Citation
 --------
 
