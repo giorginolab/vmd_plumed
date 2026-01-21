@@ -45,6 +45,11 @@ Please find
 - Information on the PLUMED engine at http://www.plumed.org 
 
 
+License
+-------
+
+The plugin can be used under the terms of the 3-clause BSD license. 
+
 
 Citation
 --------
