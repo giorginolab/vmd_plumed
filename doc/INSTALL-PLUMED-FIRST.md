@@ -26,6 +26,9 @@ manager as follows:
 Windows
 -------
 
+> [!WARNING]  
+> The instructions in this section are outdated and no longer work.
+
 Plumed-GUI provides a _Help > Attempt
 download of prebuilt Windows driver binaries_.  menu entry which
 attempts to get precompiled binaries and to install them in a
@@ -33,13 +36,6 @@ attempts to get precompiled binaries and to install them in a
 added to the search path. The method requires enough permissions
 and network access.
 
-
-If the Windows-specific automated installation above fails, try to
-manually download the pre-compiled binaries for Win32
-([driver.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=driver.exe)
-and
-[plumed.exe](http://www.multiscalelab.org/utilities/PlumedGUI?action=AttachFile&do=get&target=plumed.exe))
-and copy them e.g. in `c:\windows` or in VMD's directory.  If all
-else fails, you can try to cross-compile yourself, as shown in the
+Instructions for cross-compilation are provided in the
 [PLUMED-WIN32.md](PLUMED-WIN32.md) file.
 
