@@ -1,0 +1,40 @@
+[tool.bumpversion]
+current_version = "2.9"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)"
+serialize = ["{major}.{minor}"]
+search = "package provide plumed {current_version}"
+replace = "package provide plumed {new_version}"
+regex = false
+ignore_missing_version = true
+ignore_missing_files = false
+tag = true
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = false
+commit = true
+message = "Bump version: {current_version} → {new_version}"
+moveable_tags = []
+commit_args = ""
+setup_hooks = []
+pre_commit_hooks = ["make -f maintainer/Makefile pkgIndex.tcl"]
+post_commit_hooks = []
+
+
+[[tool.bumpversion.files]]
+filename = "vmdplumed.tcl"
+
+[[tool.bumpversion.files]]
+filename = "templates_list_v1.tcl"
+
+[[tool.bumpversion.files]]
+filename = "templates_list_vmdcv.tcl"
+
+[[tool.bumpversion.files]]
+filename = "maintainer/templates_list_v2_generator.tcl"
+
+
+[[tool.bumpversion.files]]
+filename = "Makefile"
+search = "VMD_PLUMED_VERSION = {current_version}"
+replace = "VMD_PLUMED_VERSION = {new_version}"

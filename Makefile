@@ -1,9 +1,9 @@
 .SILENT:
 
-VMFILES = vmdplumed.tcl pkgIndex.tcl \
+VMD_PLUMED_FILES = vmdplumed.tcl pkgIndex.tcl \
 	  templates_list_v1.tcl templates_list_v2.tcl templates_list_vmdcv.tcl
-VMVERSION = 2.9
-DIR = $(PLUGINDIR)/noarch/tcl/plumed$(VMVERSION)
+VMD_PLUMED_VERSION = 2.9
+DIR = $(PLUGINDIR)/noarch/tcl/plumed$(VMD_PLUMED_VERSION)
 
 
 bins:
@@ -15,9 +15,9 @@ win32staticlibs:
 
 # The first targets are used by VMD's builds.
 distrib: 
-	@echo "Copying plumed $(VMVERSION) files to $(DIR)"
+	@echo "Copying vmd_plumed $(VMD_PLUMED_VERSION) files to $(DIR)"
 	mkdir -p $(DIR) 
-	cp $(VMFILES) $(DIR) 
+	cp $(VMD_PLUMED_FILES) $(DIR) 
 
 
 
