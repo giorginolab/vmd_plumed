@@ -22,6 +22,9 @@ post_commit_hooks = []
 
 
 [[tool.bumpversion.files]]
+filename = "pkgIndex.tcl"
+
+[[tool.bumpversion.files]]
 filename = "vmdplumed.tcl"
 
 [[tool.bumpversion.files]]
