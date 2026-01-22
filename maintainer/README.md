@@ -14,7 +14,8 @@ The distribution contains these files
 Use
 
     uv tool install bump-my-version
-    bump-my-version minor
+    # commit any pending changes
+    bump-my-version bump minor -v
 
 
 
@@ -32,6 +33,10 @@ must be in the path).
 ### Package index
 
 It is an important part of TCL's packaging scheme. The file should be updated as part of the bumping process. 
+Basically amounts to
+
+    pkg_mkIndex -verbose .
+
 
 
 ## Cross-compiling plumed2
