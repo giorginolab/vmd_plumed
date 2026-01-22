@@ -1,6 +1,11 @@
 Cross-compiling PLUMED under WIN32
 ==================================
 
+> [!WARNING]  
+> The instructions in this section are outdated and no longer work. Life is too short 
+> to maintain platforms mostly used for office work.
+
+
 These instructions are only necessary if you are unable to download
 the pre-built Windows binaries.
 
