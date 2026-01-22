@@ -17,7 +17,7 @@ message = "Bump version: {current_version} → {new_version}"
 moveable_tags = []
 commit_args = ""
 setup_hooks = []
-pre_commit_hooks = ["make -f maintainer/Makefile pkgIndex.tcl"]
+pre_commit_hooks = ["tclsh maintainer/pkg_mkIndex.tcl"]
 post_commit_hooks = []
 
 
@@ -26,6 +26,9 @@ filename = "vmdplumed.tcl"
 
 [[tool.bumpversion.files]]
 filename = "templates_list_v1.tcl"
+
+[[tool.bumpversion.files]]
+filename = "templates_list_v2.tcl"
 
 [[tool.bumpversion.files]]
 filename = "templates_list_vmdcv.tcl"
